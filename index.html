@@ -50,7 +50,8 @@ function sendRequest() {
 			$("#results").show();
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
-			alert("error: " + textStatus + ", " + errorThrown);
+			$("#results").html(jqXHR.status + ": " + jqXHR.statusText);
+			$("#results").show();
 		}
 	});
 }
