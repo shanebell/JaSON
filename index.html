@@ -7,14 +7,14 @@
 <title>JaSON</title>
 
 <!-- Twitter Bootstrap -->    
-<link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Google Pretty Printer -->
-<link href="stylesheets/prettify.css" rel="stylesheet">
-<script src="javascripts/prettify.js"></script>
+<link href="css/prettify.css" rel="stylesheet">
+<script src="js/prettify.js"></script>
 
 <!-- JQuery -->
-<script src="javascripts/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
 
 <!--  Custom Styles -->
 <style type="text/css">
@@ -30,9 +30,16 @@ $(document).ready(function() {
 	// enable google pretty printer
 	prettyPrint();
 	
+	// default focus on the URL field
+	$("#url").focus();
+	
 	$("#addHeader").click(addHeader);
 	
 	$("#send").click(sendRequest);
+	
+	$(document).on("click", ".icon-remove", function() {
+		$(this).parent().remove();
+	});
 	
 });
 
@@ -45,8 +52,8 @@ function sendRequest() {
 		  xhr.setRequestHeader("password", "password1");
 		},
 		dataType: "json",
-		success: function(data) {
-			$("#results").html(JSON.stringify(data, null, 2));
+		success: function(data, textStatus, jqXHR) {
+			$("#results").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders() + "\n" + JSON.stringify(data, null, 2));
 			$("#results").show();
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
@@ -57,7 +64,7 @@ function sendRequest() {
 }
 
 function addHeader() {
-	var header = $("<li><input type='text' class='headerName' placeHolder='name'/><input type='text' class='headerValue' placeHolder='value'/></li>");
+	var header = $("<li><input type='text' class='headerName' placeHolder='name'/>&nbsp;<input type='text' class='headerValue' placeHolder='value'/><i id='x' class='icon-remove'></i></li>");
 	$("#headers").append(header);
 }
 </script>
@@ -81,16 +88,39 @@ function addHeader() {
 	
 	<!-- Container -->
 	<div class="container">
+
+		<hr />
 	
 		<div class="row">
-			<input type="text" id="url" placeHolder="URL"/>
-		</div>
+			<div class="control-group">
+	            <div class="controls">
+					<input type="text" id="url" class="span6" placeHolder="http://www.example.com/service.json"/>
+					<br/>
+	                <select id="method" class="span2">
+						<option>GET</option>
+						<option>POST</option>
+						<option>PUT</option>
+						<option>DELETE</option>
+						<option>HEAD</option>
+					</select>
+	            </div>
+	        </div>
+	    </div>
+	
+		<hr />
 		
 		<div class="row">
 		    <h3>HTTP headers</h3>
-		    <ul id="headers">
+		    <ul id="headers" class="unstyled">
 		    </ul>
 		    <button class="btn" id="addHeader">Add new HTTP header</button>
+		</div>
+		
+		<hr />
+		
+		<div class="row">
+		    <h3>Request Body</h3>
+		    <textarea class="span6" rows="5"></textarea>
 		</div>
 
 		<div class="row">
