@@ -33,7 +33,7 @@ $(document).ready(function() {
 	// default focus on the URL field
 	$("#url").focus();
 	
-	$("#addHeader").click(addHeader);
+	$("#addHeader").click(addHeaderInput);
 	
 	$("#send").click(sendRequest);
 	
@@ -44,14 +44,19 @@ $(document).ready(function() {
 });
 
 function sendRequest() {
-	
+
+    // URL validation
+    var url = $("#url").val();
+    if (url.indexOf("http") != 0) {
+        url += "http://";
+    }
+
 	$.ajax({
-		url: $("#url").val(),
-		beforeSend: function(xhr) {
-		  xhr.setRequestHeader("username", "account1@mailinator.com");
-		  xhr.setRequestHeader("password", "password1");
-		},
+		"url": url,
+        type: $("#method").val(),
+		beforeSend: addHeadersToRequest,
 		dataType: "json",
+        data: $("#data").val(),
 		success: function(data, textStatus, jqXHR) {
 			$("#results").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders() + "\n" + JSON.stringify(data, null, 2));
 			$("#results").show();
@@ -63,8 +68,26 @@ function sendRequest() {
 	});
 }
 
-function addHeader() {
-	var header = $("<li><input type='text' class='headerName' placeHolder='name'/>&nbsp;<input type='text' class='headerValue' placeHolder='value'/><i id='x' class='icon-remove'></i></li>");
+
+/**
+ * Iterate through all the headers and add them to the request
+ */
+function addHeadersToRequest(jqXHR) {
+
+    // TODO validate that the headers have content
+
+    $(".header").each(function() {
+		var name = $(".headerName", this).val();
+        var value = $(".headerValue", this).val();
+        jqXHR.setRequestHeader(name, value);
+    });
+}
+
+/**
+ * Add a header input field (name and value) to the page
+ */
+function addHeaderInput() {
+	var header = $("<li class='header'><input type='text' class='headerName' placeHolder='name'/>&nbsp;<input type='text' class='headerValue' placeHolder='value'/>&nbsp;<i id='x' class='icon-remove'></i></li>");
 	$("#headers").append(header);
 }
 </script>
@@ -94,7 +117,7 @@ function addHeader() {
 		<div class="row">
 			<div class="control-group">
 	            <div class="controls">
-					<input type="text" id="url" class="span6" placeHolder="http://www.example.com/service.json"/>
+					<input type="text" id="url" class="span12" placeHolder="http://www.example.com/service.json"/>
 					<br/>
 	                <select id="method" class="span2">
 						<option>GET</option>
@@ -120,7 +143,7 @@ function addHeader() {
 		
 		<div class="row">
 		    <h3>Request Body</h3>
-		    <textarea class="span6" rows="5"></textarea>
+		    <textarea id="data" class="span6" rows="5"></textarea>
 		</div>
 
 		<div class="row">
