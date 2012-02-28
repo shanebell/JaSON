@@ -44,6 +44,10 @@ $(document).ready(function() {
 });
 
 function sendRequest() {
+	
+	$("#response").hide();
+	$("#responseHeaders").hide();
+	$("#loading").show();
 
     // URL validation
     var url = $("#url").val();
@@ -58,12 +62,16 @@ function sendRequest() {
 		dataType: "json",
         data: $("#data").val(),
 		success: function(data, textStatus, jqXHR) {
-			$("#results").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders() + "\n" + JSON.stringify(data, null, 2));
-			$("#results").show();
+			$("#responseHeaders").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders());
+			$("#response").html(JSON.stringify(data, null, 2));
+			$("#loading").hide();
+			$("#responseHeaders").show();
+			$("#response").show();
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
-			$("#results").html(jqXHR.status + ": " + jqXHR.statusText);
-			$("#results").show();
+			$("#response").html(jqXHR.status + ": " + jqXHR.statusText);
+			$("#loading").hide();
+			$("#response").show();
 		}
 	});
 }
@@ -88,7 +96,7 @@ function addHeadersToRequest(jqXHR) {
  */
 function addHeaderInput() {
 	var header = $("<li class='header'><input type='text' class='headerName' placeHolder='name'/>&nbsp;<input type='text' class='headerValue' placeHolder='value'/>&nbsp;<i id='x' class='icon-remove'></i></li>");
-	$("#headers").append(header);
+	$("#requestHeaders").append(header);
 }
 </script>
 </head>
@@ -112,12 +120,12 @@ function addHeaderInput() {
 	
 	<!-- Container -->
 	<div class="container">
-
+	
+		<!-- URL and method -->
 		<div class="row">
 			<div class="control-group">
 	            <div class="controls">
-					<input type="text" id="url" class="span12" placeHolder="http://www.example.com/service.json"/>
-					<br/>
+					<input type="text" id="url" class="span6" placeHolder="http://www.example.com/service.json"/>
 	                <select id="method" class="span2">
 						<option>GET</option>
 						<option>POST</option>
@@ -129,27 +137,31 @@ function addHeaderInput() {
 	        </div>
 	    </div>
 	
-		<hr />
-		
+		<!-- Headers -->
 		<div class="row">
-		    <h3>HTTP headers</h3>
-		    <ul id="headers" class="unstyled">
-		    </ul>
-		    <button class="btn" id="addHeader">Add new HTTP header</button>
+			<div class="control-group">
+			    <h3>HTTP headers</h3>
+			    <ul id="requestHeaders" class="unstyled">
+			    </ul>
+			    <button class="btn" id="addHeader">Add new HTTP header</button>
+		    </div>
 		</div>
 		
-		<hr />
-		
+		<!-- Request body -->
 		<div class="row">
-		    <h3>Request Body</h3>
-		    <textarea id="data" class="span6" rows="5"></textarea>
+	    	<h3>Request Body</h3>
+	    	<textarea id="data" class="span6" rows="5"></textarea>
 		</div>
-
+		
+		<!-- Submit and results -->
 		<div class="row">
 			<div class="form-actions">
 				<input type="button" class="btn btn-primary" id="send" value="Send Request" />
 			</div>
-			<pre id="results" class="prettyprint lang-js" style="display:none"></pre>
+			
+			<img id="loading" src="img/loading.gif" style="display:none" />
+			<pre id="responseHeaders" class="prettyprint" style="display:none"></pre>
+			<pre id="response" class="prettyprint lang-js" style="display:none"></pre>
 		</div>
 		
 	</div>
