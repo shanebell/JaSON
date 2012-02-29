@@ -29,7 +29,7 @@ $(document).ready(function() {
 	
 	// enable google pretty printer
 	prettyPrint();
-	
+
 	// default focus on the URL field
 	$("#url").focus();
 	
@@ -51,49 +51,37 @@ function sendRequest() {
 	$("#responseHeaders").hide();
 	$("#loading").show();
 
-    // URL validation
-    var url = $("#url").val();
-    if (url.indexOf("http") != 0) {
-        url += "http://";
-    }
-
-    // default values
-    var processData = true;
-    var contentType = "application/x-www-form-urlencoded";
-    var data = $("#data").val();
+    var ajaxArgs = {
+		url: getURL("#url"),
+        type: $("#method").val(),
+    	contentType: "application/x-www-form-urlencoded",
+        processData: true,
+		beforeSend: addHeadersToRequest,
+		dataType: "json",
+        data: $("#data").val(),
+		success: successResponse,
+		error: errorResponse
+	};
 
     // some things change depending on the method
     var method = $("#method").val();
     if (method == "GET") {
-        data = "";
+        ajaxArgs.data = "";
     } else if (method == "POST") {
-		processData = false;
-        contentType = "application/json";
+		ajaxArgs.processData = false;
+        ajaxArgs.contentType = "application/json";
     }
 
-	$.ajax({
-		"url": url,
-        type: $("#method").val(),
-        "processData": processData,
-        "contentType": contentType,
-		beforeSend: addHeadersToRequest,
-		dataType: "json",
-        "data": data,
-		success: function(data, textStatus, jqXHR) {
-			$("#responseHeaders").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders());
-			$("#response").html(JSON.stringify(data, null, 2));
-			$("#loading").hide();
-			$("#responseHeaders").show();
-			$("#response").show();
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-			$("#response").html(jqXHR.status + ": " + jqXHR.statusText);
-			$("#loading").hide();
-			$("#response").show();
-		}
-	});
+	$.ajax(ajaxArgs);
 }
 
+/**
+ * Get a URL from the given selector and tweak it if necessary
+ */
+function getURL(selector) {
+    var url = $(selector).val().trim();
+    return url.indexOf("http") != 0 ? "http://" + url : url;
+}
 
 /**
  * Iterate through all the headers and add them to the request
@@ -108,6 +96,27 @@ function addHeadersToRequest(jqXHR) {
         jqXHR.setRequestHeader(name, value);
     });
 }
+
+/**
+ * Called when the AJAX response returns success.
+ */
+function successResponse(data, textStatus, jqXHR) {
+	$("#responseHeaders").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders());
+	$("#response").html(JSON.stringify(data, null, 2));
+	$("#loading").hide();
+	$("#responseHeaders").show();
+	$("#response").show();
+};
+
+/**
+ * Called when the AJAX response returns an error.
+ */
+function errorResponse(jqXHR, textStatus, errorThrown) {
+	$("#response").html(jqXHR.status + ": " + jqXHR.statusText);
+	$("#loading").hide();
+	$("#response").show();
+}
+
 
 /**
  * Add a request header input field (name and value) to the page
