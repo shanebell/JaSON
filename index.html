@@ -27,9 +27,6 @@ body {
 <script type="text/javascript">
 $(document).ready(function() {
 	
-	// enable google pretty printer
-	prettyPrint();
-
 	// default focus on the URL field
 	$("#url").focus();
 	
@@ -103,6 +100,7 @@ function addHeadersToRequest(jqXHR) {
 function successResponse(data, textStatus, jqXHR) {
 	$("#responseHeaders").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders());
 	$("#response").html(JSON.stringify(data, null, 2));
+	prettyPrint();
 	$("#loading").hide();
 	$("#responseHeaders").show();
 	$("#response").show();
@@ -113,6 +111,7 @@ function successResponse(data, textStatus, jqXHR) {
  */
 function errorResponse(jqXHR, textStatus, errorThrown) {
 	$("#response").html(jqXHR.status + ": " + jqXHR.statusText);
+	prettyPrint();
 	$("#loading").hide();
 	$("#response").show();
 }
@@ -207,7 +206,7 @@ function addRequestParamInput() {
 			
 			<img id="loading" src="img/loading.gif" style="display:none" />
 			<pre id="responseHeaders" class="prettyprint" style="display:none"></pre>
-			<pre id="response" class="prettyprint lang-js" style="display:none"></pre>
+			<pre id="response" class="prettyprint" style="display:none"></pre>
 		</div>
 		
 	</div>
