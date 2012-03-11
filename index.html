@@ -53,7 +53,7 @@ function sendRequest() {
         type: $("#method").val(),
     	contentType: "application/x-www-form-urlencoded",
         processData: true,
-		beforeSend: addHeadersToRequest,
+		beforeSend: processHeadersAndParams,
 		dataType: "json",
         data: $("#data").val(),
 		success: successResponse,
@@ -73,7 +73,8 @@ function sendRequest() {
 }
 
 /**
- * Get a URL from the given selector and tweak it if necessary
+ * Get a URL string from the given selector and clean it up
+ * by trimming and prefixing with http if necessary.
  */
 function getURL(selector) {
     var url = $(selector).val().trim();
@@ -81,17 +82,35 @@ function getURL(selector) {
 }
 
 /**
- * Iterate through all the headers and add them to the request
+ * Add headers and parameters to the request. 
  */
-function addHeadersToRequest(jqXHR) {
+function processHeadersAndParams(jqXHR) {
 
-    // TODO validate that the headers have content
-
+	// headers
     $(".header").each(function() {
-		var name = $(".headerName", this).val();
-        var value = $(".headerValue", this).val();
-        jqXHR.setRequestHeader(name, value);
+		var name = $(".name", this).val().trim();
+        var value = $(".value", this).val().trim();
+        
+	    // TODO show an error message for headers that don't have any content
+        if (name == "" || value == "") {
+        	$(this).remove();
+        } else {
+	        jqXHR.setRequestHeader(name, value);
+        }
+        
     });
+	
+	// parameters
+	$(".requestParam").each(function() {
+		var name = $(".name", this).val().trim();
+		var value = $(".value", this).val().trim();
+		
+		if (name == "" || value == "") {
+			$(this).remove();
+		}
+		
+		// TODO: add to the request
+	});
 }
 
 /**
@@ -121,7 +140,7 @@ function errorResponse(jqXHR, textStatus, errorThrown) {
  * Add a request header input field (name and value) to the page
  */
 function addHeaderInput() {
-	var header = $("<li class='header'><input type='text' class='headerName' placeHolder='name'/>&nbsp;<input type='text' class='headerValue' placeHolder='value'/>&nbsp;<i class='icon-remove'></i></li>");
+	var header = $("<li class='header'><input type='text' class='name' placeHolder='name'/>&nbsp;<input type='text' class='value' placeHolder='value'/>&nbsp;<i class='icon-remove'></i></li>");
 	$("#requestHeaders").append(header);
 }
 
@@ -129,7 +148,7 @@ function addHeaderInput() {
  * Add a request parameter input field (name and value) to the page
  */
 function addRequestParamInput() {
-	var requestParamInput = $("<li class='requestParam'><input type='text' class='paramName' placeHolder='name'/>&nbsp;<input type='text' class='paramValue' placeHolder='value'/>&nbsp;<i class='icon-remove'></i></li>");
+	var requestParamInput = $("<li class='requestParam'><input type='text' class='name' placeHolder='name'/>&nbsp;<input type='text' class='value' placeHolder='value'/>&nbsp;<i class='icon-remove'></i></li>");
 	$("#requestParams").append(requestParamInput);
 }
 
