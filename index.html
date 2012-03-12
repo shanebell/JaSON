@@ -40,6 +40,12 @@ $(document).ready(function() {
 		$(this).parent().remove();
 	});
 	
+	$("#responseTab, #responseHeadersTab").click(function() {
+		$("#response, #responseHeaders").toggle();
+		$("#responseTab, #responseHeadersTab").removeClass("active");
+		$(this).addClass("active");
+	});
+	
 });
 
 function sendRequest() {
@@ -107,9 +113,10 @@ function processHeadersAndParams(jqXHR) {
 		
 		if (name == "" || value == "") {
 			$(this).remove();
+		} else {
+			
+			// TODO: add to the request
 		}
-		
-		// TODO: add to the request
 	});
 }
 
@@ -121,7 +128,6 @@ function successResponse(data, textStatus, jqXHR) {
 	$("#response").html(JSON.stringify(data, null, 2));
 	prettyPrint();
 	$("#loading").hide();
-	$("#responseHeaders").show();
 	$("#response").show();
 };
 
@@ -224,8 +230,19 @@ function addRequestParamInput() {
 			</div>
 			
 			<img id="loading" src="img/loading.gif" style="display:none" />
-			<pre id="responseHeaders" class="prettyprint" style="display:none"></pre>
+			
+			<!-- Response tabs -->
+			<ul class="nav nav-tabs">
+				<li id="responseTab" class="active">
+					<a href="javascript:void(0)">Response</a>
+				</li>
+				<li id="responseHeadersTab">
+					<a href="javascript:void(0)">Response Headers</a>
+				</li>
+			</ul>
+			
 			<pre id="response" class="prettyprint" style="display:none"></pre>
+			<pre id="responseHeaders" class="prettyprint" style="display:none"></pre>
 		</div>
 		
 	</div>
