@@ -68,7 +68,39 @@ $(document).ready(function() {
 	
 });
 
+/**
+ * Reset error messages etc
+ */
+function reset() {
+	$(".help-inline").hide();
+	$(".control-group").removeClass("error");
+}
+
+/**
+ * Validate inputs
+ */
+function validate() {
+	
+	var valid = true;
+	
+	var url = $("#url").val().trim();
+	if (url == "") {
+		$("#urlGroup").addClass("error");
+		$("#urlError").html("URL is required");
+		$("#urlError").show();
+		valid = false;
+	}
+	
+	return valid;
+}
+
 function sendRequest() {
+	
+	reset();
+	
+	if (!validate()) {
+		return false;	
+	}
 	
 	$("#response").hide();
 	$("#responseHeaders").hide();
@@ -183,10 +215,15 @@ function addHeaderInput() {
 	
 		<!-- URL and method -->
 		<div class="row">
-			<div class="control-group">
+			<div id="urlGroup" class="control-group">
 	            <div class="controls">
 					<input type="text" id="url" class="span6" placeHolder="http://www.example.com/service.json"/>
-	                <select id="method" class="span2">
+					<span id="urlError" class="help-inline" style="display:none"></span>
+	            </div>
+	        </div>
+			<div class="control-group">
+	            <div class="controls">
+					<select id="method" class="span2">
 						<option>GET</option>
 						<option>POST</option>
 						<option>PUT</option>
@@ -201,16 +238,22 @@ function addHeaderInput() {
 		<div class="row">
 			<div class="control-group">
 			    <h3>HTTP headers</h3>
-			    <ul id="requestHeaders" class="unstyled">
-			    </ul>
-			    <button class="btn" id="addHeader">Add HTTP header</button>
+			    <div class="controls">
+				    <ul id="requestHeaders" class="unstyled">
+				    </ul>
+				    <button class="btn" id="addHeader">Add HTTP header</button>
+			    </div>
 		    </div>
 		</div>
 		
 		<!-- Request body -->
 		<div class="row">
 	    	<h3>Request Body</h3>
-	    	<textarea id="data" class="span6" rows="5"></textarea>
+	    	<div class="control-group">
+	    		<div class="controls">
+			    	<textarea id="data" class="span6" rows="5"></textarea>
+	    		</div>
+	    	</div>
 		</div>
 		
 		<!-- Submit and results -->
@@ -218,8 +261,6 @@ function addHeaderInput() {
 			<div class="form-actions">
 				<input type="button" class="btn btn-primary" id="send" value="Send Request" />
 			</div>
-			
-			<img id="loading" src="img/loading.gif" style="display:none" />
 			
 			<!-- Response tabs -->
 			<ul class="nav nav-tabs">
@@ -230,6 +271,8 @@ function addHeaderInput() {
 					<a href="javascript:void(0)">Response Headers</a>
 				</li>
 			</ul>
+			
+			<img id="loading" src="img/loading.gif" style="display:none" />
 			
 			<pre id="response" class="prettyprint" style="display:none"></pre>
 			<pre id="responseHeaders" class="prettyprint" style="display:none"></pre>
