@@ -50,8 +50,6 @@ $(document).ready(function() {
 	
 	$("#addHeader").click(addHeaderInput);
 
-	$("#addRequestParam").click(addRequestParamInput);
-	
 	$("#send").click(sendRequest);
 	
 	$(document).on("click", ".icon-remove", function() {
@@ -81,7 +79,7 @@ function sendRequest() {
         type: $("#method").val(),
     	contentType: "application/x-www-form-urlencoded",
         processData: true,
-		beforeSend: processHeadersAndParams,
+		beforeSend: processHeaders,
 		dataType: "json",
         data: $("#data").val(),
 		success: successResponse,
@@ -110,9 +108,9 @@ function getURL(selector) {
 }
 
 /**
- * Add headers and parameters to the request. 
+ * Add headers to the request. 
  */
-function processHeadersAndParams(jqXHR) {
+function processHeaders(jqXHR) {
 
 	// headers
     $(".header").each(function() {
@@ -120,6 +118,7 @@ function processHeadersAndParams(jqXHR) {
         var value = $(".value", this).val().trim();
         
 	    // TODO show an error message for headers that don't have any content
+	    
         if (name == "" || value == "") {
         	$(this).remove();
         } else {
@@ -127,19 +126,6 @@ function processHeadersAndParams(jqXHR) {
         }
         
     });
-	
-	// parameters
-	$(".requestParam").each(function() {
-		var name = $(".name", this).val().trim();
-		var value = $(".value", this).val().trim();
-		
-		if (name == "" || value == "") {
-			$(this).remove();
-		} else {
-			
-			// TODO: add to the request
-		}
-	});
 }
 
 /**
@@ -170,14 +156,6 @@ function errorResponse(jqXHR, textStatus, errorThrown) {
 function addHeaderInput() {
 	var header = $("<li class='header'><input type='text' class='name' placeHolder='name'/>&nbsp;<input type='text' class='value' placeHolder='value'/>&nbsp;<i class='icon-remove'></i></li>");
 	$("#requestHeaders").append(header);
-}
-
-/**
- * Add a request parameter input field (name and value) to the page
- */
-function addRequestParamInput() {
-	var requestParamInput = $("<li class='requestParam'><input type='text' class='name' placeHolder='name'/>&nbsp;<input type='text' class='value' placeHolder='value'/>&nbsp;<i class='icon-remove'></i></li>");
-	$("#requestParams").append(requestParamInput);
 }
 
 </script>
@@ -218,16 +196,6 @@ function addRequestParamInput() {
 	            </div>
 	        </div>
 	    </div>
-	
-		<!-- Request Parameters -->
-		<div class="row">
-			<div class="control-group">
-			    <h3>Request parameters</h3>
-			    <ul id="requestParams" class="unstyled">
-			    </ul>
-			    <button class="btn" id="addRequestParam">Add request parameter</button>
-		    </div>
-		</div>
 
 		<!-- Request headers -->
 		<div class="row">
