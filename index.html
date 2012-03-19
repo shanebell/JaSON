@@ -56,21 +56,7 @@ $(document).ready(function() {
 		$(this).parent().remove();
 	});
 	
-	$("#responseTab, #responseHeadersTab").click(function() {
-		
-		$("#responseTab, #responseHeadersTab").removeClass("active");
-		$(this).addClass("active");
-		
-		var response = $("#response");
-		if (response.html() != "") {
-			response.toggle();
-		}
-		
-		var responseHeaders = $("#responseHeaders");
-		if (responseHeaders.html() != "") {
-			responseHeaders.toggle();
-		}
-	});
+	$("#responseTab, #responseHeadersTab").click(manageTabs);
 	
 	$("#aboutModal").modal({
 		show: false
@@ -115,6 +101,28 @@ function validate() {
 	return valid;
 }
 
+/**
+ * Manage the display of the result tabs.
+ */
+function manageTabs() {
+	
+	$("#responseTab, #responseHeadersTab").removeClass("active");
+	$(this).addClass("active");
+	
+	var response = $("#response");
+	if (response.html() != "") {
+		response.toggle();
+	}
+	
+	var responseHeaders = $("#responseHeaders");
+	if (responseHeaders.html() != "") {
+		responseHeaders.toggle();
+	}
+}
+
+/**
+ * Construct the request and send it.
+ */
 function sendRequest() {
 	
 	reset();
