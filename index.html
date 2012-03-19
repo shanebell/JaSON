@@ -45,6 +45,10 @@ body {
 <script type="text/javascript">
 $(document).ready(function() {
 	
+	var version = "v1.0.0";
+	
+	$(".version").html(version);
+	
 	// default focus on the URL field
 	$("#url").focus();
 	
@@ -95,6 +99,7 @@ function validate() {
 		$("#urlGroup").addClass("error");
 		$("#urlError").html("URL is required");
 		$("#urlError").show();
+		$("#url").focus();
 		valid = false;
 	}
 	
@@ -302,12 +307,18 @@ function addHeaderInput() {
 			<pre id="responseHeaders" class="prettyprint" style="display:none"></pre>
 		</div>
 		
+		<!-- Footer -->
+      <footer class="footer">
+        <p class="help-block pull-right version"></p>
+      </footer>
+		
 	</div>
 
 	<div id="aboutModal" class="modal fade" style="display:none">
 		<div class="modal-header">
 			<a class="close" data-dismiss="modal">x</a>
 			<h3>JaSON</h3>
+			<p class="version"></p>
 		</div>
 		<div class="modal-body">
 			<p>
@@ -319,7 +330,7 @@ function addHeaderInput() {
 				<a href="mailto:shane.bell@gmail.com" target="new">shane.bell@gmail.com</a>
 			</p>
 			<p>
-				JaSON is distributed under the terms of the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>
+				JaSON is distributed under the terms of the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>
 			</p>
 			<p>
 				Source code available on GitHub
