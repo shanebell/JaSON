@@ -15,10 +15,18 @@
 #   limitations under the License.
 #
 
-
 if [ $# -eq 1 ]; then
+
+	if [ -f JaSON-$1.zip ]; then
+		echo "- Deleting old zip file."
+		rm JaSON-$1.zip
+	fi
+	
+	echo "- Building JaSON-$1 zip file."
     zip JaSON-$1.zip LICENSE manifest.json index.html css/* img/* js/*
+    
 else
     echo "Usage: build version"
+    echo " - builds a file called JaSON-version.zip"
 fi
 
