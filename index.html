@@ -57,9 +57,19 @@ $(document).ready(function() {
 	});
 	
 	$("#responseTab, #responseHeadersTab").click(function() {
-		$("#response, #responseHeaders").toggle();
+		
 		$("#responseTab, #responseHeadersTab").removeClass("active");
 		$(this).addClass("active");
+		
+		var response = $("#response");
+		if (response.html() != "") {
+			response.toggle();
+		}
+		
+		var responseHeaders = $("#responseHeaders");
+		if (responseHeaders.html() != "") {
+			responseHeaders.toggle();
+		}
 	});
 	
 	$("#aboutModal").modal({
@@ -69,15 +79,26 @@ $(document).ready(function() {
 });
 
 /**
- * Reset error messages etc
+ * Reset everything before sending a request.
  */
 function reset() {
+	
+	$("#responseHeadersTab").removeClass("active");
+	$("#responseTab").addClass("active");
+	
+	$("#response").hide();
+	$("#response").html("");
+	$("#responseHeaders").hide();
+	$("#responseHeaders").html("");
+	
 	$(".help-inline").hide();
+	$(".help-inline").html("");
+	
 	$(".control-group").removeClass("error");
 }
 
 /**
- * Validate inputs
+ * Validate inputs and show error messages.
  */
 function validate() {
 	
@@ -102,8 +123,6 @@ function sendRequest() {
 		return false;	
 	}
 	
-	$("#response").hide();
-	$("#responseHeaders").hide();
 	$("#loading").show();
 
     var ajaxArgs = {
@@ -143,8 +162,6 @@ function getURL(selector) {
  * Add headers to the request. 
  */
 function processHeaders(jqXHR) {
-
-	// headers
     $(".header").each(function() {
 		var name = $(".name", this).val().trim();
         var value = $(".value", this).val().trim();
@@ -156,7 +173,6 @@ function processHeaders(jqXHR) {
         } else {
 	        jqXHR.setRequestHeader(name, value);
         }
-        
     });
 }
 
@@ -175,12 +191,12 @@ function successResponse(data, textStatus, jqXHR) {
  * Called when the AJAX response returns an error.
  */
 function errorResponse(jqXHR, textStatus, errorThrown) {
+	$("#responseHeaders").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders());
 	$("#response").html(jqXHR.status + ": " + jqXHR.statusText);
 	prettyPrint();
 	$("#loading").hide();
 	$("#response").show();
 }
-
 
 /**
  * Add a request header input field (name and value) to the page
