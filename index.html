@@ -76,6 +76,11 @@ function reset() {
 	$("#responseHeadersTab").removeClass("active");
 	$("#responseTab").addClass("active");
 	
+	$("#responseCode").hide();
+	$("#responseCode").html("");
+	$("#responseCode").removeClass("label-important");
+	$("#responseCode").removeClass("label-success");
+	
 	$("#response").hide();
 	$("#response").html("");
 	$("#responseHeaders").hide();
@@ -193,10 +198,13 @@ function processHeaders(jqXHR) {
  * Called when the AJAX response returns success.
  */
 function successResponse(data, textStatus, jqXHR) {
-	$("#responseHeaders").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders());
+	$("#responseCode").html(jqXHR.status + ": " + jqXHR.statusText);
+	$("#responseCode").addClass("label-success");
 	$("#response").html(JSON.stringify(data, null, 2));
+	$("#responseHeaders").html(jqXHR.getAllResponseHeaders());
 	prettyPrint();
 	$("#loading").hide();
+	$("#responseCode").show();
 	$("#response").show();
 };
 
@@ -204,11 +212,16 @@ function successResponse(data, textStatus, jqXHR) {
  * Called when the AJAX response returns an error.
  */
 function errorResponse(jqXHR, textStatus, errorThrown) {
-	$("#responseHeaders").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders());
-	var data = JSON.parse(jqXHR.responseText);
-	$("#response").html(jqXHR.status + ": " + jqXHR.statusText + "\n" + JSON.stringify(data, null, 2));
+	$("#responseCode").html(jqXHR.status + ": " + jqXHR.statusText);
+	$("#responseCode").addClass("label-important");
+	// TODO: deal with badly formed JSON
+	//var data = JSON.parse(jqXHR.responseText);
+	//$("#response").html(JSON.stringify(data, null, 2));
+	$("#response").html(jqXHR.responseText);
+	$("#responseHeaders").html(jqXHR.getAllResponseHeaders());
 	prettyPrint();
 	$("#loading").hide();
+	$("#responseCode").show();
 	$("#response").show();
 }
 
@@ -316,6 +329,9 @@ _gaq.push(['_trackPageview']);
 			
 			<img id="loading" src="img/loading.gif" style="display:none" />
 			
+			<p>
+				<span id="responseCode" class="label" style="display:none"></span>
+			</p>
 			<pre id="response" class="prettyprint" style="display:none"></pre>
 			<pre id="responseHeaders" class="prettyprint" style="display:none"></pre>
 		</div>
