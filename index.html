@@ -205,7 +205,8 @@ function successResponse(data, textStatus, jqXHR) {
  */
 function errorResponse(jqXHR, textStatus, errorThrown) {
 	$("#responseHeaders").html(jqXHR.status + ": " +jqXHR.statusText + "\n" + jqXHR.getAllResponseHeaders());
-	$("#response").html(jqXHR.status + ": " + jqXHR.statusText);
+	var data = JSON.parse(jqXHR.responseText);
+	$("#response").html(jqXHR.status + ": " + jqXHR.statusText + "\n" + JSON.stringify(data, null, 2));
 	prettyPrint();
 	$("#loading").hide();
 	$("#response").show();
