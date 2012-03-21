@@ -13,6 +13,7 @@
     "128": "img/icon_128.png"
   },
   "permissions": [
-    "http://*/"
+    "http://*/",
+    "https://*/"
   ]
 }
