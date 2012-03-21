@@ -214,10 +214,13 @@ function successResponse(data, textStatus, jqXHR) {
 function errorResponse(jqXHR, textStatus, errorThrown) {
 	$("#responseCode").html(jqXHR.status + ": " + jqXHR.statusText);
 	$("#responseCode").addClass("label-important");
-	// TODO: deal with badly formed JSON
-	//var data = JSON.parse(jqXHR.responseText);
-	//$("#response").html(JSON.stringify(data, null, 2));
-	$("#response").html(jqXHR.responseText);
+	if (jqXHR.getResponseHeader("Content-Type").indexOf("application/json") == 0) {
+		try {
+	    	$("#response").html(JSON.stringify(JSON.parse(jqXHR.responseText), null, 2));
+		} catch (exception) {
+	    	$("#response").html(jqXHR.responseText);
+		}
+	}
 	$("#responseHeaders").html(jqXHR.getAllResponseHeaders());
 	prettyPrint();
 	$("#loading").hide();
