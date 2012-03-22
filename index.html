@@ -69,7 +69,7 @@ $(document).ready(function() {
 });
 
 /**
- * Reset everything before sending a request.
+ * Reset field visibility, css classes etc back to the default state.
  */
 function reset() {
 	
@@ -131,7 +131,7 @@ function manageTabs() {
 }
 
 /**
- * Construct the request and send it.
+ * Construct a request and send it.
  */
 function sendRequest() {
 	
@@ -198,32 +198,43 @@ function processHeaders(jqXHR) {
  * Called when the AJAX response returns success.
  */
 function successResponse(data, textStatus, jqXHR) {
-	$("#responseCode").html(jqXHR.status + ": " + jqXHR.statusText);
-	$("#responseCode").addClass("label-success");
-	$("#response").html(JSON.stringify(data, null, 2));
-	$("#responseHeaders").html(jqXHR.getAllResponseHeaders());
-	prettyPrint();
-	$("#loading").hide();
-	$("#responseCode").show();
-	$("#response").show();
+	processResponse(jqXHR, true);
 };
 
 /**
  * Called when the AJAX response returns an error.
  */
 function errorResponse(jqXHR, textStatus, errorThrown) {
+	processResponse(jqXHR, false);
+}
+
+/**
+ * Process a response. A successful (ie: non error) response is indicated by setting 'success' to true.
+ */
+function processResponse(jqXHR, success) {
+	
+	// response code and headers
+	$("#responseCode").addClass(success ? "label-success" : "label-important");
 	$("#responseCode").html(jqXHR.status + ": " + jqXHR.statusText);
-	$("#responseCode").addClass("label-important");
+	$("#responseHeaders").html(jqXHR.getAllResponseHeaders());
+
+	// parse the response body if there is one
+	var data = jqXHR.responseText;
 	var contentType = jqXHR.getResponseHeader("Content-Type");
-	if (contentType != null && contentType.indexOf("application/json") == 0) {
+	if (contentType != null && contentType.indexOf("application/json") == 0 && data != null) {
 		try {
-	    	$("#response").html(JSON.stringify(JSON.parse(jqXHR.responseText), null, 2));
+	    	$("#response").html(JSON.stringify(JSON.parse(data), null, 2));
 		} catch (exception) {
-	    	$("#response").html(jqXHR.responseText);
+			
+			// JSON must be invalid, just show it unparsed
+	    	$("#response").html(data);
 		}
 	}
-	$("#responseHeaders").html(jqXHR.getAllResponseHeaders());
+	
+	// pretty print the response and response headers
 	prettyPrint();
+	
+	// show the response
 	$("#loading").hide();
 	$("#responseCode").show();
 	if ($("#response").html() != "") {
