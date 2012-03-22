@@ -214,7 +214,8 @@ function successResponse(data, textStatus, jqXHR) {
 function errorResponse(jqXHR, textStatus, errorThrown) {
 	$("#responseCode").html(jqXHR.status + ": " + jqXHR.statusText);
 	$("#responseCode").addClass("label-important");
-	if (jqXHR.getResponseHeader("Content-Type").indexOf("application/json") == 0) {
+	var contentType = jqXHR.getResponseHeader("Content-Type");
+	if (contentType != null && contentType.indexOf("application/json") == 0) {
 		try {
 	    	$("#response").html(JSON.stringify(JSON.parse(jqXHR.responseText), null, 2));
 		} catch (exception) {
