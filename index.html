@@ -110,26 +110,34 @@ function validate() {
 	}
 	
 	// validate request headers
+	var headers = [];
 	$(".header").each(function() {
-		var name = $(".name", this);
-        var value = $(".value", this);
+		var name = $(".name", this).val().trim().toLowerCase();
+        var value = $(".value", this).val().trim();
         
-        if (name.val().trim() == "" || value.val().trim() == "") {
+        if (name == "" || value == "") {
         	valid = false;
         	$(".help-inline", this).html("Header name and value are required");
         	$(".control-group", this).addClass("error");
         	$(".help-inline", this).show();
+        } else if (headers.indexOf(name) >= 0) {
+        	valid = false;
+        	$(".help-inline", this).html("A header with this name already exists");
+        	$(".control-group", this).addClass("error");
+        	$(".help-inline", this).show();
+        } else {
+			headers.push(name);
         }
     });
 	
-	// validate the request body
+	// validate request body
 	var requestBody = $("#requestBody").val().trim();
 	if (requestBody != "") {
 		try {
 			JSON.parse(requestBody);
 		} catch (exception) {
 			valid = false;
-			$("#requestBodyError").html("Request body is not valid JSON");
+			$("#requestBodyError").html("Invalid JSON: " + exception.message);
 			$("#requestBodyGroup").addClass("error");
 			$("#requestBodyError").show();
 		}		
