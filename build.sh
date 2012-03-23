@@ -23,7 +23,7 @@ if [ $# -eq 1 ]; then
 	fi
 	
 	echo "- Building JaSON-$1 zip file."
-    zip JaSON-$1.zip LICENSE manifest.json index.html css/* img/* js/*
+    zip JaSON-$1.zip LICENSE NOTICE manifest.json index.html css/* img/* js/*
     
 else
     echo "Usage: build version"
