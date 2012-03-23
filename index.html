@@ -45,7 +45,7 @@ body {
 <script type="text/javascript">
 $(document).ready(function() {
 	
-	var version = "v1.0.0";
+	var version = "v1.0";
 	
 	$(".version").html(version);
 	
@@ -56,8 +56,8 @@ $(document).ready(function() {
 
 	$("#send").click(sendRequest);
 	
-	$(document).on("click", ".icon-remove", function() {
-		$(this).parent().remove();
+	$(document).on("click", ".deleteHeader", function() {
+		$(this).parents(".header").remove();
 	});
 	
 	$("#responseTab, #responseHeadersTab").click(manageTabs);
@@ -99,13 +99,40 @@ function validate() {
 	
 	var valid = true;
 	
+	// validate URL
 	var url = $("#url").val().trim();
 	if (url == "") {
-		$("#urlGroup").addClass("error");
+		valid = false;
 		$("#urlError").html("URL is required");
+		$("#urlGroup").addClass("error");
 		$("#urlError").show();
 		$("#url").focus();
-		valid = false;
+	}
+	
+	// validate request headers
+	$(".header").each(function() {
+		var name = $(".name", this);
+        var value = $(".value", this);
+        
+        if (name.val().trim() == "" || value.val().trim() == "") {
+        	valid = false;
+        	$(".help-inline", this).html("Header name and value are required");
+        	$(".control-group", this).addClass("error");
+        	$(".help-inline", this).show();
+        }
+    });
+	
+	// validate the request body
+	var requestBody = $("#requestBody").val().trim();
+	if (requestBody != "") {
+		try {
+			JSON.parse(requestBody);
+		} catch (exception) {
+			valid = false;
+			$("#requestBodyError").html("Request body is not valid JSON");
+			$("#requestBodyGroup").addClass("error");
+			$("#requestBodyError").show();
+		}		
 	}
 	
 	return valid;
@@ -150,7 +177,7 @@ function sendRequest() {
         processData: true,
 		beforeSend: processHeaders,
 		dataType: "json",
-        data: $("#data").val(),
+        data: $("#requestBody").val(),
 		success: successResponse,
 		error: errorResponse
 	};
@@ -164,6 +191,8 @@ function sendRequest() {
         ajaxArgs.contentType = "application/json";
     }
 
+    trackRequest(ajaxArgs.url);
+    
 	$.ajax(ajaxArgs);
 }
 
@@ -184,8 +213,6 @@ function processHeaders(jqXHR) {
 		var name = $(".name", this).val().trim();
         var value = $(".value", this).val().trim();
         
-	    // TODO show an error message for headers that don't have any content
-	    
         if (name == "" || value == "") {
         	$(this).remove();
         } else {
@@ -246,8 +273,11 @@ function processResponse(jqXHR, success) {
  * Add a request header input field (name and value) to the page
  */
 function addHeaderInput() {
-	var header = $("<li class='header'><input type='text' class='name' placeHolder='name'/>&nbsp;<input type='text' class='value' placeHolder='value'/>&nbsp;<i class='icon-remove'></i></li>");
+	var header = $(".headerPrototype").clone();
+	header.removeClass("headerPrototype");
+	header.addClass("header");
 	$("#requestHeaders").append(header);
+	header.show();
 }
 
 /**
@@ -262,6 +292,10 @@ _gaq.push(['_trackPageview']);
 	ga.src = 'https://ssl.google-analytics.com/ga.js';
 	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
+
+function trackRequest(url) {
+	_gaq.push(['_trackEvent', 'Request made to ' + url]);	
+}
 </script>
 </head>
     
@@ -312,6 +346,18 @@ _gaq.push(['_trackPageview']);
 			    <h3>HTTP headers</h3>
 			    <div class="controls">
 				    <ul id="requestHeaders" class="unstyled">
+				    	
+				    	<!-- Prototype header row to be cloned and added to the list -->
+				    	<li class="headerPrototype" style="display:none">
+				    		<div class="control-group">
+				    			<div class="controls">
+				    				<input type="text" class="name" placeHolder="name"/>&nbsp;
+				    				<input type="text" class="value" placeHolder="value"/>&nbsp;
+				    				<a href="javascript:void(0)"<i class="icon-remove deleteHeader"></i></a>
+				    				<span class="help-inline" style="display:none"></span>
+				    			</div>
+				    		</div>
+				    	</li>
 				    </ul>
 				    <button class="btn" id="addHeader">Add HTTP header</button>
 			    </div>
@@ -321,9 +367,10 @@ _gaq.push(['_trackPageview']);
 		<!-- Request body -->
 		<div class="row">
 	    	<h3>Request Body</h3>
-	    	<div class="control-group">
+	    	<div id="requestBodyGroup" class="control-group">
 	    		<div class="controls">
-			    	<textarea id="data" class="span6" rows="5"></textarea>
+			    	<textarea id="requestBody" class="span6" rows="5"></textarea>
+					<span id="requestBodyError" class="help-inline" style="display:none"></span>
 	    		</div>
 	    	</div>
 		</div>
@@ -362,7 +409,7 @@ _gaq.push(['_trackPageview']);
 
 	<div id="aboutModal" class="modal fade" style="display:none">
 		<div class="modal-header">
-			<a class="close" data-dismiss="modal">x</a>
+			<i class="icon-remove close" data-dismiss="modal"></i>
 			<h3>JaSON</h3>
 			<p class="version"></p>
 		</div>
@@ -376,7 +423,7 @@ _gaq.push(['_trackPageview']);
 				<a href="mailto:shane.bell@gmail.com" target="new">shane.bell@gmail.com</a>
 			</p>
 			<p>
-				JaSON is distributed under the terms of the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>
+				JaSON is open source and distributed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>
 			</p>
 			<p>
 				Source code available on GitHub
