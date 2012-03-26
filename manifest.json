@@ -4,7 +4,7 @@
   "description": "JaSON: JSON test utility.",
   "app": {
     "launch": {
-	  "local_path": "index.html"    
+	  "local_path": "JaSON.html"    
     }
   },
   "icons": {

@@ -17,13 +17,32 @@
 
 if [ $# -eq 1 ]; then
 
-	if [ -f JaSON-$1.zip ]; then
-		echo "- Deleting old zip file."
-		rm JaSON-$1.zip
+	if [ -d build ]; then
+		echo "- Deleting old build directory."
+		rm -rf build
 	fi
 	
+	echo "- Creating build directory"
+	mkdir build
+	
+	echo "- Compressing Javascript."
+	mkdir build/js
+	java -jar tools/compiler.jar --js js/JaSON.js --js_output_file build/js/JaSON.min.js
+	
+	echo "- Updating references in HTML"
+	sed -e s/JaSON.js/JaSON.min.js/ JaSON.html > build/JaSON.html
+	
+	echo "- Copying build artifacts"
+	cp -r LICENSE NOTICE manifest.json css img js build/
+	rm build/js/JaSON.js
+	
 	echo "- Building JaSON-$1 zip file."
-    zip JaSON-$1.zip LICENSE NOTICE manifest.json index.html css/* img/* js/*
+	cd build
+    zip -q -r JaSON-$1.zip *
+    cd ..
+    
+    echo "- Build complete. Zip file contains the following files:"
+    unzip -l build/JaSON-$1.zip
     
 else
     echo "Usage: build version"
