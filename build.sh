@@ -18,31 +18,37 @@
 if [ $# -eq 1 ]; then
 
 	if [ -d build ]; then
-		echo "- Deleting old build directory."
+		echo "Deleting old build directory...\c"
 		rm -rf build
+		echo "\t\t[DONE]"
 	fi
 	
-	echo "- Creating build directory"
+	echo "Creating build directory...\c"
 	mkdir build
+	echo "\t\t[DONE]"
 	
-	echo "- Compressing Javascript."
+	echo "Compressing Javascript...\c"
 	mkdir build/js
 	java -jar tools/compiler.jar --js js/JaSON.js --js_output_file build/js/JaSON.min.js
+	echo "\t\t[DONE]"
 	
-	echo "- Updating references in HTML"
+	echo "Updating references in HTML...\c"
 	sed -e s/JaSON.js/JaSON.min.js/ JaSON.html > build/JaSON.html
+	echo "\t\t[DONE]"
 	
-	echo "- Copying build artifacts"
+	echo "Copying build artifacts...\c"
 	cp -r LICENSE NOTICE manifest.json css img js build/
 	rm build/js/JaSON.js
+	echo "\t\t[DONE]"
 	
-	echo "- Building JaSON-$1 zip file."
+	echo "Building JaSON-$1 zip file...\c"
 	cd build
     zip -q -r JaSON-$1.zip *
     cd ..
+	echo "\t\t[DONE]"
     
-    echo "- Build complete. Zip file contains the following files:"
-    unzip -l build/JaSON-$1.zip
+    echo "\nBuild complete. JaSON-$1.zip contains the following files:\n"
+    unzip -q -l build/JaSON-$1.zip
     
 else
     echo "Usage: build version"
