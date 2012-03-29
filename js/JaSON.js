@@ -1,9 +1,5 @@
 $(document).ready(function() {
 	
-	var version = "v1.0";
-	
-	$(".version").html(version);
-	
 	// default focus on the URL field
 	$("#url").focus();
 	

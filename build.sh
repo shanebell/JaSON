@@ -27,18 +27,17 @@ if [ $# -eq 1 ]; then
 	mkdir build
 	echo "\t\t[DONE]"
 	
-	echo "Compressing Javascript...\c"
-	mkdir build/js
-	java -jar tools/compiler.jar --js js/JaSON.js --js_output_file build/js/JaSON.min.js
-	echo "\t\t[DONE]"
-	
-	echo "Updating references in HTML...\c"
-	sed -e s/JaSON.js/JaSON.min.js/ JaSON.html > build/JaSON.html
-	echo "\t\t[DONE]"
-	
 	echo "Copying build artifacts...\c"
 	cp -r LICENSE NOTICE manifest.json css img js build/
+	echo "\t\t[DONE]"
+	
+	echo "Compressing Javascript...\c"
+	java -jar tools/compiler.jar --js build/js/JaSON.js --js_output_file build/js/JaSON.min.js
 	rm build/js/JaSON.js
+	echo "\t\t[DONE]"
+	
+	echo "Replacing values in HTML...\c"
+	sed -e s/JaSON.js/JaSON.min.js/ -e s/DEVELOPMENT/$1/ JaSON.html > build/JaSON.html
 	echo "\t\t[DONE]"
 	
 	echo "Building JaSON-$1 zip file...\c"
