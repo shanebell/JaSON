@@ -1,13 +1,17 @@
    JaSON - JSON Test Utility - a Google Chrome plugin
    Copyright 2012 Shane Bell
    
-   Javascript logic built using JQuery which is open source
+   Javascript functionality built with JQuery which is open source
    and licensed under the MIT License.
    http://jquery.com
    
-   User interface styling built using Twitter Bootstrap which
-   is open source and licensed under Apache License v2.0.
-   http://twitter.github.com/bootstrap/  
+   User interface styling built with Twitter Bootstrap which is
+   open source and licensed under the Apache License v2.0.
+   http://twitter.github.com/bootstrap/
+   
+   Javascript compression built with Google Closure Compiler which
+   is open source and licensed under the Apache License v2.0
+   http://developers.google.com/closure/compiler
    
    Friday the 13th icon designed by Tony Gil 
    http://tonygil.com/
