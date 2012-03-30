@@ -2,4 +2,4 @@ JaSON: JSON Test Utility
 
 JaSON is a Google Chrome plugin that allows for testing of JSON web services.
 
- https://chrome.google.com/webstore/detail/jajpocadndbhajcmmfenmofajfkpgghj
+https://chrome.google.com/webstore/detail/oealdlhfjifhgbmjnenhkgffglaibojf
