@@ -8,9 +8,9 @@ Requires the following for an extension:
 
 - 1280x800 or 640x400 screenshots
 
-- 440x280 promo code
+- 440x280 promo image
 
-- 920x680 promo code (optional)
+- 920x680 promo image (optional)
 
-- 1400x560 promot code (optional)
+- 1400x560 promot image (optional)
  
