@@ -12,5 +12,4 @@ Requires the following for an extension:
 
 - 920x680 promo image (optional)
 
-- 1400x560 promot image (optional)
- 
+- 1400x560 promo image (optional)
