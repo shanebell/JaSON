@@ -38,6 +38,7 @@ if [ $# -eq 1 ]; then
 	
 	echo "Replacing values in HTML...\c"
 	sed -e s/JaSON.js/JaSON.min.js/ -e s/DEVELOPMENT/$1/ JaSON.html > build/JaSON.html
+	sed -e s/DEVELOPMENT/$1/ manifest.json > build/manifest.json
 	echo "\t\t[DONE]"
 	
 	echo "Building JaSON-$1 zip file...\c"
