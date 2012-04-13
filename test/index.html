@@ -40,20 +40,23 @@
         	function createTestElement(elem) {
         		$("#qunit-fixture").append(elem);
         	}
-
+        	
+        	/*
+        	 * Tests for the reset function.
+        	 */ 
         	module("reset()");
         
 	        test("should reset 'responseHeadersTab' element", function() {
 	        	createTestElement("<div id='responseHeadersTab'/>");
 	        	$("#responseHeadersTab").addClass("active");
 	        	JaSON.reset();
-	        	equal($("#responseHeadersTab").attr("class"), "", "CSS classes have been removed");
+	        	equal($("#responseHeadersTab").attr("class"), "", ".active class has been removed");
 	        });
 	        
 	        test("should reset 'responseTab' element", function() {
 	        	createTestElement("<div id='responseTab'/>");
 	        	JaSON.reset();
-	        	equal($("#responseTab").attr("class"), "active", "CSS classes 'active' has been added");
+	        	equal($("#responseTab").attr("class"), "active", ".active class has been added");
 	        });
         
             test("should reset 'responseCode' element", function() {
@@ -63,7 +66,7 @@
             	$("#responseCode").addClass("label-important");
             	$("#responseCode").addClass("label-success");
                 JaSON.reset();
-                equal($("#responseCode").attr("class"), "", "CSS classes have been removed");
+                equal($("#responseCode").attr("class"), "", ".label-important and .label-success classes have been removed");
                 equal($("#responseCode").html(), "", "HTML content has been removed");
 	        	ok($("#responseCode").not(":visible"), "Element is not visible");
             });
@@ -87,45 +90,91 @@
 	        });
 			
 			test("should reset 'control-group' elements", function() {
-				createTestElement("<div id='error1' class='control-group' />");
-				createTestElement("<div id='error2' class='control-group' />");
+				createTestElement("<div id='error1' class='control-group'/>");
+				createTestElement("<div id='error2' class='control-group'/>");
 				$(".control-group").addClass("error");
 	        	JaSON.reset();
-	        	ok($("#error1").is(".control-group"));
-	        	ok($("#error1").not(".error"));
-	        	ok($("#error2").is(".control-group"));
-	        	ok($("#error2").not(".error"));
+	        	ok($("#error1").is(".control-group"), ".control-group class still exists");
+	        	ok($("#error1").not(".error"), ".error class has been removed");
+	        	ok($("#error2").is(".control-group"), ".control-group class still exists	");
+	        	ok($("#error2").not(".error"), ".error class has been removed");
 	        });
 			
-			
+			/**
+			 * Tests for the getURL() function.
+			 */
 			module("getURL()");
 			
 			test("should prefix URL with http if necessary", function() {
 				createTestElement("<input type='text' id='url'/>");
 				
 				$("#url").val("www.example.com");
-				equal(JaSON.getURL("#url"), "http://www.example.com");
+				equal(JaSON.getURL("#url"), "http://www.example.com", "URL has ben prefixed with http://");
 				
 				$("#url").val("http://www.example.com");
-				equal(JaSON.getURL("#url"), "http://www.example.com");
+				equal(JaSON.getURL("#url"), "http://www.example.com", "URL has ben prefixed with http://");
 				
 				$("#url").val("https://www.example.com");
-				equal(JaSON.getURL("#url"), "https://www.example.com");
+				equal(JaSON.getURL("#url"), "https://www.example.com", "URL has ben prefixed with http://");
 			});
 			
 			test("should trim whitespace from URL", function() {
 				createTestElement("<input type='text' id='url'/>");
 				
 				$("#url").val("  	www.example.com  ");
-				equal(JaSON.getURL("#url"), "http://www.example.com");
+				equal(JaSON.getURL("#url"), "http://www.example.com", "URL has been trimmed of whitespace");
 				
 				$("#url").val("  	http://www.example.com  ");
-				equal(JaSON.getURL("#url"), "http://www.example.com");
+				equal(JaSON.getURL("#url"), "http://www.example.com", "URL has been trimmed of whitespace");
 				
 				$("#url").val("  	https://www.example.com  ");
-				equal(JaSON.getURL("#url"), "https://www.example.com");
+				equal(JaSON.getURL("#url"), "https://www.example.com", "URL has been trimmed of whitespace");
 			});
 			
+			/**
+			 * Tests for the validate() function.
+			 */
+			module("validate()");
+			
+			test("should validate that the URL field is populated", function() {
+				createTestElement("<input type='text' id='url'/>");
+				createTestElement("<div id='urlGroup'/>");
+				createTestElement("<div id='urlError'/>");
+				createTestElement("<input type='text' id='requestBody'/>");
+				$("#urlError").hide();
+				equal(JaSON.validate(), false, "form is not valid");
+				equal($("#urlError").html(), "URL is required", "Error message is correct");
+				ok($("#urlGroup").is(".error"), ".error class has been added");
+				ok($("#urlError").is(":visible"), "Error message is visible");
+			});
+			
+			test("should validate that headers are populated", function() {
+				createTestElement("<div id='header' class='header'/>");
+				$("#header").append("<input id='headerName' type='text' class='name' value=' '/>");
+				$("#header").append("<input id='headerValue' type='text' class='value' value='	'/>");
+				$("#header").append("<div class='help-inline'/>");
+				$("#header").append("<div class='control-group'/>");
+				$("#header .help-inline").hide();
+				createTestElement("<input type='text' id='url' value='www.example.com'/>");
+				createTestElement("<input type='text' id='requestBody'/>");
+				
+				equal(JaSON.validate(), false, "form is not valid");
+				equal($("#header .help-inline").html(), "Header name and value are required", "Error message is correct");
+				ok($("#header .control-group").is(".error"), ".error class has been added");
+				ok($("#header .help-inline").is(":visible"), "error message is visible");
+			});
+			
+			test("should validate request body is valid", function() {
+				createTestElement("<input type='text' id='url' value='www.example.com'/>");
+				createTestElement("<div id='requestBodyError'/>");
+				$("#requestBodyError").hide();
+				createTestElement("<div id='requestBodyGroup'/>");
+				createTestElement("<input type='text' id='requestBody' value='{ invalid }'/>");
+				equal(JaSON.validate(), false, "form is not valid");
+				equal($("#requestBodyError").html(), "Invalid JSON: Unexpected token i", "Error message is correct");
+				ok($("#requestBodyGroup").is(".error"), ".error class has been added");
+				ok($("#requestBodyError").is(":visible"), "error message is visible");
+			});
 			
         </script>
     </head>
