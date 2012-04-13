@@ -34,6 +34,9 @@
         <!-- QUnit Tests -->
         <script>
         
+        	/**
+        	 * Convenience method for adding an element to qunit-fixture to test with.
+        	 */
         	function createTestElement(elem) {
         		$("#qunit-fixture").append(elem);
         	}
@@ -55,7 +58,7 @@
         
             test("should reset 'responseCode' element", function() {
 	        	createTestElement("<div id='responseCode'/>");
-            	$("#responseCode").show();
+	        	$("#responseCode").show();
             	$("#responseCode").html("xyz");
             	$("#responseCode").addClass("label-important");
             	$("#responseCode").addClass("label-success");
@@ -76,7 +79,7 @@
             
 			test("should reset 'responseHeaders' element", function() {
 				createTestElement("<div id='responseHeaders'/>");
-            	$("#responseHeaders").show();
+				$("#responseHeaders").show();
             	$("#responseHeaders").html("xyz");
 	        	JaSON.reset();
 	        	equal($("#responseHeaders").html(), "", "HTML content has been removed");
@@ -86,7 +89,7 @@
 			test("should reset 'control-group' elements", function() {
 				createTestElement("<div id='error1' class='control-group' />");
 				createTestElement("<div id='error2' class='control-group' />");
-            	$(".control-group").addClass("error");
+				$(".control-group").addClass("error");
 	        	JaSON.reset();
 	        	ok($("#error1").is(".control-group"));
 	        	ok($("#error1").not(".error"));
@@ -97,14 +100,12 @@
 			
 			module("getURL()");
 			
-			test("should prefix URL with http", function() {
+			test("should prefix URL with http if necessary", function() {
 				createTestElement("<input type='text' id='url'/>");
+				
 				$("#url").val("www.example.com");
 				equal(JaSON.getURL("#url"), "http://www.example.com");
-			});
-			
-			test("should not prefix URL if http or https already present", function() {
-				createTestElement("<input type='text' id='url'/>");
+				
 				$("#url").val("http://www.example.com");
 				equal(JaSON.getURL("#url"), "http://www.example.com");
 				
@@ -114,6 +115,7 @@
 			
 			test("should trim whitespace from URL", function() {
 				createTestElement("<input type='text' id='url'/>");
+				
 				$("#url").val("  	www.example.com  ");
 				equal(JaSON.getURL("#url"), "http://www.example.com");
 				
