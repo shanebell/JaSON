@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<!--
+   Copyright 2012 Shane Bell
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+ 
+<html>
+
+    <head>
+        <meta charset="utf-8" />
+        <title>JaSON - QUnit Tests</title>
+        
+        <link rel="stylesheet" href="css/qunit-1.2.0.css">
+        <script src="js/qunit-1.2.0.js"></script>
+        <script src="../js/jquery-1.7.1.min.js"></script>
+        <script src="../js/prettify.js"></script>
+        <script src="../js/bootstrap-modal.js"></script>
+        <script src="../js/bootstrap-transition.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../js/JaSON.js"></script>
+        
+        <!-- QUnit Tests -->
+        <script>
+        
+        	function createTestElement(elem) {
+        		$("#qunit-fixture").append(elem);
+        	}
+
+        	module("reset()");
+        
+	        test("should reset 'responseHeadersTab' element", function() {
+	        	createTestElement("<div id='responseHeadersTab'/>");
+	        	$("#responseHeadersTab").addClass("active");
+	        	JaSON.reset();
+	        	equal($("#responseHeadersTab").attr("class"), "", "CSS classes have been removed");
+	        });
+	        
+	        test("should reset 'responseTab' element", function() {
+	        	createTestElement("<div id='responseTab'/>");
+	        	JaSON.reset();
+	        	equal($("#responseTab").attr("class"), "active", "CSS classes 'active' has been added");
+	        });
+        
+            test("should reset 'responseCode' element", function() {
+	        	createTestElement("<div id='responseCode'/>");
+            	$("#responseCode").show();
+            	$("#responseCode").html("xyz");
+            	$("#responseCode").addClass("label-important");
+            	$("#responseCode").addClass("label-success");
+                JaSON.reset();
+                equal($("#responseCode").attr("class"), "", "CSS classes have been removed");
+                equal($("#responseCode").html(), "", "HTML content has been removed");
+	        	ok($("#responseCode").not(":visible"), "Element is not visible");
+            });
+            
+            test("should reset 'response' element", function() {
+            	createTestElement("<div id='response'/>");
+            	$("#response").show();
+            	$("#response").html("xyz");
+	        	JaSON.reset();
+	        	equal($("#response").html(), "", "HTML content has been removed");
+	        	ok($("#response").not(":visible"), "Element is not visible");
+	        });
+            
+			test("should reset 'responseHeaders' element", function() {
+				createTestElement("<div id='responseHeaders'/>");
+            	$("#responseHeaders").show();
+            	$("#responseHeaders").html("xyz");
+	        	JaSON.reset();
+	        	equal($("#responseHeaders").html(), "", "HTML content has been removed");
+	        	ok($("#responseHeaders").not(":visible"), "Element is not visible");
+	        });
+			
+			test("should reset 'control-group' elements", function() {
+				createTestElement("<div id='error1' class='control-group' />");
+				createTestElement("<div id='error2' class='control-group' />");
+            	$(".control-group").addClass("error");
+	        	JaSON.reset();
+	        	ok($("#error1").is(".control-group"));
+	        	ok($("#error1").not(".error"));
+	        	ok($("#error2").is(".control-group"));
+	        	ok($("#error2").not(".error"));
+	        });
+			
+			
+			module("getURL()");
+			
+			test("should prefix URL with http", function() {
+				createTestElement("<input type='text' id='url'/>");
+				$("#url").val("www.example.com");
+				equal(JaSON.getURL("#url"), "http://www.example.com");
+			});
+			
+			test("should not prefix URL if http or https already present", function() {
+				createTestElement("<input type='text' id='url'/>");
+				$("#url").val("http://www.example.com");
+				equal(JaSON.getURL("#url"), "http://www.example.com");
+				
+				$("#url").val("https://www.example.com");
+				equal(JaSON.getURL("#url"), "https://www.example.com");
+			});
+			
+			test("should trim whitespace from URL", function() {
+				createTestElement("<input type='text' id='url'/>");
+				$("#url").val("  	www.example.com  ");
+				equal(JaSON.getURL("#url"), "http://www.example.com");
+				
+				$("#url").val("  	http://www.example.com  ");
+				equal(JaSON.getURL("#url"), "http://www.example.com");
+				
+				$("#url").val("  	https://www.example.com  ");
+				equal(JaSON.getURL("#url"), "https://www.example.com");
+			});
+			
+			
+        </script>
+    </head>
+    
+    <body>
+        <h1 id="qunit-header">JaSON - QUnit Tests</h1>
+        <h2 id="qunit-banner"></h2>
+        <ol id="qunit-tests"></ol>
+        <div id="qunit-fixture"/>
+    </body>
+</html>
