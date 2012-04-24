@@ -12,11 +12,8 @@ $(document).ready(function() {
 	});
 	
 	$("#method").change(function() {
-		if ($(this).val() == "POST" || $(this).val() == "PUT") {
-			$("#contentType").show();
-		} else {
-			$("#contentType").hide();
-		}
+		var contentType = $(this).val();
+		contentType == "POST" || contentType == "PUT" ? $("#contentType").show() : $("#contentType").hide();
 	});
 	
 	$("#responseTab, #responseHeadersTab").click(JaSON.manageTabs);
