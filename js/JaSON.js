@@ -287,7 +287,7 @@ var JaSON = {
 		header.addClass("header");
 		$("#requestHeaders").append(header);
 		header.show();
-	},
+	}
 };
 
 
