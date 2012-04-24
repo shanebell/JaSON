@@ -11,11 +11,6 @@ $(document).ready(function() {
 		$(this).parents(".header").remove();
 	});
 	
-	$("#method").change(function() {
-		var contentType = $(this).val();
-		contentType == "POST" || contentType == "PUT" ? $("#contentType").show() : $("#contentType").hide();
-	});
-	
 	$("#responseTab, #responseHeadersTab").click(JaSON.manageTabs);
 	
 	$("#aboutModal").modal({
@@ -149,12 +144,13 @@ var JaSON = {
 		}
 		
 		$("#loading").show();
-
+		
 	    var ajaxArgs = {
 			url: JaSON.getURL("#url"),
 	        type: $("#method").val(),
 	    	contentType: "application/x-www-form-urlencoded",
 	        processData: true,
+	        dataType: $("#contentType option:selected").text().toLowerCase(),
 			beforeSend: JaSON.processHeaders,
 	        data: $("#requestBody").val(),
 			success: JaSON.successResponse,
