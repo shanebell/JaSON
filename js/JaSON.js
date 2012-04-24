@@ -85,16 +85,30 @@ var JaSON = {
 		
 		// validate request body
 		var requestBody = $("#requestBody").val().trim();
+		var contentType = $("#contentType").val();
 		if (requestBody != "") {
-			try {
-				JSON.parse(requestBody);
-			} catch (exception) {
-				valid = false;
-				$("#requestBodyError").html("Invalid JSON: " + exception.message);
-				$("#requestBodyGroup").addClass("error");
-				$("#requestBodyError").show();
-			}		
+			if (contentType == "application/json") {
+				try {
+					$.parseJSON(requestBody);
+				} catch (exception) {
+					valid = false;
+					$("#requestBodyError").html("Invalid JSON: " + exception.message);
+					$("#requestBodyGroup").addClass("error");
+					$("#requestBodyError").show();
+				}		
+			} else if (contentType == "text/xml") {
+				try {
+					$.parseXML(requestBody);
+				} catch (exception) {
+					valid = false;
+					$("#requestBodyError").html("Invalid XML: " + exception.message);
+					$("#requestBodyGroup").addClass("error");
+					$("#requestBodyError").show();
+				}
+			}
 		}
+		
+		
 		
 		return valid;
 	},
@@ -137,7 +151,6 @@ var JaSON = {
 	    	contentType: "application/x-www-form-urlencoded",
 	        processData: true,
 			beforeSend: JaSON.processHeaders,
-			dataType: "json",
 	        data: $("#requestBody").val(),
 			success: JaSON.successResponse,
 			error: JaSON.errorResponse
@@ -149,7 +162,7 @@ var JaSON = {
 	        ajaxArgs.data = "";
 	    } else if (method == "POST") {
 			ajaxArgs.processData = false;
-	        ajaxArgs.contentType = "application/json";
+	        ajaxArgs.contentType = $("#contentType").val();
 	    }
 
 	    trackRequest(ajaxArgs.url);
@@ -209,14 +222,17 @@ var JaSON = {
 		// parse the response body if there is one
 		var data = jqXHR.responseText;
 		var contentType = jqXHR.getResponseHeader("Content-Type");
-		if (contentType != null && contentType.indexOf("application/json") == 0 && data != null) {
+		
+		if (JaSON.isJson(contentType)) {
 			try {
-		    	$("#response").html(JSON.stringify(JSON.parse(data), null, 2));
+		    	$("#response").text(JSON.stringify(JSON.parse(data), null, 2));
 			} catch (exception) {
 				
 				// JSON must be invalid, just show it unparsed
-		    	$("#response").html(data);
+		    	$("#response").text(data);
 			}
+		} else if (JaSON.isXml(contentType)) {
+			$("#response").text(data);
 		}
 		
 		// pretty print the response and response headers
@@ -231,6 +247,38 @@ var JaSON = {
 	},
 	
 	/**
+	 * Returns true if the content type is a valid JSON content type.
+	 */
+	isJson: function(contentType) {
+		var jsonContentTypes = [ 
+		    "application/json",
+		    "application/x-javascript",
+		    "text/javascript",
+		    "text/x-javascript",
+		    "text/x-json"
+		];
+		return contentType != null && jsonContentTypes.some(function(element) {
+			return contentType.indexOf(element) == 0;
+		});
+	},
+	
+	/**
+	 * Returns true if the content type is a valid XML content type.
+	 */
+	isXml: function(contentType) {
+		var xmlContentTypes = [
+		    "text/xml",
+		    "application/xml",
+		    "text/xml-external-parsed-entity", 
+		    "application/xml-external-parsed-entity", 
+		    "application/xml-dtd"
+		];
+		return contentType != null && xmlContentTypes.some(function(element) {
+			return contentType.indexOf(element) == 0;
+		});
+	},
+	
+	/**
 	 * Add a request header input field (name and value) to the page
 	 */
 	addHeaderInput: function() {
@@ -239,7 +287,7 @@ var JaSON = {
 		header.addClass("header");
 		$("#requestHeaders").append(header);
 		header.show();
-	}
+	},
 };
 
 

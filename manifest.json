@@ -1,6 +1,6 @@
 {
   "name": "JaSON",
-  "version": "DEVELOPMENT",
+  "version": "0.0",
   "description": "JaSON: JSON test utility.",
   "app": {
     "launch": {

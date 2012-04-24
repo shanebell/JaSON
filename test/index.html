@@ -169,11 +169,43 @@
 				createTestElement("<div id='requestBodyError'/>");
 				$("#requestBodyError").hide();
 				createTestElement("<div id='requestBodyGroup'/>");
+				createTestElement("<input type='text' id='contentType' value='application/json'/>");
 				createTestElement("<input type='text' id='requestBody' value='{ invalid }'/>");
 				equal(JaSON.validate(), false, "form is not valid");
 				equal($("#requestBodyError").html(), "Invalid JSON: Unexpected token i", "Error message is correct");
 				ok($("#requestBodyGroup").is(".error"), ".error class has been added");
 				ok($("#requestBodyError").is(":visible"), "error message is visible");
+			});
+
+			/**
+			 * Tests for the isJson() function.
+			 */
+			module("isJson()");
+			
+			test("should return true for valid JSON content types", function() {
+				equal(JaSON.isJson("application/json"), true);
+				equal(JaSON.isJson("application/json; charset=utf-8"), true);
+				equal(JaSON.isJson("text/javascript"), true);
+				equal(JaSON.isJson("text/x-javascript"), true);
+				equal(JaSON.isJson("text/x-json"), true);
+				equal(JaSON.isJson("text/xml"), false);
+				equal(JaSON.isJson("text/html"), false);
+				equal(JaSON.isJson("text/plain"), false);
+			});
+			
+			/**
+			 * Tests for the isXml() function.
+			 */
+			module("isXml");
+			test("should return true for valid XML content types", function() {
+				equal(JaSON.isXml("text/xml"), true);
+				equal(JaSON.isXml("application/xml"), true);
+				equal(JaSON.isXml("text/xml-external-parsed-entity"), true);
+				equal(JaSON.isXml("application/xml-external-parsed-entity"), true);
+				equal(JaSON.isXml("application/xml-dtd"), true);
+				equal(JaSON.isXml("application/json"), false);
+				equal(JaSON.isXml("text/html"), false);
+				equal(JaSON.isXml("text/plain"), false);
 			});
 			
         </script>
