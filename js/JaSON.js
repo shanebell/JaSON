@@ -11,6 +11,14 @@ $(document).ready(function() {
 		$(this).parents(".header").remove();
 	});
 	
+	$("#method").change(function() {
+		if ($(this).val() == "POST" || $(this).val() == "PUT") {
+			$("#contentType").show();
+		} else {
+			$("#contentType").hide();
+		}
+	});
+	
 	$("#responseTab, #responseHeadersTab").click(JaSON.manageTabs);
 	
 	$("#aboutModal").modal({
