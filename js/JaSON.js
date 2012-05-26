@@ -13,6 +13,8 @@ $(document).ready(function() {
 	
 	$("#responseTab, #responseHeadersTab").click(JaSON.manageTabs);
 	
+	$("#method").on("change", JaSON.manageRequestBody); 
+	
 	$("#aboutModal").modal({
 		show: false
 	});
@@ -108,8 +110,6 @@ var JaSON = {
 			}
 		}
 		
-		
-		
 		return valid;
 	},
 	
@@ -129,6 +129,29 @@ var JaSON = {
 		var responseHeaders = $("#responseHeaders");
 		if (responseHeaders.html() != "") {
 			responseHeaders.toggle();
+		}
+	},
+	
+	/**
+	 * Manage the display and value of the request body depending on the request method
+	 */
+	manageRequestBody: function() {
+		
+		var requestBody = $("#requestBody");
+		
+		// save the current value of the request body field
+		if (requestBody.val()) {
+			requestBody.data("value", requestBody.val());
+		}
+		
+		// disable the field and populate as appropriate
+		var method = $("#method").val();
+		if (method == "POST" || method == "PUT") {
+			requestBody.val(requestBody.data("value"));
+			requestBody.prop("disabled", false);
+		} else {
+			requestBody.val("");
+			requestBody.prop("disabled", true);
 		}
 	},
 	
@@ -161,7 +184,7 @@ var JaSON = {
 	    var method = $("#method").val();
 	    if (method == "GET") {
 	        ajaxArgs.data = "";
-	    } else if (method == "POST") {
+	    } else if (method == "POST" || method == "PUT") {
 			ajaxArgs.processData = false;
 	        ajaxArgs.contentType = $("#contentType").val();
 	    }
