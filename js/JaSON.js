@@ -175,7 +175,7 @@ var JaSON = {
 	        processData: true,
 	        dataType: $("#contentType option:selected").text().toLowerCase(),
 			beforeSend: JaSON.processHeaders,
-	        data: $("#requestBody").val(),
+	        data: $("#requestBody").val().trim(),
 			success: JaSON.successResponse,
 			error: JaSON.errorResponse
 		};
@@ -184,7 +184,7 @@ var JaSON = {
 	    var method = $("#method").val();
 	    if (method == "GET") {
 	        ajaxArgs.data = "";
-	    } else if (method == "POST" || method == "PUT") {
+	    } else if ((method == "POST" || method == "PUT") && ajaxArgs.data != "") {
 			ajaxArgs.processData = false;
 	        ajaxArgs.contentType = $("#contentType").val();
 	    }
