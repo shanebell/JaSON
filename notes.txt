@@ -1,0 +1,7 @@
+https://api.twitter.com/1/users/show.json?screen_name=googlechrome
+
+http://search.twitter.com/search.json?q=google
+
+TODO:
+
+- Add qUnit tests for Javascript

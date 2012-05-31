@@ -3,9 +3,32 @@ $(document).ready(function() {
 	// default focus on the URL field
 	$("#url").focus();
 	
+	// load any previously saved requests
+	JaSON.loadSavedRequests();
+	
+	$(document).on("click", "#savedRequests tr", function(event) {
+		var key = $(this).attr("id");
+		var value = JSON.parse(window.localStorage.getItem(key));
+		$(this).effect("transfer", { to: $("#leftPanel") }, 300, function() {
+			$("#url").val(value.url);
+			$("#url").effect("highlight", {}, 1000)
+			$("#method").val(value.method);
+			$("#method").effect("highlight", {}, 1000)
+			$("#contentType").val(value.contentType);
+			$("#contentType").effect("highlight", {}, 1000)
+			$("#requestBody").val(value.requestBody);
+			$("#requestBody").effect("highlight", {}, 1000)
+		});
+	});
+	
 	$("#addHeader").click(JaSON.addHeaderInput);
 
 	$("#send").click(JaSON.sendRequest);
+	
+	$("#clear").click(function() {
+		$("#savedRequests").empty();
+		window.localStorage.clear();
+	});
 	
 	$(document).on("click", ".deleteHeader", function() {
 		$(this).parents(".header").remove();
@@ -189,9 +212,68 @@ var JaSON = {
 	        ajaxArgs.contentType = $("#contentType").val();
 	    }
 
+	    JaSON.saveRequest();
+	    
 	    trackRequest(ajaxArgs.url);
 	    
 		$.ajax(ajaxArgs);
+	},
+
+	/**
+	 * Save the request to the local broswer storage
+	 */
+	saveRequest: function() {
+		
+		var request = {
+			"url" : $("#url").val(),
+			"method" : $("#method").val(),
+			"contentType" : $("#contentType").val(),
+			"requestBody" : $("#requestBody").val()
+		};
+		
+		window.localStorage.setItem(new Date(), JSON.stringify(request));
+		$("#savedRequests").empty();
+		
+		JaSON.loadSavedRequests();
+	},
+	
+	/**
+	 * Load saved requests into the saved requests table.
+	 */
+	loadSavedRequests: function() {
+		
+		var keys = [];
+		for (var key in window.localStorage) {
+			keys.push(key);
+		}
+		keys.sort().reverse();
+		
+		for (var i=0; i<keys.length; i++) {
+			var key = keys[i];
+			
+			// load the first 8, delete the rest
+			if (i < 8) {
+				var value = JSON.parse(window.localStorage.getItem(key));
+				
+				// trim the date
+				var date = new Date(key).toLocaleString().substring(4, 24);
+				
+				// remove the leading http(s) from the URL and trim to a max of 40 chars
+				var url = value.url.replace(/http(s)?:\/\//, "");
+				if (url.length > 40) {
+					url = url.substring(0, 40) + "..."	;
+				}
+
+				// add a row to the table
+				var row = $("<tr/>").attr("id", key);
+				row.append($("<td/>").html(date));
+				row.append($("<td/>").html(url));
+				row.append($("<td/>").html(value.method));
+				$("#savedRequests").append(row);
+			} else {
+				window.localStorage.removeItem(key);
+			}
+		}
 	},
 	
 	/**
