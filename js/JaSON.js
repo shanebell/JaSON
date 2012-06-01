@@ -6,29 +6,15 @@ $(document).ready(function() {
 	// load any previously saved requests
 	JaSON.loadSavedRequests();
 	
-	$(document).on("click", "#savedRequests tr", function(event) {
-		var key = $(this).attr("id");
-		var value = JSON.parse(window.localStorage.getItem(key));
-		$(this).effect("transfer", { to: $("#leftPanel") }, 300, function() {
-			$("#url").val(value.url);
-			$("#url").effect("highlight", {}, 1000)
-			$("#method").val(value.method);
-			$("#method").effect("highlight", {}, 1000)
-			$("#contentType").val(value.contentType);
-			$("#contentType").effect("highlight", {}, 1000)
-			$("#requestBody").val(value.requestBody);
-			$("#requestBody").effect("highlight", {}, 1000)
-		});
-	});
+	$(document).on("click", "#savedRequests tr", JaSON.copySavedRequest);
 	
 	$("#addHeader").click(JaSON.addHeaderInput);
 
 	$("#send").click(JaSON.sendRequest);
 	
-	$("#clear").click(function() {
-		$("#savedRequests").empty();
-		window.localStorage.clear();
-	});
+	$("#reset").click(JaSON.resetAndClear);
+	
+	$("#clearSavedRequests").click(JaSON.clearSavedRequests);
 	
 	$(document).on("click", ".deleteHeader", function() {
 		$(this).parents(".header").remove();
@@ -68,6 +54,52 @@ var JaSON = {
 		$(".help-inline").html("");
 		
 		$(".control-group").removeClass("error");
+	},
+	
+	/**
+	 * Reset and clear all fields (except saved requests)
+	 */
+	resetAndClear: function() {
+		JaSON.reset();
+		$("#url").val("");
+		$("#method").val("GET");
+		$("#contentType").val("JSON");
+		$("#requestBody").val("");
+		$("#requestHeaders .header").remove();
+	},
+	
+	/**
+	 * Clear the saved request history.
+	 */
+	clearSavedRequests: function() {
+		$("#savedRequests").empty();
+		window.localStorage.clear();
+	},
+	
+	/**
+	 * Copy a saved request from the history into the request fields.
+	 */
+	copySavedRequest: function(event) {
+		var key = $(this).attr("id");
+		var value = JSON.parse(window.localStorage.getItem(key));
+		
+		$(this).effect("transfer", { to: $("#leftPanel") }, 300, function() {
+			$("#url").val(value.url);
+			$("#method").val(value.method);
+			$("#contentType").val(value.contentType);
+			$("#requestBody").val(value.requestBody);
+			$("#requestHeaders .header").remove();
+			$(value.headers).each(function() {
+				JaSON.addHeaderInput(this[0], this[1]);
+			});
+			
+			$("#url").effect("highlight", {}, 1000)
+			$("#method").effect("highlight", {}, 1000)
+			$("#contentType").effect("highlight", {}, 1000)
+			$("#requestBody").effect("highlight", {}, 1000)
+			$("#requestHeaders .name").effect("highlight", {}, 1000)
+			$("#requestHeaders .value").effect("highlight", {}, 1000)
+		});
 	},
 	
 	/**
@@ -224,10 +256,20 @@ var JaSON = {
 	 */
 	saveRequest: function() {
 		
+		var headers = [];
+		
+		// get the request headers
+		$(".header").each(function() {
+			var name = $(".name", this).val().trim();
+	        var value = $(".value", this).val().trim();
+	        headers.push([ name, value ]);
+	    });
+		
 		var request = {
 			"url" : $("#url").val(),
 			"method" : $("#method").val(),
 			"contentType" : $("#contentType").val(),
+			"headers" : headers,
 			"requestBody" : $("#requestBody").val()
 		};
 		
@@ -251,8 +293,8 @@ var JaSON = {
 		for (var i=0; i<keys.length; i++) {
 			var key = keys[i];
 			
-			// load the first 8, delete the rest
-			if (i < 8) {
+			// load the first 10, delete the rest
+			if (i < 10) {
 				var value = JSON.parse(window.localStorage.getItem(key));
 				
 				// trim the date
@@ -387,10 +429,17 @@ var JaSON = {
 	/**
 	 * Add a request header input field (name and value) to the page
 	 */
-	addHeaderInput: function() {
+	addHeaderInput: function(name, value) {
+		
+		// cleanse inputs
+		name = typeof name == "string" ? name : ""; 
+		value = typeof value == "string" ? value : "";
+		
 		var header = $(".headerPrototype").clone();
 		header.removeClass("headerPrototype");
 		header.addClass("header");
+		$(header).find(".name").val(name);
+		$(header).find(".value").val(value);
 		$("#requestHeaders").append(header);
 		header.show();
 	}
