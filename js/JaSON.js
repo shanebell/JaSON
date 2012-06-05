@@ -6,7 +6,7 @@ $(document).ready(function() {
 	// load any previously saved requests
 	JaSON.loadSavedRequests();
 	
-	$(document).on("click", "#savedRequests tr", JaSON.copySavedRequest);
+	$(document).on("click", ".savedRequest", JaSON.copySavedRequest);
 	
 	$("#addHeader").click(JaSON.addHeaderInput);
 
@@ -307,7 +307,7 @@ var JaSON = {
 				}
 
 				// add a row to the table
-				var row = $("<tr/>").attr("id", key);
+				var row = $("<tr/>").addClass("savedRequest").attr("id", key);
 				row.append($("<td/>").html(date));
 				row.append($("<td/>").html(url));
 				row.append($("<td/>").html(value.method));

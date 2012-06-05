@@ -4,4 +4,7 @@ http://search.twitter.com/search.json?q=google
 
 TODO:
 
-- Add qUnit tests for Javascript
+- Find a jQuery library for working with dates
+  - sort dates properly when pulling from local storage
+    - currently being sorted based on the day eg: "Sat" comes before "Wed"
+- Add more qUnit tests for Javascript
