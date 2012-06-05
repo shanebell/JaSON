@@ -100,6 +100,27 @@
 	        	ok($("#error2").not(".error"), ".error class has been removed");
 	        });
 			
+			
+			/**
+			 * Tests for the resetAndClear() function.
+			 */
+			module("resetAndClear()");
+			
+			test("should reset and clear input fields", function() {
+				createTestElement("<input id='url' value='test'/>");
+				createTestElement("<input id='method' value='POST'/>");
+				createTestElement("<input id='contentType' value='XML'/>");
+				createTestElement("<input id='requestBody' value='test'/>");
+				createTestElement("<ul id='requestHeaders'><li class='header'/><li class='header'/></ul>");
+	        	JaSON.resetAndClear();
+	        	equal($("#url").val(), "", "url has been reset");
+	        	equal($("#method").val(), "GET", "method has been reset");
+	        	equal($("#contentType").val(), "JSON", "contentType has been reset");
+	        	equal($("#requestBody").val(), "", "requestBody has been reset");
+	        	equal($("#requestHeaders").children().size(), 0, "requestHeaders has been reset");
+			});
+
+			
 			/**
 			 * Tests for the getURL() function.
 			 */
