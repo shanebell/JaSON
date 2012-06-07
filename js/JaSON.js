@@ -301,10 +301,10 @@ var JaSON = {
 			if (i < 10) {
 				var value = JSON.parse(window.localStorage.getItem(key));
 				
-				// remove the leading http(s) from the URL and trim to a max of 40 chars
+				// remove leading http(s) from URL and trim to a max of 40 chars
 				var url = value.url.replace(/http(s)?:\/\//, "");
 				if (url.length > 40) {
-					url = url.substring(0, 40) + "..."	;
+					url = url.substring(0, 40) + "...";
 				}
 
 				// add a row to the table
@@ -313,6 +313,12 @@ var JaSON = {
 				row.append($("<td/>").html(key));
 				row.append($("<td/>").html(url));
 				row.append($("<td/>").html(value.method));
+				
+				// add a tooltip if the URL had to be trimmed
+				if (url.indexOf("...") > 0) {
+					row.attr("title", value.url);
+				}
+				
 				$("#savedRequests").append(row);
 			} else {
 				window.localStorage.removeItem(key);
@@ -325,6 +331,9 @@ var JaSON = {
 				$(".savedRequest:first").effect("highlight", {}, 1000)
 			}
 		}
+		
+		// enable tooltips
+		$(".savedRequest").tooltip({ "placement": "bottom" });
 	},
 	
 	/**
