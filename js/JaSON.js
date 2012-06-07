@@ -74,7 +74,7 @@ var JaSON = {
 	clearSavedRequests: function() {
 		$("#savedRequests").empty();
 		$("#savedRequestsRow").hide();
-		window.localStorage.clear();
+		localStorage.clear();
 	},
 	
 	/**
@@ -82,7 +82,7 @@ var JaSON = {
 	 */
 	copySavedRequest: function(event) {
 		var key = $(this).attr("id");
-		var value = JSON.parse(window.localStorage.getItem(key));
+		var value = JSON.parse(localStorage[key]);
 		
 		$(this).effect("transfer", { to: $("#leftPanel") }, 300, function() {
 			$("#url").val(value.url);
@@ -272,7 +272,7 @@ var JaSON = {
 			"requestBody" : $("#requestBody").val()
 		});
 		
-		window.localStorage.setItem(key, value);
+		localStorage[key] = value;
 		
 		JaSON.loadSavedRequests(true);
 	},
@@ -289,7 +289,7 @@ var JaSON = {
 		$("#savedRequests").empty();
 		
 		var keys = [];
-		for (var key in window.localStorage) {
+		for (var key in localStorage) {
 			keys.push(key);
 		}
 		keys.sort().reverse();
@@ -299,7 +299,7 @@ var JaSON = {
 			
 			// load the first 10, delete the rest
 			if (i < 10) {
-				var value = JSON.parse(window.localStorage.getItem(key));
+				var value = JSON.parse(localStorage[key]);
 				
 				// remove leading http(s) from URL and trim to a max of 40 chars
 				var url = value.url.replace(/http(s)?:\/\//, "");
@@ -321,7 +321,7 @@ var JaSON = {
 				
 				$("#savedRequests").append(row);
 			} else {
-				window.localStorage.removeItem(key);
+				localStorage.removeItem(key);
 			}
 		}
 		
