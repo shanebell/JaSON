@@ -312,7 +312,7 @@ var JaSON = {
 				row.append($("<td/>").html(i + 1 + "."));
 				row.append($("<td/>").html(key));
 				row.append($("<td/>").html(url));
-				row.append($("<td/>").html(value.method));
+				row.append($("<td/>").html($("<span/>").addClass("label").html(value.method)));
 				
 				// add a tooltip if the URL had to be trimmed
 				if (url.indexOf("...") > 0) {
