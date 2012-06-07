@@ -303,8 +303,8 @@ var JaSON = {
 				
 				// remove leading http(s) from URL and trim to a max of 40 chars
 				var url = value.url.replace(/http(s)?:\/\//, "");
-				if (url.length > 40) {
-					url = url.substring(0, 40) + "...";
+				if (url.length > 35) {
+					url = url.substring(0, 35) + "...";
 				}
 
 				// add a row to the table
