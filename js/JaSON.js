@@ -4,7 +4,7 @@ $(document).ready(function() {
 	$("#url").focus();
 	
 	// load any previously saved requests
-	JaSON.loadSavedRequests();
+	JaSON.loadSavedRequests(false);
 	
 	$(document).on("click", ".savedRequest", JaSON.copySavedRequest);
 	
@@ -73,6 +73,7 @@ var JaSON = {
 	 */
 	clearSavedRequests: function() {
 		$("#savedRequests").empty();
+		$("#savedRequestsRow").hide();
 		window.localStorage.clear();
 	},
 	
@@ -244,8 +245,6 @@ var JaSON = {
 	        ajaxArgs.contentType = $("#contentType").val();
 	    }
 
-	    JaSON.saveRequest();
-	    
 	    trackRequest(ajaxArgs.url);
 	    
 		$.ajax(ajaxArgs);
@@ -256,33 +255,38 @@ var JaSON = {
 	 */
 	saveRequest: function() {
 		
+		// build an array of the request headers
 		var headers = [];
-		
-		// get the request headers
 		$(".header").each(function() {
 			var name = $(".name", this).val().trim();
 	        var value = $(".value", this).val().trim();
 	        headers.push([ name, value ]);
 	    });
 		
-		var request = {
+		var key = $.format.date(new Date(), "dd/MM/yyyy HH:mm:ss");
+		var value = JSON.stringify({
 			"url" : $("#url").val(),
 			"method" : $("#method").val(),
 			"contentType" : $("#contentType").val(),
 			"headers" : headers,
 			"requestBody" : $("#requestBody").val()
-		};
+		});
 		
-		window.localStorage.setItem(new Date(), JSON.stringify(request));
-		$("#savedRequests").empty();
+		window.localStorage.setItem(key, value);
 		
-		JaSON.loadSavedRequests();
+		JaSON.loadSavedRequests(true);
 	},
 	
 	/**
 	 * Load saved requests into the saved requests table.
+	 * 
+	 * The refresh flag indicates whether the table is being
+	 * updated after saving a request in which case the first
+	 * row is highlighted after the requests are loaded.
 	 */
-	loadSavedRequests: function() {
+	loadSavedRequests: function(refresh) {
+		
+		$("#savedRequests").empty();
 		
 		var keys = [];
 		for (var key in window.localStorage) {
@@ -297,9 +301,6 @@ var JaSON = {
 			if (i < 10) {
 				var value = JSON.parse(window.localStorage.getItem(key));
 				
-				// trim the date
-				var date = new Date(key).toLocaleString().substring(4, 24);
-				
 				// remove the leading http(s) from the URL and trim to a max of 40 chars
 				var url = value.url.replace(/http(s)?:\/\//, "");
 				if (url.length > 40) {
@@ -308,12 +309,20 @@ var JaSON = {
 
 				// add a row to the table
 				var row = $("<tr/>").addClass("savedRequest").attr("id", key);
-				row.append($("<td/>").html(date));
+				row.append($("<td/>").html(i + 1 + "."));
+				row.append($("<td/>").html(key));
 				row.append($("<td/>").html(url));
 				row.append($("<td/>").html(value.method));
 				$("#savedRequests").append(row);
 			} else {
 				window.localStorage.removeItem(key);
+			}
+		}
+		
+		if ($(".savedRequest").size() > 0) {
+			$("#savedRequestsRow").show();
+			if (refresh) {
+				$(".savedRequest:first").effect("highlight", {}, 1000)
 			}
 		}
 	},
@@ -347,6 +356,7 @@ var JaSON = {
 	 * Called when the AJAX response returns success.
 	 */
 	successResponse: function(data, textStatus, jqXHR) {
+		JaSON.saveRequest();
 		JaSON.processResponse(jqXHR, true);
 	},
 	
