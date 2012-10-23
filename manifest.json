@@ -1,4 +1,5 @@
 {
+  "manifest_version": 2,
   "name": "JaSON",
   "version": "0.0",
   "description": "JaSON: JSON and XML test utility.",
@@ -15,5 +16,6 @@
   "permissions": [
     "http://*/",
     "https://*/"
-  ]
+  ],
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }

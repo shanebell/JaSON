@@ -5,3 +5,21 @@
 .ui-effects-transfer { 
 	border: 1px solid black;
 }
+
+.control-group {
+	margin-bottom: 0px;
+}
+
+#savedRequestsRow .controls {
+	max-height: 150px;
+	overflow: scroll;
+	margin-bottom: 15px;
+}
+
+#requestHeaders input {
+	margin-bottom: 5px;
+}
+
+#addHeader {
+	margin-bottom: 10px;
+}

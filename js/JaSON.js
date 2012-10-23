@@ -20,7 +20,7 @@ $(document).ready(function() {
 		$(this).parents(".header").remove();
 	});
 	
-	$("#responseTab, #responseHeadersTab").click(JaSON.manageTabs);
+	$("#responseTab, #responseHeadersTab, #rawResponseTab").click(JaSON.manageTabs);
 	
 	$("#method").on("change", JaSON.manageRequestBody); 
 	
@@ -38,6 +38,7 @@ var JaSON = {
 	reset: function() {
 		
 		$("#responseHeadersTab").removeClass("active");
+		$("#rawResponseTab").removeClass("active");
 		$("#responseTab").addClass("active");
 		
 		$("#responseCode").hide();
@@ -47,6 +48,8 @@ var JaSON = {
 		
 		$("#response").hide();
 		$("#response").html("");
+		$("#rawResponse").hide();
+		$("#rawResponse").html("");
 		$("#responseHeaders").hide();
 		$("#responseHeaders").html("");
 		
@@ -159,7 +162,7 @@ var JaSON = {
 					$.parseXML(requestBody);
 				} catch (exception) {
 					valid = false;
-					$("#requestBodyError").html("Invalid XML: " + exception.message);
+					$("#requestBodyError").html(exception.message);
 					$("#requestBodyGroup").addClass("error");
 					$("#requestBodyError").show();
 				}
@@ -173,18 +176,36 @@ var JaSON = {
 	 * Manage the display of the result tabs.
 	 */
 	manageTabs: function() {
-		
-		$("#responseTab, #responseHeadersTab").removeClass("active");
+		$("#responseTab, #responseHeadersTab, #rawResponseTab").removeClass("active");
 		$(this).addClass("active");
 		
 		var response = $("#response");
-		if (response.html() != "") {
-			response.toggle();
-		}
-		
 		var responseHeaders = $("#responseHeaders");
-		if (responseHeaders.html() != "") {
-			responseHeaders.toggle();
+		var rawResponse = $("#rawResponse");
+
+		switch($(this).attr("id")) {
+		
+		case "responseTab":
+			responseHeaders.hide();
+		    rawResponse.hide();
+			if (response.html() != "") {
+				response.show();
+			}
+			break;
+		case "responseHeadersTab":
+			response.hide();
+			rawResponse.hide();
+			if (responseHeaders.html() != "") {
+				responseHeaders.show();
+			}
+			break;
+		case "rawResponseTab":
+			response.hide();
+			responseHeaders.hide();
+			if (rawResponse.html() != "") {
+				rawResponse.show();
+			}
+			break;
 		}
 	},
 	
@@ -297,8 +318,8 @@ var JaSON = {
 		for (var i=0; i<keys.length; i++) {
 			var key = keys[i];
 			
-			// load the first 10, delete the rest
-			if (i < 10) {
+			// load the first 50, delete the rest
+			if (i < 50) {
 				var value = JSON.parse(localStorage[key]);
 				
 				// remove leading http(s) from URL and trim to a max of 40 chars
@@ -390,6 +411,8 @@ var JaSON = {
 		var data = jqXHR.responseText;
 		var contentType = jqXHR.getResponseHeader("Content-Type");
 		
+		$("#rawResponse").text(data);
+		
 		if (JaSON.isJson(contentType)) {
 			try {
 		    	$("#response").text(JSON.stringify(JSON.parse(data), null, 2));
@@ -461,6 +484,7 @@ var JaSON = {
 		$(header).find(".value").val(value);
 		$("#requestHeaders").append(header);
 		header.show();
+		$(header).find(".name").focus();
 	}
 };
 
