@@ -12,7 +12,7 @@
 
 #savedRequestsRow .controls {
 	max-height: 150px;
-	overflow: scroll;
+	overflow: auto;
 	margin-bottom: 15px;
 }
 
