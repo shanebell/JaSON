@@ -20,6 +20,23 @@
 	margin-bottom: 5px;
 }
 
+#responseTabs {
+    margin-top: 10px;
+}
+
 #addHeader {
 	margin-bottom: 10px;
+}
+
+.help-inline {
+    margin-bottom: 10px;
+}
+
+#url, #requestBody, #savedRequestsRow {
+    font-size: 10pt;
+}
+
+#response, #rawResponse, #responseHeaders {
+    font-size: 8pt;
+    line-height: 14pt;
 }

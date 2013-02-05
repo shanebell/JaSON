@@ -107,7 +107,7 @@ body {
 				<!-- Request headers -->
 				<div class="row">
 					<div class="control-group span6">
-					    <h3>HTTP headers</h3>
+					    <h4>HTTP headers</h4>
 					    <div class="controls">
 						    <ul id="requestHeaders" class="unstyled">
 						    	
@@ -155,23 +155,23 @@ body {
 		<!-- Request body -->
 		<div class="row">
 	    	<div id="requestBodyGroup" class="control-group span12">
-		    	<h3>Request body</h3>
+		    	<h4>Request body</h4>
 	    		<div class="controls">
-			    	<textarea id="requestBody" class="span12" rows="8" placeholder="JSON or XML content. 'Form encoded' requests can contain JSON content which will be converted to form request parameters and is available for all method types. 'JSON' and 'XML' requests pass the content through unmodified in the request body and hence is only available for POST and PUT methods." disabled></textarea>
+			    	<textarea id="requestBody" class="span12" rows="8" placeholder="JSON or XML content. 'Form encoded' requests can contain JSON content which will be converted to form request parameters and is available for all method types. 'JSON' and 'XML' requests pass the content through unmodified in the request body and hence is only available for POST and PUT methods. Note that JSON is strictly validated so element names and values must be &quot;quoted&quot;." disabled></textarea>
 					<span id="requestBodyError" class="help-inline" style="display:none"></span>
 	    		</div>
 	    	</div>
 	    	<div class="control-group span12">
 	    		<div class="controls">
-	    			<input type="button" class="btn btn-primary" id="send" value="Send request"/>
-	    			<input type="button" class="btn" id="reset" value="Reset fields"/>
+                    <input type="button" class="btn btn-primary" id="send" value="Send request"/>
+                    <input type="button" class="btn" id="reset" value="Reset fields"/>
 				</div>
 	    	</div>
 		</div>
 		
 		<!-- Response tabs -->
 		<div class="row">
-			<div class="span12">
+			<div id="responseTabs" class="span12">
 				<ul class="nav nav-tabs">
 					<li id="responseTab" class="active">
 						<a href="javascript:void(0)">Response</a>
