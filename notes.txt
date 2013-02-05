@@ -1,11 +1,3 @@
 https://api.twitter.com/1/users/show.json?screen_name=googlechrome
 
 http://search.twitter.com/search.json?q=google
-
-TODO:
-
-- bug - selecting from history does not switch the method (eg: post)
-- Find a jQuery library for working with dates
-  - sort dates properly when pulling from local storage
-    - currently being sorted based on the day eg: "Sat" comes before "Wed"
-- Add more qUnit tests for Javascript

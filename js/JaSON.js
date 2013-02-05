@@ -5,25 +5,38 @@ $(document).ready(function() {
 	
 	// load any previously saved requests
 	JaSON.loadSavedRequests(false);
-	
+
+    // load a saved request from the history
 	$(document).on("click", ".savedRequest", JaSON.copySavedRequest);
-	
+
+    // add a header
 	$("#addHeader").click(JaSON.addHeaderInput);
 
+    // send a request
 	$("#send").click(JaSON.sendRequest);
-	
+
+    // reset fields
 	$("#reset").click(JaSON.resetAndClear);
-	
+
+    // clear history
 	$("#clearSavedRequests").click(JaSON.clearSavedRequests);
-	
+
+    // delete a header
 	$(document).on("click", ".deleteHeader", function() {
 		$(this).parents(".header").remove();
 	});
-	
+
+    // manage tabs
 	$("#responseTab, #responseHeadersTab, #rawResponseTab").click(JaSON.manageTabs);
-	
-	$("#method").on("change", JaSON.manageRequestBody); 
-	
+
+    // manage the editability and content of the request body
+	$("#method").on("change", JaSON.manageRequestBody);
+	$("#contentType").on("change", JaSON.manageRequestBody);
+
+    // handle a manual clear of the request body content
+    $("#requestBody").change(JaSON.handleRequestBodyClear);
+
+    // show the about modal
 	$("#aboutModal").modal({
 		show: false
 	});
@@ -40,20 +53,23 @@ var JaSON = {
 		$("#responseHeadersTab").removeClass("active");
 		$("#rawResponseTab").removeClass("active");
 		$("#responseTab").addClass("active");
-		
-		$("#responseCode").hide();
+
+        $("#responseCode").hide();
 		$("#responseCode").html("");
 		$("#responseCode").removeClass("label-important");
 		$("#responseCode").removeClass("label-success");
-		
-		$("#response").hide();
+
+        $("#response").hide();
 		$("#response").html("");
-		$("#rawResponse").hide();
+
+        $("#rawResponse").hide();
 		$("#rawResponse").html("");
-		$("#responseHeaders").hide();
+
+
+        $("#responseHeaders").hide();
 		$("#responseHeaders").html("");
-		
-		$(".help-inline").hide();
+
+        $(".help-inline").hide();
 		$(".help-inline").html("");
 		
 		$(".control-group").removeClass("error");
@@ -67,7 +83,8 @@ var JaSON = {
 		$("#url").val("");
 		$("#method").val("GET");
 		$("#contentType").val("JSON");
-		$("#requestBody").val("");
+        $("#requestBody").val("");
+        $("#requestBody").data("value", "");
 		$("#requestHeaders .header").remove();
 	},
 	
@@ -103,6 +120,8 @@ var JaSON = {
 			$("#requestBody").effect("highlight", {}, 1000)
 			$("#requestHeaders .name").effect("highlight", {}, 1000)
 			$("#requestHeaders .value").effect("highlight", {}, 1000)
+			
+			JaSON.manageRequestBody();
 		});
 	},
 	
@@ -148,7 +167,7 @@ var JaSON = {
 		var requestBody = $("#requestBody").val().trim();
 		var contentType = $("#contentType").val();
 		if (requestBody != "") {
-			if (contentType == "application/json") {
+			if (contentType == "application/json" || contentType == "application/x-www-form-urlencoded; charset=UTF-8") {
 				try {
 					$.parseJSON(requestBody);
 				} catch (exception) {
@@ -210,20 +229,21 @@ var JaSON = {
 	},
 	
 	/**
-	 * Manage the display and value of the request body depending on the request method
+	 * Manage the display and value of the request body depending on the request method and content type
 	 */
 	manageRequestBody: function() {
-		
+
 		var requestBody = $("#requestBody");
-		
+
 		// save the current value of the request body field
 		if (requestBody.val()) {
 			requestBody.data("value", requestBody.val());
 		}
-		
+
 		// disable the field and populate as appropriate
 		var method = $("#method").val();
-		if (method == "POST" || method == "PUT") {
+        var contentType = $("#contentType").val();
+		if (method == "POST" || method == "PUT" || contentType == "application/x-www-form-urlencoded; charset=UTF-8") {
 			requestBody.val(requestBody.data("value"));
 			requestBody.prop("disabled", false);
 		} else {
@@ -231,6 +251,17 @@ var JaSON = {
 			requestBody.prop("disabled", true);
 		}
 	},
+
+    /**
+     * If a user manually clears the content of the request body field then clear the field's data value.
+     * This prevents the field from being re-populated with the old value if they change the method or
+     * content type drop downs.
+     */
+    handleRequestBodyClear: function() {
+        if ($("#requestBody").val().trim() == "") {
+            $("#requestBody").data("value", "");
+        }
+    },
 	
 	/**
 	 * Construct a request and send it.
@@ -244,26 +275,25 @@ var JaSON = {
 		}
 		
 		$("#loading").show();
-		
-	    var ajaxArgs = {
+
+        var contentType = $("#contentType").val();
+
+        // defaults
+        var ajaxArgs = {
 			url: JaSON.getURL("#url"),
 	        type: $("#method").val(),
-	    	contentType: "application/x-www-form-urlencoded",
-	        processData: true,
-	        dataType: $("#contentType option:selected").text().toLowerCase(),
+	    	contentType: contentType,
+	        processData: false,
 			beforeSend: JaSON.processHeaders,
 	        data: $("#requestBody").val().trim(),
 			success: JaSON.successResponse,
 			error: JaSON.errorResponse
 		};
 
-	    // some things change depending on the method
-	    var method = $("#method").val();
-	    if (method == "GET") {
-	        ajaxArgs.data = "";
-	    } else if ((method == "POST" || method == "PUT") && ajaxArgs.data != "") {
-			ajaxArgs.processData = false;
-	        ajaxArgs.contentType = $("#contentType").val();
+	    // form encoded requests must process the data before sending
+	    if (contentType == "application/x-www-form-urlencoded; charset=UTF-8" && ajaxArgs.data != "") {
+            ajaxArgs.processData = true;
+            ajaxArgs.data = JSON.parse(ajaxArgs.data);
 	    }
 
 	    trackRequest(ajaxArgs.url);

@@ -58,7 +58,7 @@ body {
 		<div class="navbar-inner">
 			<div class="container">
 				<a href="#" class="brand">JaSON</a>
-				<img src="img/icon_32.png" style="padding-top: 4px"></img>
+				<img src="img/icon_32.png" style="padding-top: 4px" />
                 <ul class="nav pull-right">
 					<li>
 						<a id="about" data-toggle="modal" href="#aboutModal">About</a>
@@ -100,6 +100,7 @@ body {
 							<select id="contentType" class="span2">
 								<option value="application/json">JSON</option>
 								<option value="text/xml">XML</option>
+								<option value="application/x-www-form-urlencoded; charset=UTF-8">Form encoded</option>
 							</select>
 			            </div>
 			        </div>
@@ -108,7 +109,7 @@ body {
 				<!-- Request headers -->
 				<div class="row">
 					<div class="control-group span6">
-					    <h3>HTTP Headers</h3>
+					    <h3>HTTP headers</h3>
 					    <div class="controls">
 						    <ul id="requestHeaders" class="unstyled">
 						    	
@@ -124,7 +125,7 @@ body {
 						    		</div>
 						    	</li>
 						    </ul>
-						    <button class="btn" id="addHeader">Add HTTP Header</button>
+						    <button class="btn" id="addHeader">Add HTTP header</button>
 					    </div>
 				    </div>
 				</div>
@@ -140,10 +141,10 @@ body {
 						<table class="table table-condensed">
 							<thead>
 								<tr>
-									<th colspan="4">Request History (click to re-use)</th>
+									<th colspan="4">Request history (click to re-use)</th>
 								</tr>
 							</thead>
-							<tbody id="savedRequests"/>
+							<tbody id="savedRequests"></tbody>
 						</table>
 					</div>
 					<button id="clearSavedRequests" class="btn pull-right">Clear History <i class="icon-trash"></i></button>
@@ -156,16 +157,16 @@ body {
 		<!-- Request body -->
 		<div class="row">
 	    	<div id="requestBodyGroup" class="control-group span12">
-		    	<h3>Request Body</h3>
+		    	<h3>Request body</h3>
 	    		<div class="controls">
-			    	<textarea id="requestBody" class="span12" rows="8" placeholder="JSON or XML (POST and PUT methods only)" disabled></textarea>
+			    	<textarea id="requestBody" class="span12" rows="8" placeholder="JSON or XML content. 'Form encoded' requests can contain JSON content which will be converted to form request parameters and is available for all method types. 'JSON' and 'XML' requests pass the content through unmodified in the request body and hence is only available for POST and PUT methods." disabled></textarea>
 					<span id="requestBodyError" class="help-inline" style="display:none"></span>
 	    		</div>
 	    	</div>
 	    	<div class="control-group span12">
 	    		<div class="controls">
-	    			<input type="button" class="btn btn-primary" id="send" value="Send Request"/>
-	    			<input type="button" class="btn" id="reset" value="Reset Fields"/>
+	    			<input type="button" class="btn btn-primary" id="send" value="Send request"/>
+	    			<input type="button" class="btn" id="reset" value="Reset fields"/>
 				</div>
 	    	</div>
 		</div>
@@ -178,10 +179,10 @@ body {
 						<a href="javascript:void(0)">Response</a>
 					</li>
 					<li id="responseHeadersTab">
-						<a href="javascript:void(0)">Response Headers</a>
+						<a href="javascript:void(0)">Response headers</a>
 					</li>
 					<li id="rawResponseTab">
-						<a href="javascript:void(0)">Raw Response</a>
+						<a href="javascript:void(0)">Raw response</a>
 					</li>
 				</ul>
 				
@@ -212,7 +213,7 @@ body {
 		</div>
 		<div class="modal-body">
 			<p>
-				<img src="img/icon_128.png"></img>
+				<img src="img/icon_128.png"/>
 			</p>
 			<p>
 				Developed and maintaned by Shane Bell
