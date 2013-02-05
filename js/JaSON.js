@@ -36,11 +36,6 @@ $(document).ready(function() {
     // handle a manual clear of the request body content
     $("#requestBody").change(JaSON.handleRequestBodyClear);
 
-    // show the about modal
-	$("#aboutModal").modal({
-		show: false
-	});
-	
 });
 
 var JaSON = {

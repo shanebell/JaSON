@@ -29,9 +29,7 @@
 
 <!-- Twitter Bootstrap -->    
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<script src="js/bootstrap-transition.js"></script>
-<script src="js/bootstrap-modal.js"></script>
-<script src="js/bootstrap-tooltip.js"></script>
+<script src="js/bootstrap.min.js"></script>
 
 <!-- Google Pretty Printer -->
 <link href="css/prettify.css" rel="stylesheet">
@@ -61,7 +59,7 @@ body {
 				<img src="img/icon_32.png" style="padding-top: 4px" />
                 <ul class="nav pull-right">
 					<li>
-						<a id="about" data-toggle="modal" href="#aboutModal">About</a>
+						<a href="javascript:void(0);" id="about" data-toggle="modal" data-target="#aboutModal">About</a>
 					</li>
                 </ul>
 			</div>
@@ -205,7 +203,7 @@ body {
 	</div>
 
 	<!-- About modal -->
-	<div id="aboutModal" class="modal fade" style="display:none">
+	<div id="aboutModal" class="modal hide fade">
 		<div class="modal-header">
 			<i class="icon-remove close" data-dismiss="modal"></i>
 			<h3>JaSON</h3>
@@ -218,20 +216,20 @@ body {
 			<p>
 				Developed and maintaned by Shane Bell
 				<br/>
-				<a href="mailto:shane.bell@gmail.com" target="new">shane.bell@gmail.com</a>
+				<a href="mailto:shane.bell@gmail.com" target="_mail">shane.bell@gmail.com</a>
 			</p>
 			<p>
-				JaSON is open source and licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>
+				JaSON is open source and licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_license">Apache License v2.0</a>
 			</p>
 			<p>
 				Source code available at GitHub
 				<br/>
-				<a href="https://github.com/shanebell/JaSON">https://github.com/shanebell/JaSON</a>
+				<a href="https://github.com/shanebell/JaSON" target="_github">https://github.com/shanebell/JaSON</a>
 			</p>
 			<p>
 				Friday the 13th icon designed by Tony Gil
 				<br/>
-				<a href="http://tonygil.com/">http://tonygil.com/</a>
+				<a href="http://tonygil.com/" target="_tony">http://tonygil.com/</a>
 			</p>
 		</div>
 		<div class="modal-footer">
