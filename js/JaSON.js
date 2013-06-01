@@ -39,6 +39,9 @@ $(document).ready(function() {
 });
 
 var JaSON = {
+
+    startTime: 0,
+    endTime: 0,
 	
 	/**
 	 * Reset field visibility, css classes etc back to the default state.
@@ -53,6 +56,9 @@ var JaSON = {
 		$("#responseCode").html("");
 		$("#responseCode").removeClass("label-important");
 		$("#responseCode").removeClass("label-success");
+
+        $("#responseTime").hide();
+        $("#responseTime").html("");
 
         $("#response").hide();
 		$("#response").html("");
@@ -98,7 +104,7 @@ var JaSON = {
 	copySavedRequest: function(event) {
 		var key = $(this).attr("id");
 		var value = JSON.parse(localStorage[key]);
-		
+
 		$(this).effect("transfer", { to: $("#leftPanel") }, 300, function() {
 			$("#url").val(value.url);
 			$("#method").val(value.method);
@@ -108,6 +114,19 @@ var JaSON = {
 			$(value.headers).each(function() {
 				JaSON.addHeaderInput(this[0], this[1]);
 			});
+            $("#rawResponse").text(value.response);
+            $("#responseCode").html(value.responseCode);
+            $("#responseCode").addClass(value.responseCodeClass);
+            $("#responseTime").html(value.responseTime);
+            $("#responseHeaders").html(value.responseHeaders);
+            $("#response").text(value.response);
+
+            prettyPrint();
+
+            $("#responseCode").attr("hidden", false);
+            if ($("#response").html() != "") {
+                $("#response").attr("hidden", false);
+            }
 			
 			$("#url").effect("highlight", {}, 1000)
 			$("#method").effect("highlight", {}, 1000)
@@ -115,7 +134,10 @@ var JaSON = {
 			$("#requestBody").effect("highlight", {}, 1000)
 			$("#requestHeaders .name").effect("highlight", {}, 1000)
 			$("#requestHeaders .value").effect("highlight", {}, 1000)
-			
+			$("#responseCode").effect("highlight", {}, 1000)
+            $("#responseTime").effect("highlight", {}, 1000)
+			$("#response").effect("highlight", {}, 1000)
+
 			JaSON.manageRequestBody();
 		});
 	},
@@ -262,7 +284,7 @@ var JaSON = {
 	 * Construct a request and send it.
 	 */
 	sendRequest: function() {
-			
+
 		JaSON.reset();
 		
 		if (!JaSON.validate()) {
@@ -292,12 +314,13 @@ var JaSON = {
 	    }
 
 	    trackRequest(ajaxArgs.url);
-	    
+
+        JaSON.startTime = new Date().getTime();
 		$.ajax(ajaxArgs);
 	},
 
 	/**
-	 * Save the request to the local broswer storage
+	 * Save the request to the local browser storage
 	 */
 	saveRequest: function() {
 		
@@ -315,9 +338,14 @@ var JaSON = {
 			"method" : $("#method").val(),
 			"contentType" : $("#contentType").val(),
 			"headers" : headers,
-			"requestBody" : $("#requestBody").val()
+			"requestBody" : $("#requestBody").val(),
+            "responseCode" : $("#responseCode").text(),
+            "responseCodeClass" : $("#responseCode").attr('class'),
+            "response" : $("#rawResponse").text(),
+            "responseTime" : $("#responseTime").text(),
+            "responseHeaders" : $("#responseHeaders").text()
 		});
-		
+
 		localStorage[key] = value;
 		
 		JaSON.loadSavedRequests(true);
@@ -411,8 +439,8 @@ var JaSON = {
 	 * Called when the AJAX response returns success.
 	 */
 	successResponse: function(data, textStatus, jqXHR) {
-		JaSON.saveRequest();
-		JaSON.processResponse(jqXHR, true);
+        JaSON.processResponse(jqXHR, true);
+        JaSON.saveRequest();
 	},
 	
 	/**
@@ -426,10 +454,13 @@ var JaSON = {
 	 * Process a response. A successful (ie: non error) response is indicated by setting 'success' to true.
 	 */
 	processResponse: function(jqXHR, success) {
-		
+
+        JaSON.endTime = new Date().getTime();
+
 		// response code and headers
 		$("#responseCode").addClass(success ? "label-success" : "label-important");
 		$("#responseCode").html(jqXHR.status + ": " + jqXHR.statusText);
+        $("#responseTime").html((JaSON.endTime - JaSON.startTime) + "ms");
 		$("#responseHeaders").html(jqXHR.getAllResponseHeaders());
 
 		// parse the response body if there is one
@@ -456,6 +487,7 @@ var JaSON = {
 		// show the response
 		$("#loading").hide();
 		$("#responseCode").show();
+        $("#responseTime").show();
 		if ($("#response").html() != "") {
 			$("#response").show();
 		}
