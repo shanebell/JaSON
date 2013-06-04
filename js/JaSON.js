@@ -332,7 +332,7 @@ var JaSON = {
 	        headers.push([ name, value ]);
 	    });
 		
-		var key = $.format.date(new Date(), "dd/MM/yyyy HH:mm:ss");
+        var key = moment().format();
 		var value = JSON.stringify({
 			"url" : $("#url").val(),
 			"method" : $("#method").val(),
@@ -371,28 +371,23 @@ var JaSON = {
 		for (var i=0; i<keys.length; i++) {
 			var key = keys[i];
 			
-			// load the first 50, delete the rest
-			if (i < 50) {
+			// load the first 100, delete the rest
+			if (i < 100) {
 				var value = JSON.parse(localStorage[key]);
 				
 				// remove leading http(s) from URL and trim to a max of 40 chars
 				var url = value.url.replace(/http(s)?:\/\//, "");
-				if (url.length > 35) {
-					url = url.substring(0, 35) + "...";
-				}
 
 				// add a row to the table
 				var row = $("<tr/>").addClass("savedRequest").attr("id", key);
 				row.append($("<td/>").html(i + 1 + "."));
-				row.append($("<td/>").html(key));
-				row.append($("<td/>").html(url));
+				row.append($("<td class='historyDate'/>").html(moment(key).format("YYYY/MM/DD HH:mm:ss")));
+				row.append($("<td class='historyUrl'/>").html(url));
 				row.append($("<td/>").html($("<span/>").addClass("label").html(value.method)));
 				
 				// add a tooltip if the URL had to be trimmed
-				if (url.indexOf("...") > 0) {
-					row.attr("title", value.url);
-				}
-				
+				row.attr("title", value.url);
+
 				$("#savedRequests").append(row);
 			} else {
 				localStorage.removeItem(key);
