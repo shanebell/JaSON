@@ -495,6 +495,7 @@ var JaSON = {
 		var jsonContentTypes = [ 
 		    "application/json",
 		    "application/x-javascript",
+            "application/javascript",
 		    "text/javascript",
 		    "text/x-javascript",
 		    "text/x-json"
