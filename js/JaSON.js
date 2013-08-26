@@ -371,8 +371,8 @@ var JaSON = {
 		for (var i=0; i<keys.length; i++) {
 			var key = keys[i];
 			
-			// load the first 100, delete the rest
-			if (i < 100) {
+			// load the first 250, delete the rest
+			if (i < 250) {
 				var value = JSON.parse(localStorage[key]);
 				
 				// remove leading http(s) from URL and trim to a max of 40 chars
