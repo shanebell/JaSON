@@ -119,8 +119,8 @@ var JaSON = {
             $("#responseCode").addClass(value.responseCodeClass);
             $("#responseTime").html(value.responseTime);
             $("#responseHeaders").html(value.responseHeaders);
-            $("#response").text(value.response);
 
+            JaSON.processResponseData(value.contentType, value.response);
             prettyPrint();
 
             $("#responseCode").attr("hidden", false);
@@ -463,19 +463,9 @@ var JaSON = {
 		var contentType = jqXHR.getResponseHeader("Content-Type");
 		
 		$("#rawResponse").text(data);
-		
-		if (JaSON.isJson(contentType)) {
-			try {
-		    	$("#response").text(JSON.stringify(JSON.parse(data), null, 2));
-			} catch (exception) {
-				
-				// JSON must be invalid, just show it unparsed
-		    	$("#response").text(data);
-			}
-		} else if (JaSON.isXml(contentType)) {
-			$("#response").text(data);
-		}
-		
+
+        JaSON.processResponseData(contentType, data);
+
 		// pretty print the response and response headers
 		prettyPrint();
 		
@@ -487,6 +477,25 @@ var JaSON = {
 			$("#response").show();
 		}
 	},
+
+    /**
+     * Process the response data and optionally format it for readability.
+     */
+    processResponseData: function(contentType, data) {
+        if (JaSON.isJson(contentType)) {
+            try {
+                $("#response").text(JSON.stringify(JSON.parse(data), null, 2));
+            } catch (exception) {
+
+                // JSON must be invalid, just show it unparsed
+                $("#response").text(data);
+            }
+        } else {
+
+            // TODO: format other content types for readability
+            $("#response").text(data);
+        }
+    },
 	
 	/**
 	 * Returns true if the content type is a valid JSON content type.
