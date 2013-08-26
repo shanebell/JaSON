@@ -1,8 +1,8 @@
 $(document).ready(function() {
-	
+
 	// default focus on the URL field
 	$("#url").focus();
-	
+
 	// load any previously saved requests
 	JaSON.loadSavedRequests(false);
 
@@ -35,6 +35,14 @@ $(document).ready(function() {
 
     // handle a manual clear of the request body content
     $("#requestBody").change(JaSON.handleRequestBodyClear);
+
+    // hitting enter in the URL field will submit the form
+    $("#url").keypress(function(event) {
+        if (event.which == 13) {
+            event.preventDefault();
+            JaSON.sendRequest();
+        }
+    });
 
 });
 
