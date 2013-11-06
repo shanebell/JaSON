@@ -1,5 +1,8 @@
 $(document).ready(function() {
 
+    // pre-compile handlebars templates
+    headerTemplate = Handlebars.compile($("#header-template").html());
+
 	// default focus on the URL field
 	$("#url").focus();
 
@@ -7,10 +10,13 @@ $(document).ready(function() {
 	JaSON.loadSavedRequests(false);
 
     // load a saved request from the history
-	$(document).on("click", ".savedRequest", JaSON.copySavedRequest);
+	$(document).on("click", ".saved-request", JaSON.copySavedRequest);
 
-    // add a header
-	$("#addHeader").click(JaSON.addHeaderInput);
+    // add/remove headers
+	$("#add-header-action").on("click", JaSON.addHeaderInput);
+    $("#headers").on("click", ".delete-header-action", function() {
+        $(this).parents(".header").remove();
+    });
 
     // send a request
 	$("#send").click(JaSON.sendRequest);
@@ -19,22 +25,17 @@ $(document).ready(function() {
 	$("#reset").click(JaSON.resetAndClear);
 
     // clear history
-	$("#clearSavedRequests").click(JaSON.clearSavedRequests);
-
-    // delete a header
-	$(document).on("click", ".deleteHeader", function() {
-		$(this).parents(".header").remove();
-	});
+	$("#clear-saved-requests-action").click(JaSON.clearSavedRequests);
 
     // manage tabs
-	$("#responseTab, #responseHeadersTab, #rawResponseTab").click(JaSON.manageTabs);
+	$("#response-tab, #response-headers-tab, #raw-response-tab").click(JaSON.manageTabs);
 
     // manage the editability and content of the request body
 	$("#method").on("change", JaSON.manageRequestBody);
-	$("#contentType").on("change", JaSON.manageRequestBody);
+	$("#content-type").on("change", JaSON.manageRequestBody);
 
     // handle a manual clear of the request body content
-    $("#requestBody").change(JaSON.handleRequestBodyClear);
+    $("#request-body").change(JaSON.handleRequestBodyClear);
 
     // hitting enter in the URL field will submit the form
     $("#url").keypress(function(event) {
@@ -55,33 +56,29 @@ var JaSON = {
 	 * Reset field visibility, css classes etc back to the default state.
 	 */
 	reset: function() {
-		
-		$("#responseHeadersTab").removeClass("active");
-		$("#rawResponseTab").removeClass("active");
-		$("#responseTab").addClass("active");
 
-        $("#responseCode").hide();
-		$("#responseCode").html("");
-		$("#responseCode").removeClass("label-important");
-		$("#responseCode").removeClass("label-success");
+        $(".nav-tabs li").removeClass("active");
+        $(".nav-tabs li:first").addClass("active");
 
-        $("#responseTime").hide();
-        $("#responseTime").html("");
+        $("#response-code").hide();
+		$("#response-code").html("");
+		$("#response-code").removeClass("label-important");
+		$("#response-code").removeClass("label-success");
+
+        $("#response-time").hide();
+        $("#response-time").html("");
 
         $("#response").hide();
 		$("#response").html("");
 
-        $("#rawResponse").hide();
-		$("#rawResponse").html("");
+        $("#raw-response").hide();
+		$("#raw-response").html("");
 
+        $("#response-headers").hide();
+		$("#response-headers").html("");
 
-        $("#responseHeaders").hide();
-		$("#responseHeaders").html("");
-
-        $(".help-inline").hide();
-		$(".help-inline").html("");
-		
-		$(".control-group").removeClass("error");
+        $(".help-block").hide();
+		$(".form-group").removeClass("has-error");
 	},
 	
 	/**
@@ -90,19 +87,20 @@ var JaSON = {
 	resetAndClear: function() {
 		JaSON.reset();
 		$("#url").val("");
-		$("#method").val("GET");
-		$("#contentType").val("JSON");
-        $("#requestBody").val("");
-        $("#requestBody").data("value", "");
-		$("#requestHeaders .header").remove();
+        $("#method").val("GET");
+        $("#content-type").val("application/json");
+        $("#request-body").val("");
+        $("#request-body").data("value", "");
+
+		$("#headers .header").remove();
 	},
 	
 	/**
 	 * Clear the saved request history.
 	 */
 	clearSavedRequests: function() {
-		$("#savedRequests").empty();
-		$("#savedRequestsRow").hide();
+		$("#saved-requests").empty();
+		$("#saved-requests-row").hide();
 		localStorage.clear();
 	},
 	
@@ -113,38 +111,40 @@ var JaSON = {
 		var key = $(this).attr("id");
 		var value = JSON.parse(localStorage[key]);
 
-		$(this).effect("transfer", { to: $("#leftPanel") }, 300, function() {
+        console.log("value: %j", value);
+
+		$(this).effect("transfer", { to: $("#left-panel") }, 300, function() {
 			$("#url").val(value.url);
 			$("#method").val(value.method);
-			$("#contentType").val(value.contentType);
-			$("#requestBody").val(value.requestBody);
-			$("#requestHeaders .header").remove();
+			$("#content-type").val(value.contentType);
+			$("#request-body").val(value.requestBody);
+			$("#headers .header").remove();
 			$(value.headers).each(function() {
 				JaSON.addHeaderInput(this[0], this[1]);
 			});
-            $("#rawResponse").text(value.response);
-            $("#responseCode").html(value.responseCode);
-            $("#responseCode").addClass(value.responseCodeClass);
-            $("#responseTime").html(value.responseTime);
-            $("#responseHeaders").html(value.responseHeaders);
+            $("#raw-response").text(value.response);
+            $("#response-code").html(value.responseCode);
+            $("#response-code").addClass(value.responseCodeClass);
+            $("#response-time").html(value.responseTime);
+            $("#response-headers").html(value.responseHeaders);
 
             JaSON.processResponseData(value.contentType, value.response);
             prettyPrint();
 
-            $("#responseCode").attr("hidden", false);
+            $("#response-code").attr("hidden", false);
             if ($("#response").html() != "") {
                 $("#response").attr("hidden", false);
             }
 			
-			$("#url").effect("highlight", {}, 1000)
-			$("#method").effect("highlight", {}, 1000)
-			$("#contentType").effect("highlight", {}, 1000)
-			$("#requestBody").effect("highlight", {}, 1000)
-			$("#requestHeaders .name").effect("highlight", {}, 1000)
-			$("#requestHeaders .value").effect("highlight", {}, 1000)
-			$("#responseCode").effect("highlight", {}, 1000)
-            $("#responseTime").effect("highlight", {}, 1000)
-			$("#response").effect("highlight", {}, 1000)
+			$("#url").effect("highlight", {}, 1000);
+			$("#method").effect("highlight", {}, 1000);
+			$("#content-type").effect("highlight", {}, 1000);
+			$("#request-body").effect("highlight", {}, 1000);
+			$("#requestHeaders .name").effect("highlight", {}, 1000);
+			$("#requestHeaders .value").effect("highlight", {}, 1000);
+			$("#response-code").effect("highlight", {}, 1000);
+            $("#response-time").effect("highlight", {}, 1000);
+			$("#response").effect("highlight", {}, 1000);
 
 			JaSON.manageRequestBody();
 		});
@@ -161,10 +161,9 @@ var JaSON = {
 		var url = $("#url").val().trim();
 		if (url == "") {
 			valid = false;
-			$("#urlError").html("URL is required");
-			$("#urlGroup").addClass("error");
-			$("#urlError").show();
-			$("#url").focus();
+            $("#url").focus();
+            $("#url-group").addClass("has-error");
+			$("#url-error").show();
 		}
 		
 		// validate request headers
@@ -189,26 +188,26 @@ var JaSON = {
 	    });
 		
 		// validate request body
-		var requestBody = $("#requestBody").val().trim();
-		var contentType = $("#contentType").val();
+		var requestBody = $("#request-body").val().trim();
+		var contentType = $("#content-type").val();
 		if (requestBody != "") {
 			if (contentType == "application/json" || contentType == "application/x-www-form-urlencoded; charset=UTF-8") {
 				try {
 					$.parseJSON(requestBody);
 				} catch (exception) {
 					valid = false;
-					$("#requestBodyError").html("Invalid JSON: " + exception.message);
-					$("#requestBodyGroup").addClass("error");
-					$("#requestBodyError").show();
+					$("#request-body-error").html("Invalid JSON: " + exception.message);
+					$("#request-body-group").addClass("has-error");
+					$("#request-body-error").show();
 				}		
 			} else if (contentType == "text/xml") {
 				try {
 					$.parseXML(requestBody);
 				} catch (exception) {
 					valid = false;
-					$("#requestBodyError").html(exception.message);
-					$("#requestBodyGroup").addClass("error");
-					$("#requestBodyError").show();
+					$("#request-body-error").html(exception.message);
+					$("#request-body-group").addClass("has-error");
+					$("#request-body-error").show();
 				}
 			}
 		}
@@ -220,30 +219,30 @@ var JaSON = {
 	 * Manage the display of the result tabs.
 	 */
 	manageTabs: function() {
-		$("#responseTab, #responseHeadersTab, #rawResponseTab").removeClass("active");
+		$("#response-tab, #response-headers-tab, #raw-response-tab").removeClass("active");
 		$(this).addClass("active");
 		
 		var response = $("#response");
-		var responseHeaders = $("#responseHeaders");
-		var rawResponse = $("#rawResponse");
+		var responseHeaders = $("#response-headers");
+		var rawResponse = $("#raw-response");
 
 		switch($(this).attr("id")) {
 		
-		case "responseTab":
+		case "response-tab":
 			responseHeaders.hide();
 		    rawResponse.hide();
 			if (response.html() != "") {
 				response.show();
 			}
 			break;
-		case "responseHeadersTab":
+		case "response-headers-tab":
 			response.hide();
 			rawResponse.hide();
 			if (responseHeaders.html() != "") {
 				responseHeaders.show();
 			}
 			break;
-		case "rawResponseTab":
+		case "raw-response-tab":
 			response.hide();
 			responseHeaders.hide();
 			if (rawResponse.html() != "") {
@@ -258,7 +257,7 @@ var JaSON = {
 	 */
 	manageRequestBody: function() {
 
-		var requestBody = $("#requestBody");
+		var requestBody = $("#request-body");
 
 		// save the current value of the request body field
 		if (requestBody.val()) {
@@ -267,7 +266,7 @@ var JaSON = {
 
 		// disable the field and populate as appropriate
 		var method = $("#method").val();
-        var contentType = $("#contentType").val();
+        var contentType = $("#content-type").val();
 		if (method == "POST" || method == "PUT" || contentType == "application/x-www-form-urlencoded; charset=UTF-8") {
 			requestBody.val(requestBody.data("value"));
 			requestBody.prop("disabled", false);
@@ -283,8 +282,8 @@ var JaSON = {
      * content type drop downs.
      */
     handleRequestBodyClear: function() {
-        if ($("#requestBody").val().trim() == "") {
-            $("#requestBody").data("value", "");
+        if ($("#request-body").val().trim() == "") {
+            $("#request-body").data("value", "");
         }
     },
 	
@@ -301,7 +300,7 @@ var JaSON = {
 		
 		$("#loading").show();
 
-        var contentType = $("#contentType").val();
+        var contentType = $("#content-type").val();
 
         // defaults
         var ajaxArgs = {
@@ -310,7 +309,7 @@ var JaSON = {
 	    	contentType: contentType,
 	        processData: false,
 			beforeSend: JaSON.processHeaders,
-	        data: $("#requestBody").val().trim(),
+	        data: $("#request-body").val().trim(),
 			success: JaSON.successResponse,
 			error: JaSON.errorResponse
 		};
@@ -321,7 +320,7 @@ var JaSON = {
             ajaxArgs.data = JSON.parse(ajaxArgs.data);
 	    }
 
-	    trackRequest(ajaxArgs.url);
+	    //trackRequest(ajaxArgs.url);
 
         JaSON.startTime = new Date().getTime();
 		$.ajax(ajaxArgs);
@@ -344,14 +343,14 @@ var JaSON = {
 		var value = JSON.stringify({
 			"url" : $("#url").val(),
 			"method" : $("#method").val(),
-			"contentType" : $("#contentType").val(),
+			"contentType" : $("#content-type").val(),
 			"headers" : headers,
-			"requestBody" : $("#requestBody").val(),
-            "responseCode" : $("#responseCode").text(),
-            "responseCodeClass" : $("#responseCode").attr('class'),
-            "response" : $("#rawResponse").text(),
-            "responseTime" : $("#responseTime").text(),
-            "responseHeaders" : $("#responseHeaders").text()
+			"requestBody" : $("#request-body").val(),
+            "responseCode" : $("#response-code").text(),
+            "responseCodeClass" : $("#response-code").attr('class'),
+            "response" : $("#raw-response").text(),
+            "responseTime" : $("#response-time").text(),
+            "responseHeaders" : $("#response-headers").text()
 		});
 
 		localStorage[key] = value;
@@ -368,7 +367,7 @@ var JaSON = {
 	 */
 	loadSavedRequests: function(refresh) {
 		
-		$("#savedRequests").empty();
+		$("#saved-requests").empty();
 		
 		var keys = [];
 		for (var key in localStorage) {
@@ -387,30 +386,29 @@ var JaSON = {
 				var url = value.url.replace(/http(s)?:\/\//, "");
 
 				// add a row to the table
-				var row = $("<tr/>").addClass("savedRequest").attr("id", key);
-				row.append($("<td/>").html(i + 1 + "."));
-				row.append($("<td class='historyDate'/>").html(moment(key).format("YYYY/MM/DD HH:mm:ss")));
-				row.append($("<td class='historyUrl'/>").html(url));
-				row.append($("<td/>").html($("<span/>").addClass("label").html(value.method)));
+				var row = $("<tr/>").addClass("saved-request").attr("id", key);
+                var historyDate = moment(key).format("YYYY/MM/DD HH:mm:ss");
+				row.append($("<td class='date-and-url'/>").html(historyDate + "<br/>" + url));
+				row.append($("<td/>").html($("<span/>").addClass("badge pull-right").html(value.method)));
 				
 				// add a tooltip if the URL had to be trimmed
 				row.attr("title", value.url);
 
-				$("#savedRequests").append(row);
+				$("#saved-requests").append(row);
 			} else {
 				localStorage.removeItem(key);
 			}
 		}
 		
-		if ($(".savedRequest").size() > 0) {
-			$("#savedRequestsRow").show();
+		if ($(".saved-request").size() > 0) {
+			$("#saved-requests-row").show();
 			if (refresh) {
-				$(".savedRequest:first").effect("highlight", {}, 1000)
+				$(".saved-request:first").effect("highlight", {}, 1000)
 			}
 		}
 		
 		// enable tooltips
-		$(".savedRequest").tooltip({ "placement": "bottom" });
+		$(".saved-request").tooltip({ "placement": "bottom" });
 	},
 	
 	/**
@@ -461,16 +459,16 @@ var JaSON = {
         JaSON.endTime = new Date().getTime();
 
 		// response code and headers
-		$("#responseCode").addClass(success ? "label-success" : "label-important");
-		$("#responseCode").html(jqXHR.status + ": " + jqXHR.statusText);
-        $("#responseTime").html((JaSON.endTime - JaSON.startTime) + "ms");
-		$("#responseHeaders").html(jqXHR.getAllResponseHeaders());
+		$("#response-code").addClass(success ? "label-success" : "label-danger");
+		$("#response-code").html(jqXHR.status + ": " + jqXHR.statusText);
+        $("#response-time").html((JaSON.endTime - JaSON.startTime) + "ms");
+		$("#response-headers").html(jqXHR.getAllResponseHeaders());
 
 		// parse the response body if there is one
 		var data = jqXHR.responseText;
 		var contentType = jqXHR.getResponseHeader("Content-Type");
 		
-		$("#rawResponse").text(data);
+		$("#raw-response").text(data);
 
         JaSON.processResponseData(contentType, data);
 
@@ -479,8 +477,8 @@ var JaSON = {
 		
 		// show the response
 		$("#loading").hide();
-		$("#responseCode").show();
-        $("#responseTime").show();
+		$("#response-code").show();
+        $("#response-time").show();
 		if ($("#response").html() != "") {
 			$("#response").show();
 		}
@@ -542,26 +540,18 @@ var JaSON = {
 	 * Add a request header input field (name and value) to the page
 	 */
 	addHeaderInput: function(name, value) {
-		
-		// cleanse inputs
-		name = typeof name == "string" ? name : ""; 
-		value = typeof value == "string" ? value : "";
-		
-		var header = $(".headerPrototype").clone();
-		header.removeClass("headerPrototype");
-		header.addClass("header");
-		$(header).find(".name").val(name);
-		$(header).find(".value").val(value);
-		$("#requestHeaders").append(header);
-		header.show();
-		$(header).find(".name").focus();
+        $("#headers").append(headerTemplate({
+            "name": typeof name == "string" ? name : "",
+            "value": typeof value == "string" ? value : ""
+        }));
+        $("#headers .name:last").focus();
 	}
 };
 
 
 /**
  * Google analytics
- */
+
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-30163240-1']);
 _gaq.push(['_trackPageview']);
@@ -575,3 +565,4 @@ _gaq.push(['_trackPageview']);
 function trackRequest(url) {
 	_gaq.push(['_trackEvent', 'URL Request', url]);
 }
+ */

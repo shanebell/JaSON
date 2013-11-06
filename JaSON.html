@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <!--
-   Copyright 2012 Shane Bell
+   Copyright 2013 Shane Bell
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@
     <title>JaSON</title>
 
     <!-- JQuery -->
-    <script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
-    <script src="js/jquery-ui-1.8.20.custom.min.js" type="text/javascript"></script>
+    <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
 
-    <!-- Twitter Bootstrap -->
+    <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
 
@@ -37,206 +37,201 @@
     <!-- Moment.js -->
     <script src="js/moment.min.js"></script>
 
+    <!-- Handlebars -->
+    <script src="js/handlebars.js"></script>
+
     <!-- JaSON -->
     <link href="css/JaSON.css" rel="stylesheet">
     <script src="js/JaSON.js"></script>
 
-    <!--  Custom Styles -->
-    <style type="text/css">
-    body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-    }
-    </style>
+    <!-- Handlebars templates -->
+    <script id="header-template" type="text/x-handlebars-template">
+        <div class="header col-md-12">
+            <div class="form-group">
+                <input type="text" class="name form-control" placeHolder="name" value="{{name}}"/>
+            </div>
+            <div class="form-group">
+                <input type="text" class="value form-control" placeHolder="value" value="{{value}}"/>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-link delete-header-action"><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        </div>
+    </script>
 
 </head>
     
 <body>
 
-	<!-- Navbar -->    
-	<div class="navbar navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<a href="#" class="brand">JaSON</a>
-				<img src="img/icon_32.png" style="padding-top: 4px" />
-                <ul class="nav pull-right">
-					<li>
-						<a href="javascript:void(0);" id="about" data-toggle="modal" data-target="#aboutModal">About</a>
-					</li>
+	<!-- Navbar -->
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"><img src="img/icon-48x48.png"/>JaSON</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="javascript:void(0);" id="about" data-toggle="modal" data-target="#about-modal">About</a>
+                    </li>
                 </ul>
-			</div>
-		</div>
-	</div>
-	
+            </div>
+        </div>
+    </div>
+
 	<!-- Container -->
-	<div class="container">
-	
-		<!-- Request URL -->
-		<div class="row">
-			<div id="urlGroup" class="control-group span12">
-	            <div class="controls">
-					<input type="text" id="url" class="span12" placeHolder="http://www.example.com/service.json"/>
-					<span id="urlError" class="help-inline" style="display:none"></span>
-	            </div>
-	        </div>
-		</div>
-		
-		<div class="row">
-		
-			<!-- Request method -->
-			<div id="leftPanel" class="span5">
-			
-				<div class="row">
-					<div class="control-group span5">
-			            <div class="controls">
-							<select id="method" class="span2">
-								<option>GET</option>
-								<option>POST</option>
-								<option>PUT</option>
-								<option>DELETE</option>
-								<option>HEAD</option>
-							</select>
-							&nbsp;
-							<select id="contentType" class="span2">
-								<option value="application/json">JSON</option>
-								<option value="text/xml">XML (text/xml)</option>
+	<div class="container main">
+
+        <div class="row">
+
+            <!-- LEFT COLUMN -->
+            <div class="col-md-6" id="left-panel">
+
+                <!-- Request URL -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="url-group" class="form-group">
+                            <input type="text" id="url" class="form-control" placeHolder="http://www.example.com/service.json"/>
+                            <span id="url-error" class="help-block" style="display:none;">URL is required.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request method & content type -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <select id="method" class="form-control">
+                                <option>GET</option>
+                                <option>POST</option>
+                                <option>PUT</option>
+                                <option>DELETE</option>
+                                <option>HEAD</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col col-md-8">
+                        <div class="form-group">
+                            <select id="content-type" class="form-control">
+                                <option value="application/json">JSON (application/json)</option>
+                                <option value="text/xml">XML (text/xml)</option>
                                 <option value="application/xml">XML (application/xml)</option>
-								<option value="application/x-www-form-urlencoded; charset=UTF-8">Form encoded</option>
-							</select>
-			            </div>
-			        </div>
-			    </div>
-		
-				<!-- Request headers -->
-				<div class="row">
-					<div class="control-group span5">
-					    <h4>HTTP headers</h4>
-					    <div class="controls">
-						    <ul id="requestHeaders" class="unstyled">
-						    	
-						    	<!-- Prototype header row to be cloned and added to the list -->
-						    	<li class="headerPrototype" style="display:none">
-						    		<div class="control-group">
-						    			<div class="controls">
-						    				<input type="text" class="name span2" placeHolder="name"/>&nbsp;
-						    				<input type="text" class="value span2" placeHolder="value"/>&nbsp;
-						    				<a href="javascript:void(0)"><i class="icon-remove deleteHeader"></i></a>
-						    				<span class="help-inline" style="display:none"></span>
-						    			</div>
-						    		</div>
-						    	</li>
-						    </ul>
-						    <button class="btn" id="addHeader">Add HTTP header</button>
-					    </div>
-				    </div>
-				</div>
-				
-			</div>
-			
-			<div id="rightPanel" class="span7">
-			
-				<!-- Request history -->
-				<div class="row hide" id="savedRequestsRow">
-				
-					<div class="controls">
-						<table class="table table-condensed">
-							<thead>
-								<tr>
-									<th colspan="4">Request history (click to re-use)</th>
-								</tr>
-							</thead>
-							<tbody id="savedRequests"></tbody>
-						</table>
-					</div>
-					<button id="clearSavedRequests" class="btn pull-right">Clear History <i class="icon-trash"></i></button>
-				</div>
-				
-			</div>
-		
-		</div>
-			
-		<!-- Request body -->
-		<div class="row">
-	    	<div id="requestBodyGroup" class="control-group span12">
-		    	<h4>Request body</h4>
-	    		<div class="controls">
-			    	<textarea id="requestBody" class="span12" rows="8" placeholder="JSON or XML content. 'Form encoded' requests can contain JSON content which will be converted to form request parameters and is available for all method types. 'JSON' and 'XML' requests pass the content through unmodified in the request body and hence is only available for POST and PUT methods. Note that JSON is strictly validated so element names and values must be &quot;quoted&quot;." disabled></textarea>
-					<span id="requestBodyError" class="help-inline" style="display:none"></span>
-	    		</div>
-	    	</div>
-	    	<div class="control-group span12">
-	    		<div class="controls">
+                                <option value="application/x-www-form-urlencoded; charset=UTF-8">Form encoded</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request headers -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Request Headers</h4>
+                        <h6><a href="javascript:void(0);" id="add-header-action"><span class="glyphicon glyphicon-plus"></span> Add header</a></h6>
+                    </div>
+                    <div id="headers" class="form-inline">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="col-md-6" id="right-panel">
+
+                <!-- Request history -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th colspan="2">
+                                    <span class="glyphicon glyphicon-time"></span> History
+                                    <a href="javascript:void(0);" id="clear-saved-requests-action" class="pull-right">Clear</a>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="saved-requests"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Request body -->
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Request body</h4>
+                <div id="request-body-group" class="form-group">
+                    <textarea id="request-body" class="form-control col-md-12" rows="8" placeholder="JSON or XML content. 'Form encoded' requests can contain JSON content which will be converted to form request parameters and is available for all method types. 'JSON' and 'XML' requests pass the content through unmodified in the request body and hence is only available for POST and PUT methods. Note that JSON is strictly validated so element names and values must be &quot;quoted&quot;." disabled></textarea>
+                    <span id="request-body-error" class="help-block" style="display:none;"></span>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="form-group">
                     <input type="button" class="btn btn-primary" id="send" value="Send request"/>
                     <input type="button" class="btn" id="reset" value="Reset fields"/>
-				</div>
-	    	</div>
-		</div>
-		
-		<!-- Response tabs -->
-		<div class="row">
-			<div id="responseTabs" class="span12">
-				<ul class="nav nav-tabs">
-					<li id="responseTab" class="active">
-						<a href="javascript:void(0)">Response</a>
-					</li>
-					<li id="responseHeadersTab">
-						<a href="javascript:void(0)">Response headers</a>
-					</li>
-					<li id="rawResponseTab">
-						<a href="javascript:void(0)">Raw response</a>
-					</li>
-				</ul>
-				
-				<img id="loading" src="img/loading.gif" style="display:none" />
-				
-				<p>
-					<span id="responseCode" class="label" style="display:none"></span>
-                    <span id="responseTime" class="label label-info" style="display:none"></span>
-				</p>
-				<pre id="response" class="prettyprint" style="display:none"></pre>
-				<pre id="rawResponse" style="display:none"></pre>
-				<pre id="responseHeaders" class="prettyprint" style="display:none"></pre>
-			</div>
-		</div>
-	
+                </div>
+            </div>
+        </div>
+
+        <!-- Response tabs -->
+        <div class="row">
+            <div id="response-tabs" class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li id="response-tab" class="active">
+                        <a href="javascript:void(0)">Response</a>
+                    </li>
+                    <li id="response-headers-tab">
+                        <a href="javascript:void(0)">Response headers</a>
+                    </li>
+                    <li id="raw-response-tab">
+                        <a href="javascript:void(0)">Raw response</a>
+                    </li>
+                </ul>
+
+                <img id="loading" src="img/loading.gif" style="display:none;" />
+
+                <p>
+                    <span id="response-code" class="label" style="display:none;"></span>
+                    <span id="response-time" class="label label-info" style="display:none;"></span>
+                </p>
+
+                <pre id="response" class="prettyprint" style="display:none;"></pre>
+                <pre id="raw-response" style="display:none;"></pre>
+                <pre id="response-headers" class="prettyprint" style="display:none;"></pre>
+            </div>
+        </div>
+
 		<!-- Footer -->
-		<footer class="footer">
-			<p class="help-block pull-right">v0.0</p>
+		<footer class="footer col-md-12">
+			<p class="pull-right">v0.0</p>
 		</footer>
-		
+
 	</div>
 
-	<!-- About modal -->
-	<div id="aboutModal" class="modal hide fade">
-		<div class="modal-header">
-			<i class="icon-remove close" data-dismiss="modal"></i>
-			<h3>JaSON</h3>
-			<p>v0.0</p>
-		</div>
-		<div class="modal-body">
-			<p>
-				<img src="img/icon_128.png"/>
-			</p>
-			<p>
-				Developed and maintained by <a href="mailto:shane.bell@gmail.com" target="_mail">Shane Bell</a>
-			</p>
-			<p>
-				JaSON is open source and licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_license">Apache License v2.0</a>
-			</p>
-            <p>
-                Install JaSON from the <a href="https://chrome.google.com/webstore/detail/jason/oealdlhfjifhgbmjnenhkgffglaibojf" target="_webstore">Chrome Web Store</a>
-            </p>
-			<p>
-				Source code available at <a href="https://github.com/shanebell/JaSON" target="_github">GitHub</a>
-			</p>
-			<p>
-				Friday the 13th icon designed by <a href="http://tonygil.com/" target="_tony">Tony Gil</a>
-			</p>
-		</div>
-		<div class="modal-footer">
-			<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
-		</div>
-	</div>
+    <!-- About modal -->
+    <div id="about-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>JaSON</h3>
+                    <p>v0.0</p>
+                </div>
+                <div class="modal-body">
+                    <p><img src="img/icon-128x128.png"/></p>
+                    <p>Developed and maintained by <a href="mailto:shane.bell@gmail.com" target="_mail">Shane Bell</a></p>
+                    <p>Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_license">Apache License v2.0</a></p>
+                    <p>Available from the <a href="https://chrome.google.com/webstore/detail/jason/oealdlhfjifhgbmjnenhkgffglaibojf" target="_webstore">Chrome Web Store</a></p>
+                    <p>Source code available at <a href="https://github.com/shanebell/JaSON" target="_github">GitHub</a></p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 

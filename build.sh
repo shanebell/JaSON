@@ -28,7 +28,7 @@ if [ $# -eq 1 ]; then
 	echo "\t\t[DONE]"
 	
 	echo "Copying build artifacts...\c"
-	cp -r LICENSE NOTICE manifest.json css img js build/
+	cp -r LICENSE NOTICE manifest.json css/*.css img js font build/
 	echo "\t\t[DONE]"
 	
 	echo "Compressing Javascript...\c"

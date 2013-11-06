@@ -1,0 +1,102 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+.navbar-brand {
+  padding: 0px;
+}
+
+.ui-effects-transfer {
+  border: 1px solid black;
+}
+
+.main {
+  margin-top: 4px;
+}
+
+#about-modal {
+
+  .modal-body {
+    margin-left: 40px;
+  }
+
+  img {
+    float: left;
+  }
+}
+
+.tt-hint {
+  display: none;
+}
+
+.control-group {
+  margin-bottom: 0px;
+}
+
+#right-panel {
+  max-height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-bottom: 20px;
+}
+
+#saved-requests {
+
+  .saved-request {
+    cursor: pointer;
+  }
+
+  .date-and-url {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 4px;
+    vertical-align: middle;
+  }
+}
+
+.header {
+  margin-bottom: 6px;
+}
+
+#response-tabs {
+  margin: 10px;
+
+  .nav {
+    margin-bottom: 10px;
+  }
+}
+
+.help-inline {
+  margin-bottom: 10px;
+}
+
+#url, #request-body, #right-panel, .header {
+  font-size: 10pt;
+}
+
+#response, #raw-response, #response-headers {
+  font-size: 8pt;
+  line-height: 14pt;
+}
+
+.footer {
+  color: #ccc;
+}
+
+/**
+ * Fix for modal screen flicker
+ * https://github.com/twbs/bootstrap/issues/8768
+ */
+body.modal-open {
+  margin-right: 0px !important;
+}
+
+.modal-open .navbar-fixed-top {
+  margin-right: 0px !important;
+}
