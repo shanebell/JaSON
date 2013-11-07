@@ -48,13 +48,16 @@
     <script id="header-template" type="text/x-handlebars-template">
         <div class="header col-md-12">
             <div class="form-group">
-                <input type="text" class="name form-control" placeHolder="name" value="{{name}}"/>
-            </div>
-            <div class="form-group">
-                <input type="text" class="value form-control" placeHolder="value" value="{{value}}"/>
-            </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-link delete-header-action"><span class="glyphicon glyphicon-remove"></span></button>
+                <div class="form-group">
+                    <input type="text" class="name form-control" placeHolder="name" value="{{name}}"/>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="value form-control" placeHolder="value" value="{{value}}"/>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-link delete-header-action"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+                <span class="help-block" style="display:none;"></span>
             </div>
         </div>
     </script>
@@ -140,7 +143,7 @@
                 <!-- Request history -->
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                             <tr>
                                 <th colspan="2">

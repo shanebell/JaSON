@@ -1,3 +1,5 @@
+@grey: #888;
+
 body {
   padding-top: 60px;
   padding-bottom: 40px;
@@ -8,7 +10,7 @@ body {
 }
 
 .ui-effects-transfer {
-  border: 1px solid black;
+  border: 2px dotted @grey;
 }
 
 .main {
@@ -35,11 +37,25 @@ body {
 }
 
 #right-panel {
-  max-height: 200px;
+  max-height: 210px;
   overflow-y: scroll;
   overflow-x: hidden;
-  margin-bottom: 20px;
 }
+
+.tooltip {
+
+  .tooltip-inner {
+    max-width: 450px;
+  }
+
+  div {
+    color: white;
+    margin: 2px;
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+}
+
 
 #saved-requests {
 
@@ -64,6 +80,13 @@ body {
   margin-bottom: 6px;
 }
 
+#add-header-action {
+  text-decoration: none;
+  position: absolute;
+  top: 2px;
+  left: 175px;
+}
+
 #response-tabs {
   margin: 10px;
 
@@ -76,7 +99,7 @@ body {
   margin-bottom: 10px;
 }
 
-#url, #request-body, #right-panel, .header {
+#url, #request-body, #right-panel, .header, .help-block {
   font-size: 10pt;
 }
 

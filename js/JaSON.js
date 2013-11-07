@@ -111,9 +111,9 @@ var JaSON = {
 		var key = $(this).attr("id");
 		var value = JSON.parse(localStorage[key]);
 
-        console.log("value: %j", value);
+        JaSON.reset();
 
-		$(this).effect("transfer", { to: $("#left-panel") }, 300, function() {
+		$(this).effect("transfer", { to: $(".main") }, 200, function() {
 			$("#url").val(value.url);
 			$("#method").val(value.method);
 			$("#content-type").val(value.contentType);
@@ -131,20 +131,19 @@ var JaSON = {
             JaSON.processResponseData(value.contentType, value.response);
             prettyPrint();
 
-            $("#response-code").attr("hidden", false);
-            if ($("#response").html() != "") {
-                $("#response").attr("hidden", false);
-            }
-			
 			$("#url").effect("highlight", {}, 1000);
 			$("#method").effect("highlight", {}, 1000);
 			$("#content-type").effect("highlight", {}, 1000);
 			$("#request-body").effect("highlight", {}, 1000);
-			$("#requestHeaders .name").effect("highlight", {}, 1000);
-			$("#requestHeaders .value").effect("highlight", {}, 1000);
+			$("#headers .name").effect("highlight", {}, 1000);
+			$("#headers .value").effect("highlight", {}, 1000);
 			$("#response-code").effect("highlight", {}, 1000);
             $("#response-time").effect("highlight", {}, 1000);
 			$("#response").effect("highlight", {}, 1000);
+
+            if ($("#response").html() == "") {
+                $("#response").hide();
+            }
 
 			JaSON.manageRequestBody();
 		});
@@ -171,20 +170,23 @@ var JaSON = {
 		$(".header").each(function() {
 			var name = $(".name", this).val().trim().toLowerCase();
 	        var value = $(".value", this).val().trim();
-	        
+
+            var error = "";
 	        if (name == "" || value == "") {
 	        	valid = false;
-	        	$(".help-inline", this).html("Header name and value are required");
-	        	$(".control-group", this).addClass("error");
-	        	$(".help-inline", this).show();
+                error = "Header name and value are required";
 	        } else if (headers.indexOf(name) >= 0) {
 	        	valid = false;
-	        	$(".help-inline", this).html("A header with this name already exists");
-	        	$(".control-group", this).addClass("error");
-	        	$(".help-inline", this).show();
+                error = "A header with this name already exists";
 	        } else {
 				headers.push(name);
 	        }
+
+            if (!valid) {
+                $(".help-block", this).html(error);
+	        	$(".form-group", this).addClass("has-error");
+	        	$(".help-block", this).show();
+            }
 	    });
 		
 		// validate request body
@@ -200,7 +202,7 @@ var JaSON = {
 					$("#request-body-group").addClass("has-error");
 					$("#request-body-error").show();
 				}		
-			} else if (contentType == "text/xml") {
+			} else if (contentType == "text/xml" || contentType == "application/xml") {
 				try {
 					$.parseXML(requestBody);
 				} catch (exception) {
@@ -392,7 +394,7 @@ var JaSON = {
 				row.append($("<td/>").html($("<span/>").addClass("badge pull-right").html(value.method)));
 				
 				// add a tooltip if the URL had to be trimmed
-				row.attr("title", value.url);
+				row.attr("title", "<div>"+value.url+"</div>");
 
 				$("#saved-requests").append(row);
 			} else {
@@ -408,7 +410,12 @@ var JaSON = {
 		}
 		
 		// enable tooltips
-		$(".saved-request").tooltip({ "placement": "bottom" });
+		$(".saved-request").tooltip({
+            placement: "bottom",
+            container: "body",
+            html: true,
+            delay: { show: 500, hide: 100 }
+        });
 	},
 	
 	/**
@@ -427,7 +434,7 @@ var JaSON = {
 	    $(".header").each(function() {
 			var name = $(".name", this).val().trim();
 	        var value = $(".value", this).val().trim();
-	        
+
 	        if (name == "" || value == "") {
 	        	$(this).remove();
 	        } else {
