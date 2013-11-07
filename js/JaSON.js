@@ -62,8 +62,7 @@ var JaSON = {
 
         $("#response-code").hide();
 		$("#response-code").html("");
-		$("#response-code").removeClass("label-important");
-		$("#response-code").removeClass("label-success");
+		$("#response-code").removeClass("label-danger label-success");
 
         $("#response-time").hide();
         $("#response-time").html("");
