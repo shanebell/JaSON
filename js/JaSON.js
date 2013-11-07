@@ -1,58 +1,66 @@
 $(document).ready(function() {
-
-    // pre-compile handlebars templates
-    headerTemplate = Handlebars.compile($("#header-template").html());
-    savedRequestTemplate = Handlebars.compile($("#saved-request-template").html());
-
-	// default focus on the URL field
-	$("#url").focus();
-
-	// load any previously saved requests
-	JaSON.loadSavedRequests(false);
-
-    // load a saved request from the history
-	$(document).on("click", ".saved-request", JaSON.copySavedRequest);
-
-    // add/remove headers
-	$("#add-header-action").on("click", JaSON.addHeaderInput);
-    $("#headers").on("click", ".delete-header-action", function() {
-        $(this).parents(".header").remove();
-    });
-
-    // send a request
-	$("#send").click(JaSON.sendRequest);
-
-    // reset fields
-	$("#reset").click(JaSON.resetAndClear);
-
-    // clear history
-	$("#clear-saved-requests-action").click(JaSON.clearSavedRequests);
-
-    // manage tabs
-	$("#response-tab, #response-headers-tab, #raw-response-tab").click(JaSON.manageTabs);
-
-    // manage the editability and content of the request body
-	$("#method").on("change", JaSON.manageRequestBody);
-	$("#content-type").on("change", JaSON.manageRequestBody);
-
-    // handle a manual clear of the request body content
-    $("#request-body").change(JaSON.handleRequestBodyClear);
-
-    // hitting enter in the URL field will submit the form
-    $("#url").keypress(function(event) {
-        if (event.which == 13) {
-            event.preventDefault();
-            JaSON.sendRequest();
-        }
-    });
-
+    JaSON.init();
 });
 
 var JaSON = {
 
-    startTime: 0,
-    endTime: 0,
-	
+    init: function() {
+
+        JaSON.startTime = 0;
+        JaSON.endTime = 0;
+
+        // pre-compile handlebars templates
+        JaSON.headerTemplate = Handlebars.compile($("#header-template").html()),
+        JaSON.savedRequestTemplate = Handlebars.compile($("#saved-request-template").html()),
+
+        // default focus on the URL field
+        $("#url").focus();
+
+        // load any previously saved requests
+        JaSON.loadSavedRequests(false);
+
+        // register handlers on buttons, links etc.
+        JaSON.registerEventHandlers();
+    },
+
+    registerEventHandlers: function() {
+
+        // load a saved request from the history
+        $("#saved-requests").on("click", ".saved-request", JaSON.copySavedRequest);
+
+        // add/remove headers
+        $("#add-header-action").on("click", JaSON.addHeaderInput);
+        $("#headers").on("click", ".delete-header-action", function() {
+            $(this).parents(".header").remove();
+        });
+
+        // send a request
+        $("#send").click(JaSON.sendRequest);
+
+        // reset fields
+        $("#reset").click(JaSON.resetAndClear);
+
+        // clear history
+        $("#clear-saved-requests-action").click(JaSON.clearSavedRequests);
+
+        // manage tabs
+        $("#response-tab, #response-headers-tab, #raw-response-tab").click(JaSON.manageTabs);
+
+        // manage the editability and content of the request body
+        $("#method, #content-type").on("change", JaSON.manageRequestBody);
+
+        // handle a manual clear of the request body content
+        $("#request-body").change(JaSON.handleRequestBodyClear);
+
+        // hitting enter in the URL field will submit the form
+        $("#url").keypress(function(event) {
+            if (event.which == 13) {
+                event.preventDefault();
+                JaSON.sendRequest();
+            }
+        });
+    },
+
 	/**
 	 * Reset field visibility, css classes etc back to the default state.
 	 */
@@ -389,7 +397,7 @@ var JaSON = {
 
 				// add a row to the table
 
-                $("#saved-requests").append(savedRequestTemplate({
+                $("#saved-requests").append(JaSON.savedRequestTemplate({
                     "id": key,
                     "shortUrl": url,
                     "longUrl": value.url,
@@ -546,7 +554,7 @@ var JaSON = {
 	 * Add a request header input field (name and value) to the page
 	 */
 	addHeaderInput: function(name, value) {
-        $("#headers").append(headerTemplate({
+        $("#headers").append(JaSON.headerTemplate({
             "name": typeof name == "string" ? name : "",
             "value": typeof value == "string" ? value : ""
         }));
