@@ -61,6 +61,12 @@
             </div>
         </div>
     </script>
+    <script id="saved-request-template" type="text/x-handlebars-template">
+        <tr class="saved-request" id="{{id}}" title="<div>{{longUrl}}</div>">
+            <td class="date-and-url">{{date}}<br/>{{shortUrl}}</td>
+            <td><span class="badge pull-right">{{method}}</span></td>
+        </tr>
+    </script>
 
 </head>
     
@@ -87,7 +93,7 @@
 
         <div class="row">
 
-            <!-- LEFT COLUMN -->
+            <!-- Left column -->
             <div class="col-md-6" id="left-panel">
 
                 <!-- Request URL -->
@@ -137,7 +143,7 @@
 
             </div>
 
-            <!-- RIGHT COLUMN -->
+            <!-- Right column -->
             <div class="col-md-6" id="right-panel">
 
                 <!-- Request history -->
@@ -159,7 +165,6 @@
             </div>
 
         </div>
-
 
         <!-- Request body -->
         <div class="row">

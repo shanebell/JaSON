@@ -2,6 +2,7 @@ $(document).ready(function() {
 
     // pre-compile handlebars templates
     headerTemplate = Handlebars.compile($("#header-template").html());
+    savedRequestTemplate = Handlebars.compile($("#saved-request-template").html());
 
 	// default focus on the URL field
 	$("#url").focus();
@@ -387,15 +388,14 @@ var JaSON = {
 				var url = value.url.replace(/http(s)?:\/\//, "");
 
 				// add a row to the table
-				var row = $("<tr/>").addClass("saved-request").attr("id", key);
-                var historyDate = moment(key).format("YYYY/MM/DD HH:mm:ss");
-				row.append($("<td class='date-and-url'/>").html(historyDate + "<br/>" + url));
-				row.append($("<td/>").html($("<span/>").addClass("badge pull-right").html(value.method)));
-				
-				// add a tooltip if the URL had to be trimmed
-				row.attr("title", "<div>"+value.url+"</div>");
 
-				$("#saved-requests").append(row);
+                $("#saved-requests").append(savedRequestTemplate({
+                    "id": key,
+                    "shortUrl": url,
+                    "longUrl": value.url,
+                    "date": moment(key).format("YYYY/MM/DD HH:mm:ss"),
+                    "method": value.method
+                }));
 			} else {
 				localStorage.removeItem(key);
 			}
