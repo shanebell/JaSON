@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#   Copyright 2012 Shane Bell
+#   Copyright 2013 Shane Bell
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ if [ $# -eq 1 ]; then
 	echo "\t\t[DONE]"
 	
 	echo "Copying build artifacts...\c"
-	cp -r LICENSE NOTICE manifest.json css/*.css img js font build/
+	cp -r LICENSE NOTICE manifest.json css fonts img js build/
 	echo "\t\t[DONE]"
 	
 	echo "Compressing Javascript...\c"

@@ -13,16 +13,16 @@ var JaSON = {
         JaSON.headerTemplate = Handlebars.compile($("#header-template").html()),
         JaSON.savedRequestTemplate = Handlebars.compile($("#saved-request-template").html()),
 
-        // default focus on the URL field
+        // set focus on the URL field
         $("#url").focus();
 
-        // load any previously saved requests
         JaSON.loadSavedRequests(false);
-
-        // register handlers on buttons, links etc.
         JaSON.registerEventHandlers();
     },
 
+    /**
+     * Register handlers for button clicks etc.
+     */
     registerEventHandlers: function() {
 
         // load a saved request from the history
@@ -35,22 +35,22 @@ var JaSON = {
         });
 
         // send a request
-        $("#send").click(JaSON.sendRequest);
+        $("#send").on("click", JaSON.sendRequest);
 
         // reset fields
-        $("#reset").click(JaSON.resetAndClear);
+        $("#reset").on("click", JaSON.resetAndClear);
 
         // clear history
-        $("#clear-saved-requests-action").click(JaSON.clearSavedRequests);
+        $("#clear-saved-requests-action").on("click", JaSON.clearSavedRequests);
 
         // manage tabs
-        $("#response-tab, #response-headers-tab, #raw-response-tab").click(JaSON.manageTabs);
+        $("#response-tab, #response-headers-tab, #raw-response-tab").on("click", JaSON.manageTabs);
 
         // manage the editability and content of the request body
         $("#method, #content-type").on("change", JaSON.manageRequestBody);
 
         // handle a manual clear of the request body content
-        $("#request-body").change(JaSON.handleRequestBodyClear);
+        $("#request-body").on("change", JaSON.handleRequestBodyClear);
 
         // hitting enter in the URL field will submit the form
         $("#url").keypress(function(event) {
@@ -121,7 +121,7 @@ var JaSON = {
 
         JaSON.reset();
 
-		$(this).effect("transfer", { to: $(".main") }, 200, function() {
+		$(this).effect("transfer", { to: $(".main") }, 300, function() {
 			$("#url").val(value.url);
 			$("#method").val(value.method);
 			$("#content-type").val(value.contentType);
@@ -139,15 +139,7 @@ var JaSON = {
             JaSON.processResponseData(value.contentType, value.response);
             prettyPrint();
 
-			$("#url").effect("highlight", {}, 1000);
-			$("#method").effect("highlight", {}, 1000);
-			$("#content-type").effect("highlight", {}, 1000);
-			$("#request-body").effect("highlight", {}, 1000);
-			$("#headers .name").effect("highlight", {}, 1000);
-			$("#headers .value").effect("highlight", {}, 1000);
-			$("#response-code").effect("highlight", {}, 1000);
-            $("#response-time").effect("highlight", {}, 1000);
-			$("#response").effect("highlight", {}, 1000);
+			$("#url, #method, #content-type, #request-body, #headers .name, #headers .value, #response-code, #response-time, #response").effect("highlight", {}, 1000);
 
             if ($("#response").html() == "") {
                 $("#response").hide();
