@@ -137,7 +137,6 @@ var JaSON = {
             $("#response-headers").html(value.responseHeaders);
 
             JaSON.processResponseData(value.contentType, value.response);
-            prettyPrint();
 
 			$("#url, #method, #content-type, #request-body, #headers .name, #headers .value, #response-code, #response-time, #response").effect("highlight", {}, 1000);
 
@@ -478,9 +477,6 @@ var JaSON = {
 
         JaSON.processResponseData(contentType, data);
 
-		// pretty print the response and response headers
-		prettyPrint();
-		
 		// show the response
 		$("#loading").hide();
 		$("#response-code").show();
@@ -494,18 +490,24 @@ var JaSON = {
      * Process the response data and optionally format it for readability.
      */
     processResponseData: function(contentType, data) {
+
         if (JaSON.isJson(contentType)) {
             try {
                 $("#response").text(JSON.stringify(JSON.parse(data), null, 2));
             } catch (exception) {
-
                 // JSON must be invalid, just show it unparsed
                 $("#response").text(data);
             }
         } else {
 
-            // TODO: format other content types for readability
+            // TODO: format XML for readability
             $("#response").text(data);
+        }
+
+        // only syntax highlight if the response data is small
+        if (data.length < 10000) {
+            $("#response, #response-headers").removeClass("prettyprinted");
+            prettyPrint();
         }
     },
 	
