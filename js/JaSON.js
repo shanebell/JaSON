@@ -470,7 +470,6 @@ var JaSON = {
 		$("#raw-response").text(data);
 
         JaSON.processResponseData(contentType, data);
-        prettyPrint();
 
 		// show the response
 		$("#loading").hide();
