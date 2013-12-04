@@ -13,9 +13,9 @@
     "48": "img/icon-48x48.png",
     "128": "img/icon-128x128.png"
   },
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "permissions": [
     "http://*/",
     "https://*/"
-  ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; https://ssl.google-analytics.com; object-src 'self'"
+  ]
 }

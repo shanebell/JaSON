@@ -26,6 +26,10 @@ if [ $# -eq 1 ]; then
 	echo "Creating build directory...\c"
 	mkdir build
 	echo "\t\t[DONE]"
+
+	echo "Compiling Handlebars templates...\c"
+	handlebars *.handlebars -f js/handlebars.templates.js
+	echo "\t[DONE]"
 	
 	echo "Copying build artifacts...\c"
 	cp -r LICENSE NOTICE manifest.json css fonts img js build/

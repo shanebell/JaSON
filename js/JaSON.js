@@ -9,10 +9,6 @@ var JaSON = {
         JaSON.startTime = 0;
         JaSON.endTime = 0;
 
-        // pre-compile handlebars templates
-        JaSON.headerTemplate = Handlebars.compile($("#header-template").html()),
-        JaSON.savedRequestTemplate = Handlebars.compile($("#saved-request-template").html()),
-
         // set focus on the URL field
         $("#url").focus();
 
@@ -321,8 +317,6 @@ var JaSON = {
             ajaxArgs.data = JSON.parse(ajaxArgs.data);
 	    }
 
-	    //trackRequest(ajaxArgs.url);
-
         JaSON.startTime = new Date().getTime();
 		$.ajax(ajaxArgs);
 	},
@@ -388,7 +382,7 @@ var JaSON = {
 
 				// add a row to the table
 
-                $("#saved-requests").append(JaSON.savedRequestTemplate({
+                $("#saved-requests").append(Handlebars.templates.savedRequest({
                     "id": key,
                     "shortUrl": url,
                     "longUrl": value.url,
@@ -476,6 +470,7 @@ var JaSON = {
 		$("#raw-response").text(data);
 
         JaSON.processResponseData(contentType, data);
+        prettyPrint();
 
 		// show the response
 		$("#loading").hide();
@@ -548,7 +543,7 @@ var JaSON = {
 	 * Add a request header input field (name and value) to the page
 	 */
 	addHeaderInput: function(name, value) {
-        $("#headers").append(JaSON.headerTemplate({
+        $("#headers").append(Handlebars.templates.requestHeader({
             "name": typeof name == "string" ? name : "",
             "value": typeof value == "string" ? value : ""
         }));
@@ -559,18 +554,17 @@ var JaSON = {
 
 /**
  * Google analytics
-
+ */
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-30163240-1']);
 _gaq.push(['_trackPageview']);
 
 (function() {
-	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	ga.src = 'https://ssl.google-analytics.com/ga.js';
-	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = 'https://ssl.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
 })();
 
-function trackRequest(url) {
-	_gaq.push(['_trackEvent', 'URL Request', url]);
-}
- */
