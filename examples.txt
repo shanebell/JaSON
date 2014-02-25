@@ -1,0 +1,5 @@
+http://ip.jsontest.com
+
+http://headers.jsontest.com/
+
+http://date.jsontest.com/
