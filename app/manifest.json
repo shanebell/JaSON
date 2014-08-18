@@ -1,0 +1,21 @@
+{
+	"name": "JaSON",
+	"version": "2.0.0",
+	"manifest_version": 2,
+	"description": "JaSON: JSON and XML test utility.",
+	"app": {
+		"launch": {
+			"local_path": "JaSON.html"
+		}
+	},
+	"icons": {
+		"16": "images/icon-16x16.png",
+		"48": "images/icon-48x48.png",
+		"128": "images/icon-128x128.png"
+	},
+	"content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+	"permissions": [
+		"http://*/",
+		"https://*/"
+	]
+}
