@@ -53,20 +53,6 @@ module.exports = function (grunt) {
 			}
 		},
 
-		// run jshint over javascript
-		jshint: {
-			options: {
-				jshintrc: '.jshintrc',
-				reporter: require('jshint-stylish'),
-				force: true
-			},
-			all: [
-				'Gruntfile.js',
-				'app/scripts/{,*/}*.js',
-				'test/spec/{,*/}*.js'
-			]
-		},
-
 		// package artifacts
 		copy: {
 			package: {
@@ -133,7 +119,7 @@ module.exports = function (grunt) {
 			},
 			js: {
 				files: ['app/scripts/{,*/}*.js'],
-				tasks: ['jshint', 'copy'],
+				tasks: ['copy'],
 				options: {
 					livereload: true
 				}
@@ -145,7 +131,6 @@ module.exports = function (grunt) {
 		'clean:package',
 		'clean:dist',
 		'less',
-		'jshint',
 		'copy',
 		'watch'
 	]);
@@ -154,7 +139,6 @@ module.exports = function (grunt) {
 		'clean:package',
 		'clean:dist',
 		'less',
-		'jshint',
 		'copy',
 		'compress'
 	]);

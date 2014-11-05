@@ -7,3 +7,5 @@ package
 dist
 node_modules
 bower_components
+app/lib/
+app/css/

@@ -2,8 +2,9 @@
 	"name": "JaSON",
 	"version": "2.0.0",
 	"dependencies": {
-		"angularjs": "~1.2.22",
+		"angular": "~1.2.22",
 		"angular-bootstrap": "~0.11.0",
+		"angular-moment": "~0.8.0",
 		"bootstrap": "~3.1.1",
 		"font-awesome": "~4.0.3",
 		"underscore": "~1.6.0"
@@ -18,7 +19,7 @@
 			]
 		},
 		"bootstrap": {
-			"css": "dist/css/*.min.css",
+			"css": "css/*.min.css",
 			"fonts": "dist/fonts/*.*"
 		},
 		"font-awesome": {
