@@ -1,0 +1,2 @@
+https://github.com/webcss/angular-indexedDB
+http://www.w3.org/TR/IndexedDB/
