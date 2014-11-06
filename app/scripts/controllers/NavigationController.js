@@ -8,21 +8,20 @@ angular.module('JaSON')
 			function init() {
 				$log.debug('Initialising NavigationController...');
 
-				bingFunctions();
+				bindFunctions();
 			}
 
-			function bingFunctions() {
+			function bindFunctions() {
 
-				$scope.about = function() {
+				/**
+				 * Show the 'About' modal.
+				 */
+				$scope.about = function () {
 					$modal.open({
 						templateUrl: '/templates/about-modal.html',
-						size: 'sm',
-						controller: 'AboutModalController',
-						windowClass: 'app-modal-window'
+						windowClass: 'about-modal'
 					});
-
 				};
-
 			}
 
 			init();
