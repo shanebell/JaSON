@@ -5,6 +5,8 @@ angular.module('JaSON')
 	[ '$http', '$log',
 		function($http, $log) {
 
+			$log.debug('Initialising HttpService...');
+
 			// PRIVATE FUNCTIONS
 
 			return {

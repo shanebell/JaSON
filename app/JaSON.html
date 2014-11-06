@@ -20,10 +20,10 @@
 
 <head>
 
-    <title>JaSON</title>
+	<title>JaSON</title>
 
 	<!-- libs -->
-	<script src="/lib/underscore/underscore.js" type="text/javascript"></script>
+	<script src="/lib/lodash/lodash.compat.js" type="text/javascript"></script>
 	<script src="/lib/moment/moment.js" type="text/javascript"></script>
 
 	<!-- angular -->
@@ -41,164 +41,170 @@
 	<script src="/scripts/app.js" type="text/javascript"></script>
 	<script src="/scripts/services/HttpService.js" type="text/javascript"></script>
 	<script src="/scripts/controllers/NavigationController.js" type="text/javascript"></script>
+	<script src="/scripts/controllers/MainController.js" type="text/javascript"></script>
+	<script src="/scripts/controllers/HistoryController.js" type="text/javascript"></script>
 	<link href="/css/JaSON.css" rel="stylesheet">
 
 	<!-- TODO: find an angular friendly library for this -->
-    <!-- Google Pretty Printer
-    <link href="../css/prettify.css" rel="stylesheet">
-    <script src="../js/prettify.js"></script>
-    -->
+	<!-- Google Pretty Printer
+	<link href="../css/prettify.css" rel="stylesheet">
+	<script src="../js/prettify.js"></script>
+	-->
 
 </head>
-    
+
 <body>
 
-	<!-- Navbar -->
-    <div class="navbar navbar-default navbar-fixed-top" ng-controller="NavigationController">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#"><img src="images/icon-48x48.png"/>JaSON</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="" id="about" ng-click="about()">About</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+<!-- Navbar -->
+<div class="navbar navbar-default navbar-fixed-top" ng-controller="NavigationController">
+	<div class="container">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#"><img src="images/icon-48x48.png"/>JaSON</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					<a href="" id="about" ng-click="about()">About</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
 
-	<!-- Container -->
-	<div class="container main">
+<!-- Container -->
+<div class="container main" ng-controller="MainController">
 
-        <div class="row">
+	<div class="row">
 
-            <!-- Left column -->
-            <div class="col-md-6" id="left-panel">
+		<!-- Left column -->
+		<div class="col-md-6" id="left-panel">
 
-                <!-- Request URL -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="url-group" class="form-group">
-                            <input type="text" id="url" class="form-control" placeHolder="http://www.example.com/service.json"/>
-                            <span id="url-error" class="help-block" style="display:none;">URL is required.</span>
-                        </div>
-                    </div>
-                </div>
+			<!-- Request URL -->
+			<div class="row">
+				<div class="col-md-12">
+					<div id="url-group" class="form-group">
+						<input type="text" id="url" class="form-control" placeHolder="http://www.example.com/service.json" ng-model="model.url"/>
+						<span id="url-error" class="help-block" style="display:none;">URL is required.</span>
+					</div>
+				</div>
+			</div>
 
-                <!-- Request method & content type -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <select id="method" class="form-control">
-                                <option>GET</option>
-                                <option>POST</option>
-                                <option>PUT</option>
-                                <option>DELETE</option>
-                                <option>HEAD</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col col-md-8">
-                        <div class="form-group">
-                            <select id="content-type" class="form-control">
-                                <option value="application/json">JSON (application/json)</option>
-                                <option value="text/xml">XML (text/xml)</option>
-                                <option value="application/xml">XML (application/xml)</option>
-                                <option value="application/x-www-form-urlencoded; charset=UTF-8">Form encoded</option>
-                                <option value="">None</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+			<!-- Request method & content type -->
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<select id="method" class="form-control" ng-model="model.httpMethod" ng-options="httpMethod for httpMethod in httpMethods"></select>
+					</div>
+				</div>
+				<div class="col col-md-8">
+					<div class="form-group">
+						<select id="content-type" class="form-control" ng-model="model.contentType" ng-options="contentType.value as contentType.name for contentType in contentTypes"></select>
+					</div>
+				</div>
+			</div>
 
-                <!-- Request headers -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4>Request Headers</h4>
-                        <h6><a href="#" id="add-header-action"><span class="glyphicon glyphicon-plus"></span> Add header</a></h6>
-                    </div>
-                    <div id="headers" class="form-inline">
-                    </div>
-                </div>
+			<!-- Request headers -->
+			<div class="row">
+				<div class="col-md-12">
+					<h4>Request Headers</h4>
+					<h6><a href="#" ng-click="addHeader()" id="add-header-action"><span class="glyphicon glyphicon-plus"></span> Add header</a></h6>
+				</div>
+				<div id="headers" class="form-inline">
+					<div class="header col-md-12">
+						<div class="form-group" ng-repeat="header in model.headers">
+							<div class="form-group">
+								<input type="text" class="name form-control" placeHolder="name" value="{{ header.name }}"/>
+							</div>
+							<div class="form-group">
+								<input type="text" class="value form-control" placeHolder="value" value="{{ header.value }}"/>
+							</div>
+							<div class="form-group">
+								<a href="#" ng-click="removeHeader(header)" class="delete-header-action">
+									<span class="glyphicon glyphicon-remove"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            </div>
+		</div>
 
-            <!-- Right column -->
-            <div class="col-md-6" id="right-panel">
+		<!-- Right column -->
+		<div class="col-md-6" id="right-panel" ng-controller="HistoryController">
 
-                <!-- Request history -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th colspan="2">
-                                    <span class="glyphicon glyphicon-time"></span> History
-                                    <a href="#" id="clear-saved-requests-action" class="pull-right">Clear</a>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody id="saved-requests"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Request body -->
-        <div class="row">
-            <div class="col-md-12">
-                <h4>Request body</h4>
-                <div id="request-body-group" class="form-group">
-                    <textarea id="request-body" class="form-control col-md-12" rows="8" placeholder="JSON or XML content. 'Form encoded' requests can contain JSON content which will be converted to form request parameters and is available for all method types. 'JSON' and 'XML' requests pass the content through unmodified in the request body and hence is only available for POST and PUT methods. Note that JSON is strictly validated so element names and values must be &quot;quoted&quot;." disabled></textarea>
-                    <span id="request-body-error" class="help-block" style="display:none;"></span>
-                </div>
-            </div>
-            <div class="form-group col-md-12">
-                <div class="form-group">
-                    <input type="button" class="btn btn-primary" id="send" value="Send request"/>
-                    <input type="button" class="btn" id="reset" value="Reset fields"/>
-                </div>
-            </div>
-        </div>
-
-        <!-- Response tabs -->
-        <div class="row">
-            <div id="response-tabs" class="col-md-12">
-                <ul class="nav nav-tabs">
-                    <li id="response-tab" class="active">
-                        <a href="#">Response</a>
-                    </li>
-                    <li id="response-headers-tab">
-                        <a href="#">Response headers</a>
-                    </li>
-                    <li id="raw-response-tab">
-                        <a href="#">Raw response</a>
-                    </li>
-                </ul>
-
-                <img id="loading" src="images/loading.gif" style="display:none;" />
-
-                <p>
-                    <span id="response-code" class="label" style="display:none;"></span>
-                    <span id="response-time" class="label label-info" style="display:none;"></span>
-                </p>
-
-                <pre id="response" class="prettyprint" style="display:none;"></pre>
-                <pre id="raw-response" style="display:none;"></pre>
-                <pre id="response-headers" class="prettyprint" style="display:none;"></pre>
-            </div>
-        </div>
-
-		<!-- Footer -->
-		<footer class="footer col-md-12">
-			<p class="pull-right">v0.0</p>
-		</footer>
+			<!-- Request history -->
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table table-hover">
+						<thead>
+						<tr>
+							<th colspan="2">
+								<span class="glyphicon glyphicon-time"></span> History
+								<a href="#" id="clear-saved-requests-action" class="pull-right">Clear</a>
+							</th>
+						</tr>
+						</thead>
+						<tbody id="saved-requests"></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 
 	</div>
+
+	<!-- Request body -->
+	<div class="row">
+		<div class="col-md-12">
+			<h4>Request body</h4>
+
+			<div id="request-body-group" class="form-group">
+				<textarea id="request-body" class="form-control col-md-12" rows="8" placeholder="{{ requestBodyPlaceholder }}" ng-model="model.requestBody" ng-disabled="!requestBodyAllowed()"></textarea>
+				<span id="request-body-error" class="help-block" style="display:none;"></span>
+			</div>
+		</div>
+		<div class="form-group col-md-12">
+			<div class="form-group">
+				<input type="button" class="btn btn-primary" id="send" value="Send request" ng-click="sendRequest()"/>
+				<input type="button" class="btn" id="reset" value="Reset fields" ng-click="resetFields()"/>
+			</div>
+		</div>
+	</div>
+
+	<!-- Response tabs -->
+	<div class="row">
+		<div id="response-tabs" class="col-md-12">
+			<ul class="nav nav-tabs">
+				<li id="response-tab" class="active">
+					<a href="#">Response</a>
+				</li>
+				<li id="response-headers-tab">
+					<a href="#">Response headers</a>
+				</li>
+				<li id="raw-response-tab">
+					<a href="#">Raw response</a>
+				</li>
+			</ul>
+
+			<img id="loading" src="images/loading.gif" style="display:none;"/>
+
+			<p>
+				<span id="response-code" class="label" style="display:none;"></span>
+				<span id="response-time" class="label label-info" style="display:none;"></span>
+			</p>
+
+			<pre id="response" class="prettyprint" style="display:none;"></pre>
+			<pre id="raw-response" style="display:none;"></pre>
+			<pre id="response-headers" class="prettyprint" style="display:none;"></pre>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer class="footer col-md-12">
+		<p class="pull-right">v0.0</p>
+	</footer>
+
+</div>
 
 </body>
 
