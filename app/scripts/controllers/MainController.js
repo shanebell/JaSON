@@ -2,8 +2,8 @@
 
 angular.module('JaSON')
 	.controller('MainController',
-	[ '$scope', '$log',
-		function ($scope, $log) {
+	[ '$scope', '$log','$http', 'HttpService', 'Data',
+		function ($scope, $log, $http, HttpService, Data) {
 
 			function init() {
 				$log.debug('Initialising MainController...');
@@ -14,42 +14,12 @@ angular.module('JaSON')
 
 			function bindVars() {
 
-				$scope.httpMethods = [
-					'GET',
-					'POST',
-					'PUT',
-					'DELETE',
-					'HEAD'
-				];
-
-				$scope.contentTypes = [
-					{
-						name: 'JSON (application/json)',
-						value: 'application/json'
-					},
-					{
-						name: 'XML (text/xml)',
-						value: 'text/xml'
-					},
-					{
-						name: 'XML (application/xml)',
-						value: 'application/xml'
-					},
-					{
-						name: 'Form encoded',
-						value: 'application/x-www-form-urlencoded; charset=UTF-8'
-					},
-					{
-						name: 'None',
-						value: ''
-					}
-				];
-
-				$scope.requestBodyPlaceholder = 'JSON or XML content. \'Form encoded\' requests can contain JSON content which will be converted to form request parameters and is available for all method types. \'JSON\' and \'XML\' requests pass the content through unmodified in the request body and hence is only available for POST and PUT methods. Note that JSON is strictly validated so element names and values must be "quoted".';
+				$scope.httpMethods = Data.httpMethods;
+				$scope.contentTypes = Data.contentTypes;
+				$scope.requestBodyPlaceholder = Data.requestBodyPlaceholder;
 
 				$scope.model = buildDefaultModel();
 			}
-
 
 			function buildDefaultModel() {
 				return {
@@ -59,6 +29,10 @@ angular.module('JaSON')
 					headers: [],
 					requestBody: ''
 				};
+			}
+
+			function validate() {
+				// TODO validate the state of the form
 			}
 
 			function bindFunctions() {
@@ -72,14 +46,50 @@ angular.module('JaSON')
 				};
 
 				$scope.sendRequest = function() {
+
 					$log.debug('Send request: %s', angular.toJson($scope.model));
+
+					var httpConfig = {
+						method: $scope.model.httpMethod,
+						url: $scope.model.url,
+						headers: angular.extend([ { name: 'Content-Type', value: $scope.model.contentType } ], $scope.model.headers)
+					};
+
+					if ($scope.requestBodyAllowed()) {
+						httpConfig.data = $scope.model.requestBody;
+					}
+
+					$http(httpConfig)
+						.success(function(data, status, headers, config) {
+							// TODO populate the model with the response data
+							$log.debug('data: %s', angular.toJson(data));
+							$log.debug('status: %s', status);
+							$log.debug('headers: %s', angular.toJson(headers));
+							$log.debug('config: %s', angular.toJson(config));
+						})
+						.error(function(data, status, headers, config) {
+							// TODO populate the model with the error data
+							$log.error('HTTP error: %s', status);
+						});
 				};
 
+				/**
+				 * Reset the form back to it's default state.
+				 */
 				$scope.resetFields = function() {
 					$scope.model = buildDefaultModel();
 				};
 
+				/**
+				 * Used to determine whether the user can provide a request body based on
+				 * the current value of the HTTP method. eg: HTTP GET does not support a
+				 * request body.
+				 *
+				 * @returns {boolean} true if a request body is allowed, false otherwise.
+				 */
 				$scope.requestBodyAllowed = function() {
+
+					// TODO check if request content is allowed for other content types
 					return $scope.model.httpMethod == 'POST' || $scope.model.httpMethod == 'PUT';
 				}
 			}

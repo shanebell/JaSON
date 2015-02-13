@@ -2,8 +2,8 @@
 
 angular.module('JaSON')
 	.controller('NavigationController',
-	[ '$scope', '$log', '$http', '$modal',
-		function ($scope, $log, $http, $modal) {
+	[ '$scope', '$log', '$modal',
+		function ($scope, $log, $modal) {
 
 			function init() {
 				$log.debug('Initialising NavigationController...');

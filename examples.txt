@@ -3,3 +3,5 @@ http://ip.jsontest.com
 http://headers.jsontest.com/
 
 http://date.jsontest.com/
+
+http://httpbin.org/ip

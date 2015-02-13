@@ -1,2 +1,8 @@
 https://github.com/webcss/angular-indexedDB
 http://www.w3.org/TR/IndexedDB/
+
+
+
+TODO:
+- add all third party libraries to NOTICE
+- add angular-highlightjs for syntax highlighting

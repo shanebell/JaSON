@@ -40,16 +40,13 @@
 	<!-- JaSON -->
 	<script src="/scripts/app.js" type="text/javascript"></script>
 	<script src="/scripts/services/HttpService.js" type="text/javascript"></script>
+	<script src="/scripts/services/HistoryService.js" type="text/javascript"></script>
 	<script src="/scripts/controllers/NavigationController.js" type="text/javascript"></script>
 	<script src="/scripts/controllers/MainController.js" type="text/javascript"></script>
 	<script src="/scripts/controllers/HistoryController.js" type="text/javascript"></script>
 	<link href="/css/JaSON.css" rel="stylesheet">
 
-	<!-- TODO: find an angular friendly library for this -->
-	<!-- Google Pretty Printer
-	<link href="../css/prettify.css" rel="stylesheet">
-	<script src="../js/prettify.js"></script>
-	-->
+	<!-- TODO: drop in angular-highlightjs for syntax highlighting -->
 
 </head>
 
@@ -111,7 +108,7 @@
 				</div>
 				<div id="headers" class="form-inline">
 					<div class="header col-md-12">
-						<div class="form-group" ng-repeat="header in model.headers">
+						<div class="form-group" ng-repeat="header in model.headers track by $index">
 							<div class="form-group">
 								<input type="text" class="name form-control" placeHolder="name" value="{{ header.name }}"/>
 							</div>
@@ -193,9 +190,9 @@
 				<span id="response-time" class="label label-info" style="display:none;"></span>
 			</p>
 
-			<pre id="response" class="prettyprint" style="display:none;"></pre>
-			<pre id="raw-response" style="display:none;"></pre>
-			<pre id="response-headers" class="prettyprint" style="display:none;"></pre>
+			<pre id="response" class="prettyprint" style="display:none;">{{model.responseData}}</pre>
+			<pre id="raw-response" style="display:none;">{{model.responseData}}</pre>
+			<pre id="response-headers" class="prettyprint" style="display:none;">{{model.responseHeaders}}</pre>
 		</div>
 	</div>
 

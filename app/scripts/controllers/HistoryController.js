@@ -2,8 +2,8 @@
 
 angular.module('JaSON')
 	.controller('HistoryController',
-	[ '$scope', '$log',
-		function ($scope, $log) {
+	[ '$scope', '$log', 'HistoryService',
+		function ($scope, $log, HistoryService) {
 
 			function init() {
 				$log.debug('Initialising HistoryController...');

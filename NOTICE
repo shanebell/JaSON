@@ -1,14 +1,10 @@
    JaSON - JSON Test Utility - a Google Chrome plugin
-   Copyright 2014 Shane Bell
-   
-   Javascript functionality built with JQuery which is open source
+   Copyright 2015 Shane Bell
+
+   Javascript functionality built with AngularJS which is open source
    and licensed under the MIT License.
-   http://jquery.com
+   https://angularjs.org/
    
    User interface styling built with Twitter Bootstrap which is
    open source and licensed under the Apache License v2.0.
    http://twitter.github.com/bootstrap/
-   
-   Javascript compression built with Google Closure Compiler which
-   is open source and licensed under the Apache License v2.0
-   http://developers.google.com/closure/compiler
