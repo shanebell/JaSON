@@ -1,5 +1,37 @@
 @grey: #888;
 
+
+// COMMON
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+
+  .form-group {
+    margin-bottom: 8px;
+  }
+
+  .panel-body {
+    height: 250px;
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+}
+
+
+// NAVBAR
+.navbar {
+
+  .container-fluid {
+    margin: 0 15px;
+  }
+
+  .navbar-brand {
+    padding: 0px;
+  }
+
+}
+
+// ABOUT MODAL
 .about-modal {
   text-align: center;
   .modal-dialog {
@@ -8,65 +40,19 @@
       text-align: center;
     }
   }
-} 
-
-
-body {
-  padding-top: 60px;
-  padding-bottom: 40px;
 }
 
-.navbar-brand {
-  padding: 0px;
-}
-
-.ui-effects-transfer {
-  border: 2px dotted @grey;
+#response-tabs {
+  margin-top: 10px;
 }
 
 .main {
   margin-top: 4px;
 }
 
-#about-modal {
-
-  .modal-body {
-    margin-left: 40px;
-  }
-
-  img {
-    float: left;
-  }
-}
-
-.tt-hint {
-  display: none;
-}
-
 .control-group {
   margin-bottom: 0px;
 }
-
-#right-panel {
-  max-height: 210px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
-.tooltip {
-
-  .tooltip-inner {
-    max-width: 450px;
-  }
-
-  div {
-    color: white;
-    margin: 2px;
-    word-break: break-all;
-    word-wrap: break-word;
-  }
-}
-
 
 #saved-requests {
 
@@ -87,15 +73,24 @@ body {
   }
 }
 
-.header {
-  margin-bottom: 6px;
+#add-header-action {
+  font-size: 12px;
 }
 
-#add-header-action {
-  text-decoration: none;
-  position: absolute;
-  top: 2px;
-  left: 175px;
+#request-headers {
+  margin-top: 6px;
+  td {
+    border-top: none;
+    padding: 2px;
+    
+    a {
+      line-height: 30px;
+    }
+  }
+}
+
+.label {
+  font-size: 12px;
 }
 
 #response-tabs {
@@ -106,6 +101,12 @@ body {
   #raw-response {
     padding: 2px;
   }
+}
+
+#response-status {
+  position: absolute;
+  top: 10px;
+  right: 15px;
 }
 
 .help-inline {

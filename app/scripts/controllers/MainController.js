@@ -17,17 +17,51 @@ angular.module('JaSON')
 				$scope.httpMethods = Data.httpMethods;
 				$scope.contentTypes = Data.contentTypes;
 				$scope.requestBodyPlaceholder = Data.requestBodyPlaceholder;
+				$scope.responseCodes = Data.responseCodes;
+
+				$scope.loading = false;
 
 				$scope.model = buildDefaultModel();
 			}
 
 			function buildDefaultModel() {
 				return {
-					url: '',
+					url: 'http://localhost:3000/',
 					httpMethod: _.first($scope.httpMethods),
 					contentType: _.first($scope.contentTypes).value,
 					headers: [],
-					requestBody: ''
+					requestBody: '',
+					response: {},
+					history: [
+						{ method: 'GET', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'DELETE', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'PUT', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'POST', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'POST', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'DELETE', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'POST', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'PUT', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'POST', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'DELETE', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'PUT', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'DELETE', url: 'http://www.google.com/api/x/y/z?abc=123', 'contentType': 'application/json' },
+						{ method: 'POST', url: 'http://www.google.com', 'contentType': 'application/json' },
+						{ method: 'PUT', url: 'http://www.google.com', 'contentType': 'application/json' },
+						{ method: 'PUT', url: 'http://www.google.com', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com', 'contentType': 'application/json' },
+						{ method: 'DELETE', url: 'http://www.google.com', 'contentType': 'application/json' },
+						{ method: 'GET', url: 'http://www.google.com', 'contentType': 'application/json' },
+					]
 				};
 			}
 
@@ -47,29 +81,46 @@ angular.module('JaSON')
 
 				$scope.sendRequest = function() {
 
-					$log.debug('Send request: %s', angular.toJson($scope.model));
+					var headers = {
+						'Content-Type': $scope.model.contentType
+					};
+					_.each($scope.model.headers, function(header) {
+						headers[header.name] = header.value;
+					});
 
 					var httpConfig = {
 						method: $scope.model.httpMethod,
 						url: $scope.model.url,
-						headers: angular.extend([ { name: 'Content-Type', value: $scope.model.contentType } ], $scope.model.headers)
+						headers: headers
 					};
 
 					if ($scope.requestBodyAllowed()) {
 						httpConfig.data = $scope.model.requestBody;
 					}
 
+					$scope.loading = true;
+
+					var startTime = new Date().getTime()
 					$http(httpConfig)
-						.success(function(data, status, headers, config) {
-							// TODO populate the model with the response data
-							$log.debug('data: %s', angular.toJson(data));
-							$log.debug('status: %s', status);
-							$log.debug('headers: %s', angular.toJson(headers));
-							$log.debug('config: %s', angular.toJson(config));
+						.success(function(data, status, headers) {
+							var endTime = new Date().getTime();
+							$scope.model.response = {
+								data: data,
+								status: status,
+								headers: headers(),
+								time: endTime - startTime
+							};
+							$scope.loading = false;
 						})
-						.error(function(data, status, headers, config) {
-							// TODO populate the model with the error data
-							$log.error('HTTP error: %s', status);
+						.error(function(data, status, headers) {
+							var endTime = new Date().getTime();
+							$scope.model.response = {
+								data: data,
+								status: status,
+								headers: headers(),
+								time: endTime - startTime
+							};
+							$scope.loading = false;
 						});
 				};
 

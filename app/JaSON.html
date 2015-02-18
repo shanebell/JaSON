@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <!--
-   Copyright 2014 Shane Bell
+   Copyright 2015 Shane Bell
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@
 	<!-- libs -->
 	<script src="/lib/lodash/lodash.compat.js" type="text/javascript"></script>
 	<script src="/lib/moment/moment.js" type="text/javascript"></script>
+	<script src="/lib/highlightjs/highlight.pack.js" type="text/javascript"></script>
+	<link href="/lib/highlightjs/default.css" rel="stylesheet">
 
 	<!-- angular -->
 	<script src="/lib/angular/angular.js" type="text/javascript"></script>
@@ -36,6 +38,7 @@
 	<!-- angular libs-->
 	<script src="/lib/angular-moment/angular-moment.js" type="text/javascript"></script>
 	<script src="/lib/angular-bootstrap/ui-bootstrap-tpls.js" type="text/javascript"></script>
+	<script src="/lib/angular-highlightjs/angular-highlightjs.js" type="text/javascript"></script>
 
 	<!-- JaSON -->
 	<script src="/scripts/app.js" type="text/javascript"></script>
@@ -46,15 +49,13 @@
 	<script src="/scripts/controllers/HistoryController.js" type="text/javascript"></script>
 	<link href="/css/JaSON.css" rel="stylesheet">
 
-	<!-- TODO: drop in angular-highlightjs for syntax highlighting -->
-
 </head>
 
 <body>
 
 <!-- Navbar -->
 <div class="navbar navbar-default navbar-fixed-top" ng-controller="NavigationController">
-	<div class="container">
+	<div class="container-fluid">
 		<div class="navbar-header">
 			<a class="navbar-brand" href="#"><img src="images/icon-48x48.png"/>JaSON</a>
 		</div>
@@ -69,135 +70,171 @@
 </div>
 
 <!-- Container -->
-<div class="container main" ng-controller="MainController">
+<div class="container-fluid main" ng-controller="MainController">
 
 	<div class="row">
 
-		<!-- Left column -->
-		<div class="col-md-6" id="left-panel">
+		<!-- left column (url, headers, request body, response etc) -->
+		<div class="col-lg-8">
 
-			<!-- Request URL -->
 			<div class="row">
-				<div class="col-md-12">
-					<div id="url-group" class="form-group">
-						<input type="text" id="url" class="form-control" placeHolder="http://www.example.com/service.json" ng-model="model.url"/>
-						<span id="url-error" class="help-block" style="display:none;">URL is required.</span>
-					</div>
-				</div>
-			</div>
 
-			<!-- Request method & content type -->
-			<div class="row">
-				<div class="col-md-4">
-					<div class="form-group">
-						<select id="method" class="form-control" ng-model="model.httpMethod" ng-options="httpMethod for httpMethod in httpMethods"></select>
-					</div>
-				</div>
-				<div class="col col-md-8">
-					<div class="form-group">
-						<select id="content-type" class="form-control" ng-model="model.contentType" ng-options="contentType.value as contentType.name for contentType in contentTypes"></select>
-					</div>
-				</div>
-			</div>
+				<div class="col-lg-6">
 
-			<!-- Request headers -->
-			<div class="row">
-				<div class="col-md-12">
-					<h4>Request Headers</h4>
-					<h6><a href="#" ng-click="addHeader()" id="add-header-action"><span class="glyphicon glyphicon-plus"></span> Add header</a></h6>
-				</div>
-				<div id="headers" class="form-inline">
-					<div class="header col-md-12">
-						<div class="form-group" ng-repeat="header in model.headers track by $index">
-							<div class="form-group">
-								<input type="text" class="name form-control" placeHolder="name" value="{{ header.name }}"/>
+					<!-- Request details (url, method etc) -->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Request details</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+
+								<!-- Request URL -->
+								<div class="col-lg-12">
+									<div class="form-group">
+										<input type="text" id="url" class="form-control" placeHolder="http://www.example.com/service.json" ng-model="model.url"/>
+										<span id="url-error" class="help-block" style="display:none;">URL is required.</span>
+									</div>
+								</div>
+
+								<!-- Request method -->
+								<div class="col-lg-12">
+									<div class="form-group">
+										<select id="method" class="form-control" ng-model="model.httpMethod" ng-options="httpMethod for httpMethod in httpMethods"></select>
+									</div>
+								</div>
+
+								<!-- Content type -->
+								<div class="col-lg-12">
+									<div class="form-group">
+										<select id="content-type" class="form-control" ng-model="model.contentType" ng-options="contentType.value as contentType.name for contentType in contentTypes"></select>
+									</div>
+								</div>
 							</div>
-							<div class="form-group">
-								<input type="text" class="value form-control" placeHolder="value" value="{{ header.value }}"/>
+
+							<!-- Headers -->
+							<div class="row">
+								<div class="col-lg-12">
+									<a href="#" ng-click="addHeader()" id="add-header-action">
+										<span class="glyphicon glyphicon-plus"></span> Add request header
+									</a>
+									<table id="request-headers" class="table table-condensed">
+										<tbody>
+											<tr ng-repeat="header in model.headers track by $index">
+												<td>
+													<input type="text" class="name form-control input-sm" placeHolder="name" ng-model="header.name"/>
+												</td>
+												<td>
+													<input type="text" class="value form-control input-sm" placeHolder="value" ng-model="header.value"/>
+												</td>
+												<td>
+													<a href="#" ng-click="removeHeader(header)">
+														<span class="glyphicon glyphicon-remove"></span>
+													</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
-							<div class="form-group">
-								<a href="#" ng-click="removeHeader(header)" class="delete-header-action">
-									<span class="glyphicon glyphicon-remove"></span>
-								</a>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<!-- Request body -->
+				<div class="col-lg-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Request body <span class="text-muted small">(JSON or XML)</span></h3>
+						</div>
+						<div class="panel-body">
+							<div id="request-body-group" class="form-group">
+								<textarea id="request-body" class="form-control col-lg-12" rows="10" placeholder="{{ requestBodyPlaceholder }}" ng-model="model.requestBody" ng-disabled="!requestBodyAllowed()"></textarea>
+								<span id="request-body-error" class="help-block" style="display:none;"></span>
 							</div>
 						</div>
 					</div>
 				</div>
+
 			</div>
 
-		</div>
+			<!-- Action buttons -->
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="form-group">
+						<button class="btn btn-primary" ng-click="sendRequest()">Send request <span class="glyphicon glyphicon-send" aria-hidden="true"></span></button>
+						<button class="btn btn-default" ng-click="resetFields()">Reset fields</button>
+						<img id="loading" src="images/loading.gif" ng-if="loading"/>
+					</div>
+				</div>
+			</div>
 
-		<!-- Right column -->
-		<div class="col-md-6" id="right-panel" ng-controller="HistoryController">
+			<!-- Response tabs -->
+			<div class="row">
+
+				<tabset class="col-lg-12" id="response-tabs">
+					<div id="response-status">
+						<span class="label label-success" ng-if="model.response.status">{{ model.response.status }} {{ responseCodes[model.response.status] }}</span>
+						<span class="label label-info" ng-if="model.response.time">{{ model.response.time }}ms</span>
+					</div>
+
+					<tab heading="Response">
+						<div hljs ng-if="model.response.data" source="model.response.data | json"></div>
+					</tab>
+					<tab heading="Raw response">
+						<pre ng-if="model.response.data">{{model.response.data}}</pre>
+					</tab>
+					<tab heading="Response headers">
+						<table class="table table-condensed" ng-if="model.response.headers">
+							<tbody>
+							<tr ng-repeat="(name, value) in model.response.headers track by $index">
+								<th>{{ name }}</th>
+								<td><code>{{ value }}</code></td>
+							</tr>
+							</tbody>
+						</table>
+					</tab>
+				</tabset>
+			</div>
+
+		</div><!-- End left column -->
+
+
+		<!-- Right column (history) -->
+		<div class="col-lg-4">
 
 			<!-- Request history -->
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-lg-12">
 					<table class="table table-hover">
 						<thead>
-						<tr>
-							<th colspan="2">
-								<span class="glyphicon glyphicon-time"></span> History
-								<a href="#" ng-click="clearHistory()" id="clear-saved-requests-action" class="pull-right">Clear</a>
-							</th>
-						</tr>
+							<tr>
+								<th colspan="2">
+									<span class="glyphicon glyphicon-time"></span> History
+									<a href="#" ng-click="clearHistory()" id="clear-saved-requests-action" class="pull-right">Clear</a>
+								</th>
+							</tr>
 						</thead>
-						<tbody id="saved-requests"></tbody>
+						<tbody id="saved-requests">
+							<tr ng-repeat="entry in model.history track by $index">
+								<td><span class="badge">{{ entry.method }}</span></td>
+								<td>{{ entry.url }}</td>
+								<td>{{ entry.contentType }}</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>
-		</div>
 
-	</div>
+		</div><!-- End right column -->
 
-	<!-- Request body -->
-	<div class="row">
-		<div class="col-md-12">
-			<h4>Request body</h4>
-
-			<div id="request-body-group" class="form-group">
-				<textarea id="request-body" class="form-control col-md-12" rows="8" placeholder="{{ requestBodyPlaceholder }}" ng-model="model.requestBody" ng-disabled="!requestBodyAllowed()"></textarea>
-				<span id="request-body-error" class="help-block" style="display:none;"></span>
-			</div>
-		</div>
-		<div class="form-group col-md-12">
-			<div class="form-group">
-				<input type="button" class="btn btn-primary" id="send" value="Send request" ng-click="sendRequest()"/>
-				<input type="button" class="btn" id="reset" value="Reset fields" ng-click="resetFields()"/>
-			</div>
-		</div>
-	</div>
-
-	<!-- Response tabs -->
-	<div class="row">
-		<div id="response-tabs" class="col-md-12">
-			<ul class="nav nav-tabs">
-				<li id="response-tab" class="active">
-					<a href="#">Response</a>
-				</li>
-				<li id="response-headers-tab">
-					<a href="#">Response headers</a>
-				</li>
-				<li id="raw-response-tab">
-					<a href="#">Raw response</a>
-				</li>
-			</ul>
-
-			<img id="loading" src="images/loading.gif" style="display:none;"/>
-
-			<p>
-				<span id="response-code" class="label" style="display:none;"></span>
-				<span id="response-time" class="label label-info" style="display:none;"></span>
-			</p>
-
-			<pre id="response" class="prettyprint" style="display:none;">{{model.responseData}}</pre>
-			<pre id="raw-response" style="display:none;">{{model.responseData}}</pre>
-			<pre id="response-headers" class="prettyprint" style="display:none;">{{model.responseHeaders}}</pre>
-		</div>
 	</div>
 
 	<!-- Footer -->
-	<footer class="footer col-md-12">
+	<footer class="footer col-lg-12">
 		<p class="pull-right">v0.0</p>
 	</footer>
 
