@@ -1,8 +1,23 @@
 https://github.com/webcss/angular-indexedDB
 http://www.w3.org/TR/IndexedDB/
 
+Feature requests from Adrian:
+- star a history item
+- delete all except starred history items
+- save history to dropbox or export somehow?
+
+Random ideas:
+- share a history request with someone (export and email, click to send?)
+- group history by domain to make searching easier
+- filter history by domain, content type, request method, response status etc...
 
 
 TODO:
 - add all third party libraries to NOTICE
 - add angular-highlightjs for syntax highlighting
+
+Color Palette:
+http://www.colourlovers.com/palettes/most-loved/all-time/meta
+http://www.colourlovers.com/palette/49963/let_them_eat_cake
+http://www.colourlovers.com/palette/292482/Terra
+
