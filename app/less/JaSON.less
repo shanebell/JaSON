@@ -2,18 +2,20 @@
 
 
 // COMMON
-body {
-  padding-top: 60px;
-  padding-bottom: 40px;
 
-  .form-group {
-    margin-bottom: 8px;
-  }
+html {
+  position: relative;
+  min-height: 100%;
 
-  .panel-body {
-    height: 250px;
-    max-height: 400px;
-    overflow-y: scroll;
+  body {
+
+    padding-top: 60px;
+    padding-bottom: 20px;
+
+    .form-group {
+      margin-bottom: 8px;
+    }
+
   }
 }
 
@@ -42,6 +44,24 @@ body {
   }
 }
 
+#top-row {
+  height: 250px;
+  max-height: 250px;
+  overflow-y: hidden;
+}
+
+#request-body {
+  textarea {
+    height: 250px;
+  }
+}
+
+#request-body, #request-details, #request-history {
+  //height: 250px;
+  //max-height: 250px;
+  overflow-y: scroll;
+}
+
 #response-tabs {
   margin-top: 10px;
 }
@@ -54,28 +74,44 @@ body {
   margin-bottom: 0px;
 }
 
-#saved-requests {
-
-  .saved-request {
-    cursor: pointer;
-  }
-
-  .date-and-url {
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  td {
-    padding: 4px;
-    vertical-align: middle;
-  }
-}
-
 #add-header-action {
   font-size: 12px;
 }
+
+
+// REQUEST HISTORY
+#request-history {
+
+  margin-bottom: 0px;
+
+  table {
+    margin-top: 10px;
+    cursor: pointer;
+    table-layout: fixed;
+
+    td {
+      padding: 6px 4px;
+      vertical-align: middle;
+    }
+
+    .method {
+      width: auto;
+    }
+
+    .url {
+      width: 50%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .content-type {
+      width: auto;
+    }
+  }
+
+}
+
 
 #request-headers {
   margin-top: 6px;
@@ -113,7 +149,7 @@ body {
   margin-bottom: 10px;
 }
 
-#url, #request-body, #right-panel, .header, .help-block {
+#url, #request-body textarea, .help-block {
   font-size: 10pt;
 }
 
@@ -124,16 +160,4 @@ body {
 
 .footer {
   color: #ccc;
-}
-
-/**
- * Fix for modal screen flicker
- * https://github.com/twbs/bootstrap/issues/8768
- */
-body.modal-open {
-  margin-right: 0px !important;
-}
-
-.modal-open .navbar-fixed-top {
-  margin-right: 0px !important;
 }

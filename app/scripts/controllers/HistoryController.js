@@ -13,15 +13,23 @@ angular.module('JaSON')
 			}
 
 			function bindVars() {
-				$scope.model = {
-					history: []
-				};
+
+				// load the history
+				HistoryService.getHistory(1000)
+					.then(function(historyItems) {
+
+						$scope.model.history = _.map(historyItems, function(historyItem) {
+							return historyItem.doc;
+						});
+
+					});
 			}
 
 			function bindFunctions() {
 
 				$scope.clearHistory = function() {
 					$log.debug('Clearing history');
+					HistoryService.clearHistory();
 					$scope.model.history = [];
 				};
 

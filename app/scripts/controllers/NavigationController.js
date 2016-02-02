@@ -1,5 +1,3 @@
-'use strict';
-
 angular.module('JaSON')
 	.controller('NavigationController',
 	[ '$scope', '$log', '$modal',
@@ -7,11 +5,6 @@ angular.module('JaSON')
 
 			function init() {
 				$log.debug('Initialising NavigationController...');
-
-				bindFunctions();
-			}
-
-			function bindFunctions() {
 
 				/**
 				 * Show the 'About' modal.
@@ -22,7 +15,8 @@ angular.module('JaSON')
 						windowClass: 'about-modal'
 					});
 				};
-			}
+
+			};
 
 			init();
 

@@ -16,8 +16,13 @@ TODO:
 - add all third party libraries to NOTICE
 - add angular-highlightjs for syntax highlighting
 
-Color Palette:
-http://www.colourlovers.com/palettes/most-loved/all-time/meta
-http://www.colourlovers.com/palette/49963/let_them_eat_cake
-http://www.colourlovers.com/palette/292482/Terra
+Colors:
+- http://www.colourlovers.com/palettes/most-loved/all-time/meta
+- http://www.colourlovers.com/palette/49963/let_them_eat_cake
+- http://www.colourlovers.com/palette/292482/Terra
+- https://flatuicolors.com/
 
+IndexedDB Stuff:
+- https://hacks.mozilla.org/2014/06/breaking-the-borders-of-indexeddb/
+- https://github.com/dfahlander/Dexie.js
+- http://pouchdb.com/

@@ -22,18 +22,31 @@
 
 	<title>JaSON</title>
 
-	<!-- libs -->
+	<!-- jquery -->
+	<script src="/lib/jquery/jquery.js" type="text/javascript"></script>
+
+	<!-- lodash -->
 	<script src="/lib/lodash/lodash.compat.js" type="text/javascript"></script>
+
+	<!-- moment -->
 	<script src="/lib/moment/moment.js" type="text/javascript"></script>
+
+	<!-- JSON5 -->
+	<script src="/lib/json5/lib/json5.js" type="text/javascript"></script>
+
+	<!-- pouchdb -->
+	<script src="/lib/pouchdb/pouchdb.js" type="text/javascript"></script>
+
+	<!-- highlightjs -->
 	<script src="/lib/highlightjs/highlight.pack.js" type="text/javascript"></script>
 	<link href="/lib/highlightjs/default.css" rel="stylesheet">
+
+	<!-- bootstrap -->
+	<link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
 	<!-- angular -->
 	<script src="/lib/angular/angular.js" type="text/javascript"></script>
 	<link href="/lib/angular/angular-csp.css" rel="stylesheet">
-
-	<!-- bootstrap -->
-	<link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
 	<!-- angular libs-->
 	<script src="/lib/angular-moment/angular-moment.js" type="text/javascript"></script>
@@ -62,7 +75,7 @@
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
 				<li>
-					<a href="" id="about" ng-click="about()">About</a>
+					<a href="#" ng-click="about()">About</a>
 				</li>
 			</ul>
 		</div>
@@ -74,26 +87,25 @@
 
 	<div class="row">
 
-		<!-- left column (url, headers, request body, response etc) -->
-		<div class="col-lg-8">
+		<!-- left column (HTTP request details and history) -->
+		<div class="col-lg-4">
 
 			<div class="row">
 
-				<div class="col-lg-6">
+				<div class="col-lg-12">
 
-					<!-- Request details (url, method etc) -->
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Request details</h3>
-						</div>
-						<div class="panel-body">
+					<tabset id="request-tabs">
+
+						<!-- Request details (url, method etc) -->
+						<tab heading="HTTP request details" id="request-details">
+
 							<div class="row">
 
 								<!-- Request URL -->
 								<div class="col-lg-12">
 									<div class="form-group">
 										<input type="text" id="url" class="form-control" placeHolder="http://www.example.com/service.json" ng-model="model.url"/>
-										<span id="url-error" class="help-block" style="display:none;">URL is required.</span>
+										<span id="url-error" class="help-block hidden">URL is required.</span>
 									</div>
 								</div>
 
@@ -120,43 +132,59 @@
 									</a>
 									<table id="request-headers" class="table table-condensed">
 										<tbody>
-											<tr ng-repeat="header in model.headers track by $index">
-												<td>
-													<input type="text" class="name form-control input-sm" placeHolder="name" ng-model="header.name"/>
-												</td>
-												<td>
-													<input type="text" class="value form-control input-sm" placeHolder="value" ng-model="header.value"/>
-												</td>
-												<td>
-													<a href="#" ng-click="removeHeader(header)">
-														<span class="glyphicon glyphicon-remove"></span>
-													</a>
-												</td>
-											</tr>
+										<tr ng-repeat="header in model.headers track by $index">
+											<td>
+												<input type="text" class="name form-control input-sm" placeHolder="name" ng-model="header.name"/>
+											</td>
+											<td>
+												<input type="text" class="value form-control input-sm" placeHolder="value" ng-model="header.value"/>
+											</td>
+											<td>
+												<a href="#" ng-click="removeHeader(header)">
+													<span class="glyphicon glyphicon-remove"></span>
+												</a>
+											</td>
+										</tr>
 										</tbody>
 									</table>
 								</div>
 							</div>
 
-						</div>
+						</tab>
 
-					</div>
+						<tab heading="History">
+							<div ng-controller="HistoryController" id="request-history">
 
-				</div>
+								<div class="history-controls">
+									<a href="#" ng-click="clearHistory()" class="pull-right">Clear</a>
+									<h3 class="panel-title">
+										<span class="glyphicon glyphicon-time"></span> Request history
+									</h3>
+								</div>
 
-				<!-- Request body -->
-				<div class="col-lg-6">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Request body <span class="text-muted small">(JSON or XML)</span></h3>
-						</div>
-						<div class="panel-body">
-							<div id="request-body-group" class="form-group">
-								<textarea id="request-body" class="form-control col-lg-12" rows="10" placeholder="{{ requestBodyPlaceholder }}" ng-model="model.requestBody" ng-disabled="!requestBodyAllowed()"></textarea>
-								<span id="request-body-error" class="help-block" style="display:none;"></span>
+								<table class="table table-hover">
+									<tbody>
+									<tr ng-repeat="entry in model.history track by $index" ng-if="model.history.length > 0">
+										<td class="method">
+											<span class="label" ng-class="{ 'label-primary': entry.method == 'POST', 'label-danger': entry.method == 'DELETE', 'label-warning': entry.method == 'PUT' }">{{ entry.method }}</span>
+										</td>
+										<td class="url">
+											{{ entry.url }}
+										</td>
+										<td class="content-type">
+									<span class="label pull-right" ng-class="{ 'label-primary': entry.contentType == 'application/json', 'label-info': entry.contentType == 'application/xml' }">
+										JSON
+									</span>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+
 							</div>
-						</div>
-					</div>
+						</tab>
+
+					</tabset>
+
 				</div>
 
 			</div>
@@ -172,73 +200,56 @@
 				</div>
 			</div>
 
-			<!-- Response tabs -->
-			<div class="row">
+		</div>
 
-				<tabset class="col-lg-12" id="response-tabs">
-					<div id="response-status">
-						<span class="label label-success" ng-if="model.response.status">{{ model.response.status }} {{ responseCodes[model.response.status] }}</span>
-						<span class="label label-info" ng-if="model.response.time">{{ model.response.time }}ms</span>
+		<!-- Right column (HTTP request body and response data) -->
+		<div class="col-lg-8">
+
+			<!-- Request body -->
+			<div class="row">
+				<div class="col-lg-12" id="request-body">
+					<div id="request-body-group" class="form-group">
+						<textarea class="form-control col-lg-12" rows="10" placeholder="{{ requestBodyPlaceholder }}" ng-model="model.requestBody" ng-disabled="!requestBodyAllowed()"></textarea>
+						<span id="request-body-error" class="help-block" style="display:none;"></span>
 					</div>
-
-					<tab heading="Response">
-						<div hljs ng-if="model.response.data" source="model.response.data | json"></div>
-					</tab>
-					<tab heading="Raw response">
-						<pre ng-if="model.response.data">{{model.response.data}}</pre>
-					</tab>
-					<tab heading="Response headers">
-						<table class="table table-condensed" ng-if="model.response.headers">
-							<tbody>
-							<tr ng-repeat="(name, value) in model.response.headers track by $index">
-								<th>{{ name }}</th>
-								<td><code>{{ value }}</code></td>
-							</tr>
-							</tbody>
-						</table>
-					</tab>
-				</tabset>
-			</div>
-
-		</div><!-- End left column -->
-
-
-		<!-- Right column (history) -->
-		<div class="col-lg-4">
-
-			<!-- Request history -->
-			<div class="row">
-				<div class="col-lg-12">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th colspan="2">
-									<span class="glyphicon glyphicon-time"></span> History
-									<a href="#" ng-click="clearHistory()" id="clear-saved-requests-action" class="pull-right">Clear</a>
-								</th>
-							</tr>
-						</thead>
-						<tbody id="saved-requests">
-							<tr ng-repeat="entry in model.history track by $index">
-								<td><span class="badge">{{ entry.method }}</span></td>
-								<td>{{ entry.url }}</td>
-								<td>{{ entry.contentType }}</td>
-							</tr>
-						</tbody>
-					</table>
 				</div>
 			</div>
 
-		</div><!-- End right column -->
+			<!-- Response tabs -->
+			<div class="row">
+				<div class="col-lg-12">
+					<tabset id="response-tabs">
+						<div id="response-status">
+							<span class="label label-success" ng-if="model.response.status">{{ model.response.status }} {{ responseCodes[model.response.status] }}</span>
+							<span class="label label-info" ng-if="model.response.time">{{ model.response.time }}ms</span>
+						</div>
+
+						<tab heading="Response">
+							<div hljs ng-if="model.response.data" source="model.response.data | json"></div>
+						</tab>
+						<tab heading="Raw response">
+							<pre ng-if="model.response.data">{{model.response.data}}</pre>
+						</tab>
+						<tab heading="Response headers">
+							<table class="table table-condensed" ng-if="model.response.headers">
+								<tbody>
+								<tr ng-repeat="(name, value) in model.response.headers track by $index">
+									<td>{{ name }}</td>
+									<td><code>{{ value }}</code></td>
+								</tr>
+								</tbody>
+							</table>
+						</tab>
+					</tabset>
+				</div>
+			</div>
+
+		</div>
 
 	</div>
 
-	<!-- Footer -->
-	<footer class="footer col-lg-12">
-		<p class="pull-right">v0.0</p>
-	</footer>
 
-</div>
+</div><!-- End container-fluid -->
 
 </body>
 

@@ -1,5 +1,3 @@
-'use strict';
-
 angular.module('JaSON')
 	.factory('HttpService',
 	[ '$http', '$log',
@@ -7,10 +5,7 @@ angular.module('JaSON')
 
 			$log.debug('Initialising HttpService...');
 
-			// PRIVATE FUNCTIONS
-
 			return {
-				// PUBLIC API
 
 				send: function(data) {
 

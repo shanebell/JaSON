@@ -1,4 +1,17 @@
-'use strict';
+//function resizeElements() {
+//	var windowHeight = $(window).height();
+//	var bodyHeight = windowHeight - 80;
+//	var panelHeadingHeight = $("#request-history .panel-heading").height();
+//
+//	$("body").height(bodyHeight);
+//	$("#request-history .panel-body").height(bodyHeight - panelHeadingHeight - 57);
+//}
+//
+//$(document).ready(function() {
+//	resizeElements();
+//	$(window).resize(resizeElements);
+//});
+
 
 angular.module('JaSON', [
 	'ui.bootstrap',
@@ -46,7 +59,7 @@ angular.module('JaSON').constant('Data',
 			}
 		],
 
-		requestBodyPlaceholder: 'JSON or XML content. \'Form encoded\' requests can contain JSON content which will be converted to form request parameters and is available for all method types. \'JSON\' and \'XML\' requests pass the content through unmodified in the request body and hence is only available for POST and PUT methods. Note that JSON is strictly validated so element names and values must be "quoted".',
+		requestBodyPlaceholder: 'JSON or XML content.\n\n\'Form encoded\' requests can contain JSON content which will be converted to form request parameters.\n\n\'JSON\' and \'XML\' requests pass the content through in the request body and hence is only available for POST and PUT methods.',
 
 		responseCodes: {
 			'100': 'Continue',
