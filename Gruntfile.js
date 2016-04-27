@@ -28,7 +28,14 @@ module.exports = function (grunt) {
 			install: {
 				options: {
 					targetDir: 'app/lib',
-					layout: 'byComponent'
+					//layout: 'byType',
+					//layout: function(type, component, source) {
+					//	// We maintain the original bower layout, but only include main files
+					//	var tokens = source.split("/");
+					//	var end = tokens.length < 3 ? tokens.length : tokens.length - 1;
+					//	return tokens.slice(1, end).join("/");
+					//}
+
 				}
 			}
 		},

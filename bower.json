@@ -2,35 +2,17 @@
   "name": "JaSON",
   "version": "2.0.0",
   "dependencies": {
-    "angular": "~1.2.22",
-    "angular-bootstrap": "0.11.0",
-    "angular-highlightjs": "0.3.1",
-    "angular-moment": "0.8.0",
-    "dexie": "1.0.4",
-    "bootstrap": "3.1.1",
-    "font-awesome": "4.0.3",
-    "highlightjs": "8.3",
-    "lodash": "2.4.1",
-    "pouchdb": "4.0.0",
-    "json5": "0.4.0",
-    "jquery": "2.1.4"
+    "angular": "1.4.9",
+    "angular-bootstrap": "1.3.2",
+    "angular-highlightjs": "0.6.1",
+    "angular-moment": "0.10.3",
+    "bootstrap": "3.3.4",
+    "font-awesome": "4.3.0",
+    "lodash": "4.11.1",
+    "json5": "0.5.0",
+    "jquery": "2.2.3",
+    "highlightjs": "8.9.1"
   },
-  "devDependencies": {
-  },
-  "exportsOverride": {
-    "angular": {
-      "/": [
-        "angular.js",
-        "angular-csp.css"
-      ]
-    },
-    "bootstrap": {
-      "css": "css/*.min.css",
-      "fonts": "dist/fonts/*.*"
-    },
-    "font-awesome": {
-      "css": "css/font-awesome.min.css",
-      "fonts": "fonts/*.*"
-    }
-  }
+  "devDependencies": {},
+  "exportsOverride": {}
 }
