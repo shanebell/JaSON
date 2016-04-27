@@ -23,6 +23,8 @@ angular.module('JaSON')
 
             ctrl.sendRequest = function () {
 
+                // TODO refactor this into httpService
+
                 var headers = {
                     'Content-Type': ctrl.model.contentType
                 };
@@ -44,35 +46,20 @@ angular.module('JaSON')
                 }
 
                 ctrl.loading = true;
-
                 var startTime = new Date().getTime();
 
                 $http(httpConfig).then(
                     function(response) {
                         $log.debug('Response: %s', angular.toJson(response));
-
-                        var endTime = new Date().getTime();
-                        ctrl.model.response = {
-                            data: response.data,
-                            status: response.status,
-                            statusText: response.statusText,
-                            headers: response.headers(),
-                            time: endTime - startTime
-                        };
+                        ctrl.model.response = response;
                     },
                     function(response) {
                         $log.debug('Error: %s', angular.toJson(response));
-
-                        var endTime = new Date().getTime();
-                        ctrl.model.response = {
-                            data: response.data,
-                            status: response.status,
-                            statusText: response.statusText,
-                            headers: response.headers(),
-                            time: endTime - startTime
-                        };
+                        ctrl.model.response = response;
                     }
                 ).finally(function() {
+                    var endTime = new Date().getTime();
+                    ctrl.model.response.time = endTime - startTime;
                     ctrl.loading = false;
                 });
             };

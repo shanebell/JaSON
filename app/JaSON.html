@@ -69,7 +69,10 @@
 <div class="navbar navbar-default navbar-fixed-top" ng-controller="navController as ctrl">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#"><img src="images/icon-48x48.png"/></a>
+			<a class="navbar-brand" href="#">
+				<img src="images/icon-48x48.png"/>
+			</a>
+			<div class="title">JaSON</div>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
@@ -196,13 +199,13 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="form-group">
-						<button class="btn btn-primary" ng-click="ctrl.sendRequest()" ng-disabled="loading">
+						<button class="btn btn-primary" ng-click="ctrl.sendRequest()" ng-disabled="ctrl.loading">
 							Send request <i class="fa fa-paper-plane" aria-hidden="true"></i>
 						</button>
-						<button class="btn btn-default" ng-click="ctrl.resetFields()" ng-disabled="loading">
+						<button class="btn btn-default" ng-click="ctrl.resetFields()" ng-disabled="ctrl.loading">
 							Reset fields
 						</button>
-						<img id="loading" src="images/loading.gif" ng-show="loading"/>
+						<img id="loading" src="images/loading.gif" ng-show="ctrl.loading"/>
 					</div>
 				</div>
 			</div>
@@ -242,9 +245,9 @@
 						</uib-tab>
 
 						<uib-tab heading="Response headers">
-							<table class="table table-condensed" ng-if="ctrl.model.response.headers">
+							<table class="table table-condensed">
 								<tbody>
-								<tr ng-repeat="(name, value) in ctrl.model.response.headers track by $index">
+								<tr ng-repeat="(name, value) in ctrl.model.response.headers() track by $index">
 									<td>{{ name }}</td>
 									<td><code>{{ value }}</code></td>
 								</tr>
