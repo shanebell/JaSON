@@ -1,40 +1,29 @@
 'use strict';
 
 angular.module('JaSON')
-	.controller('HistoryController',
-	[ '$scope', '$log', 'HistoryService',
-		function ($scope, $log, HistoryService) {
+	.controller('historyController',
+	[ '$scope', '$log', 'historyService',
+		function ($scope, $log, historyService) {
 
-			function init() {
-				$log.debug('Initialising HistoryController...');
+			var ctrl = this;
 
-				bindVars();
-				bindFunctions();
-			}
+			ctrl.model = {
+			};
 
-			function bindVars() {
-
-				// load the history
-				HistoryService.getHistory(1000)
-					.then(function(historyItems) {
-
-						$scope.model.history = _.map(historyItems, function(historyItem) {
-							return historyItem.doc;
-						});
-
+			historyService.getHistory(1000).then(
+				function(historyItems) {
+					ctrl.model.history = _.map(historyItems, function(historyItem) {
+						return historyItem.doc;
 					});
-			}
+				},
+				function(response) {
+					$log.debug('Error: %s', angular.toJson(response));
+				}
+			);
 
-			function bindFunctions() {
-
-				$scope.clearHistory = function() {
-					$log.debug('Clearing history');
-					HistoryService.clearHistory();
-					$scope.model.history = [];
-				};
-
-			}
-
-			init();
+			ctrl.clearHistory = function() {
+				historyService.clearHistory();
+				ctrl.model.history = [];
+			};
 
 		}]);

@@ -1,9 +1,7 @@
 angular.module('JaSON')
-	.factory('HttpService',
+	.factory('httpService',
 	[ '$http', '$log',
 		function($http, $log) {
-
-			$log.debug('Initialising HttpService...');
 
 			return {
 
