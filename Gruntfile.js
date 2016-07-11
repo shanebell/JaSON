@@ -28,14 +28,15 @@ module.exports = function (grunt) {
 			install: {
 				options: {
 					targetDir: 'app/lib',
-					//layout: 'byType',
-					//layout: function(type, component, source) {
-					//	// We maintain the original bower layout, but only include main files
-					//	var tokens = source.split("/");
-					//	var end = tokens.length < 3 ? tokens.length : tokens.length - 1;
-					//	return tokens.slice(1, end).join("/");
-					//}
-
+					verbose: true,
+					layout: function(type, component, source) {
+						grunt.log.ok('type: %s, component: %s, source: %s', type, component, source);
+						var tokens = source.split('/');
+						var end = tokens.length < 3 ? tokens.length : tokens.length - 1;
+						var layout = tokens.slice(1, end).join('/');
+						grunt.log.ok(layout);
+						return layout;
+					}
 				}
 			}
 		},

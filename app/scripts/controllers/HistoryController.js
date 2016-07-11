@@ -1,29 +1,37 @@
-'use strict';
-
 angular.module('JaSON')
-	.controller('historyController',
-	[ '$scope', '$log', 'historyService',
-		function ($scope, $log, historyService) {
+    .controller('historyController', function ($scope, $log, historyService) {
 
-			var ctrl = this;
+        var ctrl = this;
 
-			ctrl.model = {
-			};
+        ctrl.model = {
+            searchTerm: ''
+        };
 
-			historyService.getHistory(1000).then(
-				function(historyItems) {
-					ctrl.model.history = _.map(historyItems, function(historyItem) {
-						return historyItem.doc;
-					});
-				},
-				function(response) {
-					$log.debug('Error: %s', angular.toJson(response));
-				}
-			);
+        ctrl.historyItems = [];
 
-			ctrl.clearHistory = function() {
-				historyService.clearHistory();
-				ctrl.model.history = [];
-			};
+        historyService.getHistory().then(
+            function (response) {
+                ctrl.historyItems = response;
+            },
+            function (response) {
+                $log.debug('Error loading history from local storage: %s', angular.toJson(response));
+            }
+        );
 
-		}]);
+        ctrl.clearHistory = function () {
+            historyService.clearHistory();
+            ctrl.historyItems = [];
+        };
+
+        ctrl.getHostname = function (urlString) {
+            var url = new URL(urlString);
+            return url.hostname;
+        };
+
+        ctrl.getPath = function (urlString) {
+            var hostname = ctrl.getHostname(urlString);
+            return _.replace(urlString, hostname, '');
+        };
+
+
+    });

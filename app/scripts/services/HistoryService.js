@@ -1,97 +1,140 @@
 angular.module('JaSON')
-	.factory('historyService',
-	['$log', '$q',
-		function ($log, $q) {
+    .factory('historyService', function ($log, $q, localStorageService) {
 
-			var historyItems = [
+        var LOCAL_STORAGE_KEY = 'history';
 
-				{
-					url: 'http://www.google.com/api/v1/users/quickbrownfox',
-					method: 'POST',
-					contentType: 'application/json',
-					requestHeaders: [
-						{name: 'Authorization', value: 'Basic MDQwNDAwNTcyNTowOTI0MmQzZS1kY2ZiLTRlNjUtYjlhNS0xM2E4OTE2YmExY2Q='}
-					],
-					requestBody: '{ name: \'value\' }',
-					time: 204,
-					responseCode: 200,
-					responseBody: '{ name: \'value\' }',
-					responseHeaders: [
-						{name: 'Server', value: 'Apache-Coyote/1.1'},
-						{name: 'Transfer-Encoding', value: 'chunked'},
-						{name: 'Content-Type', value: 'application/json;charset=UTF-8'}
-					]
-				},
+        var historyItems = [
 
-				{
-					url: 'http://www.google.com/quick/brown/fox',
-					method: 'PUT',
-					contentType: 'application/json',
-					requestHeaders: [
-						{name: 'Authorization', value: 'Basic MDQwNDAwNTcyNTowOTI0MmQzZS1kY2ZiLTRlNjUtYjlhNS0xM2E4OTE2YmExY2Q='}
-					],
-					requestBody: '{ name: \'value\' }',
-					time: 512,
-					responseCode: 200,
-					responseBody: '{ name: \'value\' }',
-					responseHeaders: [
-						{name: 'Server', value: 'Apache-Coyote/1.1'},
-						{name: 'Transfer-Encoding', value: 'chunked'},
-						{name: 'Content-Type', value: 'application/json;charset=UTF-8'}
-					]
-				},
+            {
+                url: 'http://localhost:8080/#/path/?a=123&b=456',
+                method: 'POST',
+                contentType: 'application/json',
+                requestHeaders: [
+                    {name: 'Authorization', value: 'Basic MDQwNDAwNTcyNTowOTI0MmQzZS1kY2ZiLTRlNjUtYjlhNS0xM2E4OTE2YmExY2Q='}
+                ],
+                requestBody: '{ name: \'value\' }',
+                time: 204,
+                responseCode: 200,
+                responseBody: '{ name: \'value\' }',
+                responseHeaders: [
+                    {name: 'Server', value: 'Apache-Coyote/1.1'},
+                    {name: 'Transfer-Encoding', value: 'chunked'},
+                    {name: 'Content-Type', value: 'application/json;charset=UTF-8'}
+                ],
+                date: new Date()
+            },
 
-				{
-					url: 'http://www.google.com/api/v1/do-stuff',
-					method: 'DELETE',
-					contentType: 'application/json',
-					requestHeaders: [
-						{name: 'Authorization', value: 'Basic MDQwNDAwNTcyNTowOTI0MmQzZS1kY2ZiLTRlNjUtYjlhNS0xM2E4OTE2YmExY2Q='}
-					],
-					time: 204,
-					responseCode: 200,
-					responseBody: '{ name: \'value\' }',
-					responseHeaders: [
-						{name: 'Server', value: 'Apache-Coyote/1.1'},
-						{name: 'Transfer-Encoding', value: 'chunked'},
-						{name: 'Content-Type', value: 'application/json;charset=UTF-8'}
-					]
-				}
+            {
+                url: 'https://www.thisisareallylongdomainnametoseewhathappens.com/api/v1/users/quickbrownfox?q=123',
+                method: 'POST',
+                contentType: 'application/json',
+                requestHeaders: [
+                    {name: 'Authorization', value: 'Basic MDQwNDAwNTcyNTowOTI0MmQzZS1kY2ZiLTRlNjUtYjlhNS0xM2E4OTE2YmExY2Q='}
+                ],
+                requestBody: '{ name: \'value\' }',
+                time: 204,
+                responseCode: 200,
+                responseBody: '{ name: \'value\' }',
+                responseHeaders: [
+                    {name: 'Server', value: 'Apache-Coyote/1.1'},
+                    {name: 'Transfer-Encoding', value: 'chunked'},
+                    {name: 'Content-Type', value: 'application/json;charset=UTF-8'}
+                ],
+                date: new Date()
+            },
 
-			];
+            {
+                url: 'http://www.google.com/quick/brown/fox/#123',
+                method: 'PUT',
+                contentType: 'application/json',
+                requestHeaders: [
+                    {name: 'Authorization', value: 'Basic MDQwNDAwNTcyNTowOTI0MmQzZS1kY2ZiLTRlNjUtYjlhNS0xM2E4OTE2YmExY2Q='}
+                ],
+                requestBody: '{ name: \'value\' }',
+                time: 512,
+                responseCode: 200,
+                responseBody: '{ name: \'value\' }',
+                responseHeaders: [
+                    {name: 'Server', value: 'Apache-Coyote/1.1'},
+                    {name: 'Transfer-Encoding', value: 'chunked'},
+                    {name: 'Content-Type', value: 'application/json;charset=UTF-8'}
+                ],
+                date: new Date()
+            },
 
-            // PUBLIC API
-			return {
+            {
+                url: 'http://www.google.com/api/v1/do-stuff',
+                method: 'DELETE',
+                contentType: 'application/json',
+                requestHeaders: [
+                    {name: 'Authorization', value: 'Basic MDQwNDAwNTcyNTowOTI0MmQzZS1kY2ZiLTRlNjUtYjlhNS0xM2E4OTE2YmExY2Q='}
+                ],
+                time: 204,
+                responseCode: 200,
+                responseBody: '{ name: \'value\' }',
+                responseHeaders: [
+                    {name: 'Server', value: 'Apache-Coyote/1.1'},
+                    {name: 'Transfer-Encoding', value: 'chunked'},
+                    {name: 'Content-Type', value: 'application/json;charset=UTF-8'}
+                ],
+                date: new Date()
+            }
 
-                /**
-                 * Save a new history item.
-                 *
-                 * @param historyItem the item to save.
-                 */
-				save: function(historyItem) {
-                    // assign a date based id so that db.allDocs() will return docs in correct order
-                    historyItem.id = new Date().toISOString();
+        ];
 
-					$log.debug('TODO');
-				},
+        var historyItem = {
+            url: 'http://localhost:8080/#/path/?a=',
+            method: 'POST',
+            contentType: 'application/json',
+            requestHeaders: [
+                {name: 'Authorization', value: 'Basic MDQwNDAwNTcyNTowOTI0MmQzZS1kY2ZiLTRlNjUtYjlhNS0xM2E4OTE2YmExY2Q='}
+            ],
+            requestBody: '{ name: \'value\' }',
+            time: 204,
+            responseCode: 200,
+            responseBody: '{ name: \'value\' }',
+            responseHeaders: [
+                {name: 'Server', value: 'Apache-Coyote/1.1'},
+                {name: 'Transfer-Encoding', value: 'chunked'},
+                {name: 'Content-Type', value: 'application/json;charset=UTF-8'}
+            ],
+            date: new Date()
+        };
 
-                /**
-                 * Get an array of the history items.
-                 *
-                 * @param limit an optional limit of how many items to return (defaults to 5000).
-                 */
-				getHistory: function(limit) {
-					var deferred = $q.defer();
-					deferred.resolve(historyItems);
-                    return deferred.promise;
-				},
+        _.times(5000, function(i) {
+            var clone = _.cloneDeep(historyItem);
+            clone.url = clone.url + _.random(1, 10000);
+            historyItems.push(clone);
+        });
 
-                /**
-                 * Clear all items from the history.
-                 */
-				clearHistory: function() {
-					$log.debug('TODO');
-				}
-			};
+        localStorageService.set(LOCAL_STORAGE_KEY, historyItems);
 
-		}]);
+        return {
+
+            save: function (historyItem) {
+                $log.debug('Saving history item');
+
+                return $q(function(resolve) {
+                    var historyItems = localStorageService.get(LOCAL_STORAGE_KEY) || [];
+                    historyItems.push(historyItem);
+                    localStorageService.set(LOCAL_STORAGE_KEY, historyItems);
+                    resolve(historyItems);
+                });
+            },
+
+            getHistory: function () {
+                $log.debug('Getting history');
+
+                return $q(function(resolve) {
+                    resolve(localStorageService.get(LOCAL_STORAGE_KEY) || []);
+                });
+            },
+
+            clearHistory: function () {
+                $log.debug('Clearing history');
+                localStorageService.set(LOCAL_STORAGE_KEY, []);
+            }
+
+        };
+
+    });

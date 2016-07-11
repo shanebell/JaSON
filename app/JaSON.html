@@ -22,24 +22,25 @@
 
 	<title>JaSON</title>
 
+	<!--
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+	-->
+
 	<!-- JQUERY -->
-	<script src="/lib/jquery/jquery.js" type="text/javascript"></script>
+	<script src="/lib/jquery/dist/jquery.min.js" type="text/javascript"></script>
 
 	<!-- LODASH -->
-	<script src="/lib/lodash/lodash.js" type="text/javascript"></script>
+	<script src="/lib/lodash/dist/lodash.min.js" type="text/javascript"></script>
 
 	<!-- MOMENT -->
-	<script src="/lib/moment/moment.js" type="text/javascript"></script>
+	<script src="/lib/moment/min/moment.min.js" type="text/javascript"></script>
 
 	<!-- JSON5 -->
 	<script src="/lib/json5/lib/json5.js" type="text/javascript"></script>
 
 	<!-- HIGHLIGHTJS -->
 	<script src="/lib/highlightjs/highlight.pack.js" type="text/javascript"></script>
-	<link href="/lib/highlightjs/default.css" rel="stylesheet">
-
-	<!-- BOOTSTRAP -->
-	<link href="/lib/bootstrap/bootstrap.css" rel="stylesheet">
+	<link href="/lib/highlightjs/styles/default.css" rel="stylesheet">
 
 	<!-- FONT AWESOME -->
 	<link href="/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -49,16 +50,22 @@
 
 	<!-- ANGULAR LIBS-->
 	<script src="/lib/angular-bootstrap/ui-bootstrap-tpls.js" type="text/javascript"></script>
-	<script src="/lib/angular-highlightjs/angular-highlightjs.js" type="text/javascript"></script>
+	<script src="/lib/angular-highlightjs/build/angular-highlightjs.js" type="text/javascript"></script>
 	<script src="/lib/angular-moment/angular-moment.js" type="text/javascript"></script>
+	<script src="/lib/angular-local-storage/dist/angular-local-storage.js" type="text/javascript"></script>
 
 	<!-- JASON -->
+	<!-- TODO: inject wth grunt -->
 	<script src="/scripts/app.js" type="text/javascript"></script>
 	<script src="/scripts/services/httpService.js" type="text/javascript"></script>
 	<script src="/scripts/services/historyService.js" type="text/javascript"></script>
 	<script src="/scripts/controllers/navController.js" type="text/javascript"></script>
 	<script src="/scripts/controllers/appController.js" type="text/javascript"></script>
 	<script src="/scripts/controllers/historyController.js" type="text/javascript"></script>
+	<script src="/scripts/directives/errorMessage.js" type="text/javascript"></script>
+	<script src="/scripts/directives/formattedUrl.js" type="text/javascript"></script>
+	<script src="/scripts/directives/historyItem.js" type="text/javascript"></script>
+	<script src="/scripts/directives/autoHeight.js" type="text/javascript"></script>
 	<link href="/css/JaSON.css" rel="stylesheet">
 
 </head>
@@ -77,7 +84,9 @@
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
 				<li>
-					<a href="#" ng-click="ctrl.about()">About</a>
+					<a href="#" ng-click="ctrl.about()">
+						About
+					</a>
 				</li>
 			</ul>
 		</div>
@@ -87,19 +96,18 @@
 <!-- MAIN CONTAINER -->
 <div class="container-fluid main" ng-controller="appController as ctrl">
 
-	<div class="row">
+	<div class="row" id="top-row">
 
-		<!-- LEFT COLUMN (HTTP REQUEST DETAILS AND HISTORY) -->
-		<div class="col-lg-4">
+		<div class="col-sm-4">
 
 			<uib-tabset id="request-tabs">
 
-				<!-- HTTP REQUEST DETAILS TAB -->
+				<!-- HTTP REQUEST TAB -->
 				<uib-tab>
 
 					<uib-tab-heading>
 						<i class="fa fa-random" aria-hidden="true"></i>
-						HTTP request details
+						HTTP request
 					</uib-tab-heading>
 
 					<div class="row">
@@ -107,7 +115,7 @@
 						<!-- REQUEST URL -->
 						<div class="col-lg-12">
 							<div class="form-group">
-								<input type="text" id="url" class="form-control" placeHolder="http://www.example.com/service.json" ng-model="ctrl.model.url"/>
+								<input type="text" id="url" class="form-control input-sm" placeHolder="http://www.example.com/service.json" ng-model="ctrl.model.url"/>
 								<span id="url-error" class="help-block hidden">URL is required.</span>
 							</div>
 						</div>
@@ -115,24 +123,44 @@
 						<!-- REQUEST METHOD -->
 						<div class="col-lg-12">
 							<div class="form-group">
-								<select id="method" class="form-control" ng-model="ctrl.model.httpMethod" ng-options="httpMethod for httpMethod in ctrl.httpMethods"></select>
+								<select id="method" class="form-control input-sm" ng-model="ctrl.model.httpMethod" ng-options="httpMethod for httpMethod in ctrl.httpMethods"></select>
 							</div>
 						</div>
 
 						<!-- CONTENT TYPE -->
 						<div class="col-lg-12">
 							<div class="form-group">
-								<select id="content-type" class="form-control" ng-model="ctrl.model.contentType" ng-options="contentType.value as contentType.name for contentType in ctrl.contentTypes"></select>
+								<select id="content-type" class="form-control input-sm" ng-model="ctrl.model.contentType" ng-options="contentType.value as contentType.name for contentType in ctrl.contentTypes"></select>
 							</div>
 						</div>
+
+						<div class="col-lg-12">
+							<error-message show="ctrl.showError">
+								URL is required
+							</error-message>
+						</div>
+
 					</div>
 
+				</uib-tab>
+
+
+				<!-- HEADERS TAB -->
+				<uib-tab>
+
+					<uib-tab-heading>
+						<i class="fa fa-list" aria-hidden="true"></i>
+						Headers
+					</uib-tab-heading>
+
 					<!-- HTTP HEADERS -->
-					<div class="row">
+					<div class="row" id="headers">
 						<div class="col-lg-12">
-							<a href="#" ng-click="ctrl.addHeader()" id="add-header-action">
+
+							<a href="#" ng-click="ctrl.addHeader()" id="add-header-action" class="btn btn-default btn-sm">
 								<i class="fa fa-plus" aria-hidden="true"></i> Add request header
 							</a>
+
 							<table id="request-headers" class="table table-condensed">
 								<tbody>
 								<tr ng-repeat="header in ctrl.model.headers track by $index">
@@ -150,70 +178,17 @@
 								</tr>
 								</tbody>
 							</table>
+
 						</div>
-					</div>
-
-				</uib-tab>
-
-
-				<!-- REQUEST HISTORY TAB -->
-				<uib-tab>
-
-					<uib-tab-heading>
-						<i class="fa fa-history" aria-hidden="true"></i>
-						Request history
-					</uib-tab-heading>
-
-					<div ng-controller="historyController as ctrl">
-
-						<div class="history-controls">
-							<a href="#" ng-click="ctrl.clearHistory()" class="pull-right">Clear</a>
-						</div>
-
-						<table class="table table-hover">
-							<tbody>
-							<tr ng-repeat="entry in ctrl.model.history track by $index" ng-if="ctrl.model.history.length > 0">
-								<td class="method">
-									<span class="label" ng-class="{ 'label-primary': entry.method == 'POST', 'label-danger': entry.method == 'DELETE', 'label-warning': entry.method == 'PUT' }">{{ entry.method }}</span>
-								</td>
-								<td class="url">
-									{{ entry.url }}
-								</td>
-								<td class="content-type">
-									<span class="label pull-right" ng-class="{ 'label-primary': entry.contentType == 'application/json', 'label-info': entry.contentType == 'application/xml' }">
-										JSON
-									</span>
-								</td>
-							</tr>
-							</tbody>
-						</table>
-
 					</div>
 
 				</uib-tab>
 
 			</uib-tabset>
 
-
-			<!-- ACTION BUTTONS -->
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="form-group">
-						<button class="btn btn-primary" ng-click="ctrl.sendRequest()" ng-disabled="ctrl.loading">
-							Send request <i class="fa fa-paper-plane" aria-hidden="true"></i>
-						</button>
-						<button class="btn btn-default" ng-click="ctrl.resetFields()" ng-disabled="ctrl.loading">
-							Reset fields
-						</button>
-						<img id="loading" src="images/loading.gif" ng-show="ctrl.loading"/>
-					</div>
-				</div>
-			</div>
-
 		</div>
 
-		<!-- RIGHT COLUMN (HTTP REQUEST BODY AND RESPONSE DATA) -->
-		<div class="col-lg-8">
+		<div class="col-sm-8">
 
 			<!-- REQUEST BODY -->
 			<div class="row">
@@ -225,40 +200,92 @@
 				</div>
 			</div>
 
-			<!-- RESPONSE TABS -->
-			<div class="row">
-				<div class="col-lg-12">
+		</div>
 
-					<div id="response-status">
-						<span class="label label-success" ng-if="ctrl.model.response.status">{{ ctrl.model.response.status }} ({{ ctrl.model.response.statusText }})</span>
-						<span class="label label-info" ng-if="ctrl.model.response.time">{{ ctrl.model.response.time }}ms</span>
+	</div>
+
+	<hr/>
+
+	<div class="row actions">
+
+		<div class="col-sm-12">
+
+			<div class="form-group">
+				<button class="btn btn-primary" ng-click="ctrl.sendRequest()" ng-disabled="ctrl.loading">
+					Send request
+					<i class="fa fa-paper-plane fa-fw" aria-hidden="true" ng-hide="ctrl.loading"></i>
+					<i class="fa fa-circle-o-notch fa-fw fa-spin" aria-hidden="true" ng-show="ctrl.loading"></i>
+				</button>
+				<button class="btn btn-default" ng-click="ctrl.resetFields()" ng-disabled="ctrl.loading">
+					Reset fields
+					<i class="fa fa-undo" aria-hidden="true"></i>
+				</button>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="row" >
+
+		<div class="col-sm-12">
+
+			<div id="response-status">
+				<span class="label label-success" ng-if="ctrl.model.response.status">{{ ctrl.model.response.status }} ({{ ctrl.getStatusText(ctrl.model.response.status) }})</span>
+				<span class="label label-info" ng-if="ctrl.model.response.time">{{ ctrl.model.response.time }}ms</span>
+			</div>
+
+			<uib-tabset id="response-tabs">
+
+				<uib-tab heading="Response">
+					<div hljs ng-if="ctrl.model.response.data" source="ctrl.model.response.data | json"></div>
+				</uib-tab>
+
+				<uib-tab heading="Raw response">
+					<pre ng-if="ctrl.model.response.data">{{ ctrl.model.response.data }}</pre>
+				</uib-tab>
+
+				<uib-tab heading="Response headers">
+					<table class="table table-condensed">
+						<tbody>
+						<tr ng-repeat="(name, value) in ctrl.model.response.headers() track by $index">
+							<td>{{ name }}</td>
+							<td><code>{{ value }}</code></td>
+						</tr>
+						</tbody>
+					</table>
+				</uib-tab>
+
+				<uib-tab class="pull-rightx">
+
+					<uib-tab-heading>
+						<i class="fa fa-history" aria-hidden="true"></i>
+						History
+					</uib-tab-heading>
+
+					<div id="request-history" ng-controller="historyController as ctrl">
+
+						<div class="history-controls">
+
+							<a href="#" class="pull-right" ng-click="ctrl.clearHistory()">Clear history</a>
+
+							<div class="search">
+								<input type="text" class="form-control input-sm" ng-model="ctrl.model.searchTerm" placeholder="Search history">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+
+						</div>
+
+						<div class="history-list">
+							<history-item item="historyItem" ng-repeat="historyItem in ctrl.historyItems | limitTo:100"></history-item>
+						</div>
+
 					</div>
 
-					<uib-tabset id="response-tabs">
+				</uib-tab>
 
-						<uib-tab heading="Response">
-							<div hljs ng-if="ctrl.model.response.data" source="ctrl.model.response.data | json"></div>
-						</uib-tab>
-
-						<uib-tab heading="Raw response">
-							<pre ng-if="ctrl.model.response.data">{{ ctrl.model.response.data }}</pre>
-						</uib-tab>
-
-						<uib-tab heading="Response headers">
-							<table class="table table-condensed">
-								<tbody>
-								<tr ng-repeat="(name, value) in ctrl.model.response.headers() track by $index">
-									<td>{{ name }}</td>
-									<td><code>{{ value }}</code></td>
-								</tr>
-								</tbody>
-							</table>
-						</uib-tab>
-
-					</uib-tabset>
-
-				</div>
-			</div>
+			</uib-tabset>
 
 		</div>
 
