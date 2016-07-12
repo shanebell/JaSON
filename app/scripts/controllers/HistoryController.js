@@ -4,19 +4,31 @@ angular.module('JaSON')
         var ctrl = this;
 
         ctrl.model = {
-            searchTerm: ''
+            searchTerm: '',
+            limit: 100
         };
 
         ctrl.historyItems = [];
 
         historyService.getHistory().then(
             function (response) {
+                $log.debug('%s history items loaded', response.length);
                 ctrl.historyItems = response;
             },
             function (response) {
                 $log.debug('Error loading history from local storage: %s', angular.toJson(response));
             }
         );
+
+        ctrl.filter = function(historyItem) {
+            var matchesFilter = true;
+
+            if (ctrl.model.searchTerm) {
+                matchesFilter = _.includes(historyItem.url, ctrl.model.searchTerm);
+            }
+
+            return matchesFilter;
+        };
 
         ctrl.clearHistory = function () {
             historyService.clearHistory();

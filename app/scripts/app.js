@@ -14,8 +14,10 @@ angular.module('JaSON', [
         localStorageServiceProvider.setPrefix('JaSON');
     })
 
-    .constant('referenceData',
-        {
+    .constant('referenceData', {
+
+            version: '2.0.0',
+
             httpMethods: [
                 'GET',
                 'POST',
@@ -116,8 +118,7 @@ angular.module('JaSON', [
                 '509': 'Unassigned',
                 '510': 'Not Extended',
                 '511': 'Network Authentication Required'
-            },
+            }
 
-            consoleMessage: '     _       ____   ___  _   _\n    | | __ _/ ___| / _ \\| \\ | |\n _  | |/ _` \\___ \\| | | |  \\| |\n| |_| | (_| |___) | |_| | |\\  |\n \\___/ \\__,_|____/ \\___/|_| \\_| v2.0.0\n\nhttps://github.com/shanebell/JaSON\n\n'
         }
     );

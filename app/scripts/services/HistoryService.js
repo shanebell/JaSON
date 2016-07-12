@@ -107,6 +107,25 @@ angular.module('JaSON')
             historyItems.push(clone);
         });
 
+        historyItems.push({
+            url: 'https://www.thisisareallylongdomainnametoseewhathappens.com/api/v1/users/quickbrownfox?q=123',
+            method: 'POST',
+            contentType: 'application/json',
+            requestHeaders: [
+                {name: 'Authorization', value: 'Basic MDQwNDAwNTcyNTowOTI0MmQzZS1kY2ZiLTRlNjUtYjlhNS0xM2E4OTE2YmExY2Q='}
+            ],
+            requestBody: '{ name: \'value\' }',
+            time: 204,
+            responseCode: 200,
+            responseBody: '{ name: \'value\' }',
+            responseHeaders: [
+                {name: 'Server', value: 'Apache-Coyote/1.1'},
+                {name: 'Transfer-Encoding', value: 'chunked'},
+                {name: 'Content-Type', value: 'application/json;charset=UTF-8'}
+            ],
+            date: new Date()
+        });
+
         localStorageService.set(LOCAL_STORAGE_KEY, historyItems);
 
         return {

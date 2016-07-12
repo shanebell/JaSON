@@ -1,7 +1,7 @@
 angular.module('JaSON')
     .controller('appController', function ($scope, $log, $http, httpService, referenceData) {
 
-        $log.debug(referenceData.consoleMessage);
+        $log.debug('     _       ____   ___  _   _\n    | | __ _/ ___| / _ \\| \\ | |\n _  | |/ _` \\___ \\| | | |  \\| |\n| |_| | (_| |___) | |_| | |\\  |\n \\___/ \\__,_|____/ \\___/|_| \\_| v%s\n\nhttps://github.com/shanebell/JaSON\n\n', referenceData.version);
 
         var ctrl = this;
 

@@ -32,6 +32,9 @@
 	<!-- LODASH -->
 	<script src="/lib/lodash/dist/lodash.min.js" type="text/javascript"></script>
 
+	<!-- SPRINTF -->
+	<script src="/lib/sprintf/dist/sprintf.min.js" type="text/javascript"></script>
+
 	<!-- MOMENT -->
 	<script src="/lib/moment/min/moment.min.js" type="text/javascript"></script>
 
@@ -278,7 +281,7 @@
 						</div>
 
 						<div class="history-list">
-							<history-item item="historyItem" ng-repeat="historyItem in ctrl.historyItems | limitTo:100"></history-item>
+							<history-item item="historyItem" ng-repeat="historyItem in ctrl.historyItems | filter : ctrl.filter | limitTo: ctrl.model.limit"></history-item>
 						</div>
 
 					</div>
