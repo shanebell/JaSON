@@ -5,7 +5,7 @@ angular.module('JaSON')
 
         ctrl.model = {
             searchTerm: '',
-            limit: 100
+            limit: 50
         };
 
         ctrl.historyItems = [];
@@ -33,6 +33,10 @@ angular.module('JaSON')
         ctrl.clearHistory = function () {
             historyService.clearHistory();
             ctrl.historyItems = [];
+        };
+
+        ctrl.showMore = function() {
+            ctrl.model.limit += 50;
         };
 
         ctrl.getHostname = function (urlString) {

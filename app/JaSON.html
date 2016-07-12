@@ -284,6 +284,11 @@
 							<history-item item="historyItem" ng-repeat="historyItem in ctrl.historyItems | filter : ctrl.filter | limitTo: ctrl.model.limit"></history-item>
 						</div>
 
+						<a href="" ng-click="ctrl.showMore()" class="btn btn-primary btn-sm pull-right show-more" ng-show="ctrl.model.limit < ctrl.historyItems.length">
+							<i class="fa fa-plus" aria-hidden="true"></i>
+							Show more
+						</a>
+
 					</div>
 
 				</uib-tab>

@@ -67,6 +67,8 @@ angular.module('JaSON')
                 function (response) {
                     $log.debug('Response: %s', angular.toJson(response));
                     ctrl.model.response = response;
+
+
                 },
                 function (response) {
                     $log.debug('Error: %s', angular.toJson(response));
