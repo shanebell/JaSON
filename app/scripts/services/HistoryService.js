@@ -126,7 +126,7 @@ angular.module('JaSON')
             date: new Date()
         });
 
-        localStorageService.set(LOCAL_STORAGE_KEY, historyItems);
+        //localStorageService.set(LOCAL_STORAGE_KEY, historyItems);
 
         return {
 
@@ -142,15 +142,12 @@ angular.module('JaSON')
             },
 
             getHistory: function () {
-                $log.debug('Getting history');
-
                 return $q(function(resolve) {
                     resolve(localStorageService.get(LOCAL_STORAGE_KEY) || []);
                 });
             },
 
             clearHistory: function () {
-                $log.debug('Clearing history');
                 localStorageService.set(LOCAL_STORAGE_KEY, []);
             }
 

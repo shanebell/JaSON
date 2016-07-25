@@ -1,5 +1,5 @@
 angular.module('JaSON')
-    .controller('appController', function ($scope, $log, $http, httpService, referenceData) {
+    .controller('appController', function ($scope, $log, $http, httpService, historyService, referenceData) {
 
         $log.debug('     _       ____   ___  _   _\n    | | __ _/ ___| / _ \\| \\ | |\n _  | |/ _` \\___ \\| | | |  \\| |\n| |_| | (_| |___) | |_| | |\\  |\n \\___/ \\__,_|____/ \\___/|_| \\_| v%s\n\nhttps://github.com/shanebell/JaSON\n\n', referenceData.version);
 
@@ -9,6 +9,7 @@ angular.module('JaSON')
         ctrl.contentTypes = referenceData.contentTypes;
         ctrl.requestBodyPlaceholder = referenceData.requestBodyPlaceholder;
         ctrl.loading = false;
+        ctrl.activeResponseTab = 0;
 
         ctrl.model = defaultModel();
 
@@ -24,13 +25,28 @@ angular.module('JaSON')
             return referenceData.responseCodes[statusCode];
         };
 
+        ctrl.loadHistoryItem = function(historyItem) {
+            $log.debug('loading history item: %s', angular.toJson(historyItem));
+            ctrl.model = {
+                url: historyItem.url,
+                httpMethod: historyItem.method,
+                contentType: historyItem.contentType,
+                headers: historyItem.headers,
+                requestBody: historyItem.requestBody || '',
+                response: historyItem.responseBody
+            }
+        };
+
         ctrl.sendRequest = function () {
 
-            if (_.isEmpty(ctrl.model.url)) {
-                ctrl.showError = true;
+            // prefix URL with "http://" if it's not already present
+            if (!_.isEmpty(ctrl.model.url) && !/^http(s)?:\/\//.test(ctrl.model.url)) {
+                ctrl.model.url = sprintf('http://%s', ctrl.model.url);
+            }
+
+            if (ctrl.form.$invalid) {
+                ctrl.showErrors = true;
                 return;
-            } else {
-                ctrl.showError = false;
             }
 
             // TODO refactor this into httpService
@@ -61,23 +77,66 @@ angular.module('JaSON')
             }
 
             ctrl.loading = true;
-            var startTime = new Date().getTime();
+            var start = new Date();
 
             $http(httpConfig).then(
                 function (response) {
                     $log.debug('Response: %s', angular.toJson(response));
                     ctrl.model.response = response;
-
-
                 },
                 function (response) {
                     $log.debug('Error: %s', angular.toJson(response));
                     ctrl.model.response = response;
                 }
             ).finally(function () {
-                var endTime = new Date().getTime();
-                ctrl.model.response.time = endTime - startTime;
+
+                // calculate the time taken for this request
+                var end = new Date();
+                var time = end.getTime() - start.getTime();
+
+                // add some custom fields to the response
+                ctrl.model.response.time = time;
+
+                // save the history item
+                var historyItem = {
+
+                    // request data
+                    url: ctrl.model.url,
+                    method: ctrl.model.httpMethod,
+                    contentType: ctrl.model.contentType,
+                    requestHeaders: headers,
+                    requestBody: ctrl.model.requestBody,
+
+                    // response data
+                    responseBody: ctrl.model.response.data,
+                    responseHeaders: ctrl.model.response.headers(),
+
+                    // metadata
+                    time: time,
+                    date: start,
+                    statusCode: ctrl.model.response.status,
+                    statusText: ctrl.model.response.statusText
+
+                };
+
+                historyService.save(historyItem).then(
+                    function() {
+                        $log.debug('history item saved');
+
+                        historyService.getHistory().then(
+                            function(historyItems) {
+                                ctrl.historyItems = historyItems;
+                            }
+                        );
+
+                    },
+                    function(error) {
+                        $log.debug('Error saving history item: %s', error);
+                    }
+                );
+
                 ctrl.loading = false;
+                ctrl.activeResponseTab = 0;
             });
         };
 
@@ -99,6 +158,16 @@ angular.module('JaSON')
 
             // TODO check if request content is allowed for other content types
             return ctrl.model.httpMethod == 'POST' || ctrl.model.httpMethod == 'PUT';
+        };
+
+        ctrl.getLength = function() {
+            if (ctrl.model.response) {
+                var contentLength = _.find(ctrl.model.response.headers(), function(headerValue, headerName) {
+                    return headerName == 'content-length';
+                });
+                return contentLength || 0;
+            }
+            return 0;
         };
 
         function defaultModel() {
