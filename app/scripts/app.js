@@ -52,6 +52,9 @@ angular.module('JaSON', [
             requestBodyPlaceholder: 'JSON or XML content.\n\n\'Form encoded\' requests can contain JSON content which will be converted to form request parameters.\n\n\'JSON\' and \'XML\' requests pass the content through in the request body and hence is only available for POST and PUT methods.',
 
             responseCodes: {
+
+                '-1': 'Error',
+
                 '100': 'Continue',
                 '101': 'Switching Protocols',
                 '102': 'Processing',
