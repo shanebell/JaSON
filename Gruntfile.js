@@ -83,12 +83,13 @@ module.exports = function (grunt) {
 						cwd: 'app',
 						dest: 'package',
 						src: [
-							'images/{,*/}*.*',
+							'css/**/*',
+							'images/**/*',
+							'lib/**/*',
+							'scripts/**/*',
+							'templates/**/*',
 							'JaSON.html',
-							'manifest.json',
-							'lib/{,*/}*.*',
-							'css/{,*/}*.css',
-							'scripts/{,*/}*.js'
+							'manifest.json'
 						]
 					}
 				]
@@ -148,17 +149,17 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerTask('default', [
-		'clean:package',
-		'clean:dist',
+		'clean',
 		//'goog-webfont-dl',
+		'bower',
 		'less',
 		'copy',
 		'watch'
 	]);
 
 	grunt.registerTask('dist', [
-		'clean:package',
-		'clean:dist',
+		'clean',
+		'bower',
 		'less',
 		'copy',
 		'compress'

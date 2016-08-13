@@ -1,5 +1,5 @@
 angular.module('JaSON')
-    .controller('appController', function ($scope, $log, $http, $filter, $window, httpService, historyService, referenceData) {
+    .controller('appController', function ($scope, $log, $http, $filter, $window, historyService, referenceData) {
 
         $log.info('     _       ____   ___  _   _\n    | | __ _/ ___| / _ \\| \\ | |\n _  | |/ _` \\___ \\| | | |  \\| |\n| |_| | (_| |___) | |_| | |\\  |\n \\___/ \\__,_|____/ \\___/|_| \\_| v%s\n\nhttps://github.com/shanebell/JaSON\n\n', referenceData.version);
 
