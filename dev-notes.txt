@@ -1,7 +1,4 @@
-https://github.com/webcss/angular-indexedDB
-http://www.w3.org/TR/IndexedDB/
-
-Feature requests from Adrian:
+Feature requests:
 - star a history item
 - delete all except starred history items
 - save history to dropbox or export somehow?
@@ -10,7 +7,6 @@ Random ideas:
 - share a history request with someone (export and email, click to send?)
 - group history by domain to make searching easier
 - filter history by domain, content type, request method, response status etc...
-
 
 TODO:
 - add all third party libraries to NOTICE
@@ -22,7 +18,5 @@ Colors:
 - http://www.colourlovers.com/palette/292482/Terra
 - https://flatuicolors.com/
 
-IndexedDB Stuff:
-- https://hacks.mozilla.org/2014/06/breaking-the-borders-of-indexeddb/
-- https://github.com/dfahlander/Dexie.js
-- http://pouchdb.com/
+Chrome screenshots:
+- in responsive mode set dimensions to 1423x889 to get 1280x800 screenshots
