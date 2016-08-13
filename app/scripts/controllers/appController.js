@@ -55,8 +55,6 @@ angular.module('JaSON')
                             response.data = $filter('json')(response.data);
                         }
 
-                        $log.debug(response.data.length);
-
                         ctrl.response = response;
                     },
                     function (response) {
