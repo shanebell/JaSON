@@ -41,6 +41,18 @@ module.exports = function (grunt) {
 			}
 		},
 
+		// 'goog-webfont-dl': { // loads fonts from google fonts
+		// 	roboto: {
+		// 		options: {
+		// 			ttf: true, eot: true, woff: true, woff2: true, svg: true,
+		// 			fontname: 'Roboto',
+		// 			fontstyles: '400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic',
+		// 			fontdest: 'app/fonts/',
+		// 			cssdest: 'app/fonts/fonts-roboto.css'
+		// 		}
+		// 	}
+		// },
+
 		// compile less to css
 		less: {
 			app: {
@@ -138,6 +150,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('default', [
 		'clean:package',
 		'clean:dist',
+		//'goog-webfont-dl',
 		'less',
 		'copy',
 		'watch'

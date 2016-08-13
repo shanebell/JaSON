@@ -1,7 +1,7 @@
 angular.module('JaSON')
-    .controller('appController', function ($scope, $log, $http, httpService, historyService, referenceData) {
+    .controller('appController', function ($scope, $log, $http, $filter, $window, httpService, historyService, referenceData) {
 
-        $log.debug('     _       ____   ___  _   _\n    | | __ _/ ___| / _ \\| \\ | |\n _  | |/ _` \\___ \\| | | |  \\| |\n| |_| | (_| |___) | |_| | |\\  |\n \\___/ \\__,_|____/ \\___/|_| \\_| v%s\n\nhttps://github.com/shanebell/JaSON\n\n', referenceData.version);
+        $log.info('     _       ____   ___  _   _\n    | | __ _/ ___| / _ \\| \\ | |\n _  | |/ _` \\___ \\| | | |  \\| |\n| |_| | (_| |___) | |_| | |\\  |\n \\___/ \\__,_|____/ \\___/|_| \\_| v%s\n\nhttps://github.com/shanebell/JaSON\n\n', referenceData.version);
 
         var ctrl = this;
 
@@ -44,19 +44,27 @@ angular.module('JaSON')
 
                 $http(buildHttpConfig()).then(
                     function (response) {
-                        $log.debug('Response: %s', angular.toJson(response));
+
+                        // convert headers to an array of name/value pairs
+                        response.headers = _.map(response.headers(), function(value, name) {
+                            return { name: name, value: value};
+                        });
+
+                        // convert data to JSON string
+                        if (_.isObject(response.data)) {
+                            response.data = $filter('json')(response.data);
+                        }
+
+                        $log.debug(response.data.length);
+
                         ctrl.response = response;
                     },
                     function (response) {
-                        $log.debug('Error: %s', angular.toJson(response));
+                        $log.error('Error: %s', angular.toJson(response, true));
                         ctrl.response = response;
                     }
                 ).finally(function () {
                     ctrl.response.time = new Date();
-
-                    ctrl.response.headers = _.map(ctrl.response.headers(), function(value, name) {
-                        return { name: name, value: value};
-                    });
 
                     saveHistoryItem();
 
@@ -75,15 +83,15 @@ angular.module('JaSON')
         };
 
         ctrl.loadHistoryItem = function(historyItem) {
-            $log.info('Loading history item: %s', angular.toJson(historyItem, true));
             ctrl.request = historyItem.request;
             ctrl.response = historyItem.response;
             ctrl.activeRequestTab = 0;
+            $window.scrollTo(0, 0);
         };
 
         // TODO check if request content is allowed for other content types
         ctrl.requestBodyAllowed = function () {
-            return ctrl.request.method == 'POST' || ctrl.request.method == 'PUT';
+            return (ctrl.request.method == 'POST' || ctrl.request.method == 'PUT');
         };
 
         ctrl.getLength = function() {
@@ -101,7 +109,7 @@ angular.module('JaSON')
         };
 
         ctrl.showMore = function() {
-            return ctrl.history.limit < ctrl.history.items.length && _.isEmpty(ctrl.history.search);
+            return ctrl.history.limit += 50;
         };
 
         ctrl.getDuration = function() {
@@ -160,7 +168,9 @@ angular.module('JaSON')
                 headers: headers
             };
 
-            if (ctrl.requestBodyAllowed()) {
+            if (ctrl.request.contentType == 'application/x-www-form-urlencoded; charset=UTF-8' && ctrl.request.body) {
+                httpConfig.params = JSON.parse(ctrl.request.body);
+            } else {
                 httpConfig.data = ctrl.request.body;
             }
 
@@ -180,35 +190,31 @@ angular.module('JaSON')
                     response: ctrl.response
                 };
 
-                $log.debug('Saving history item %s', angular.toJson(historyItem, true));
-
                 historyService.save(historyItem).then(
                     function() {
-                        historyService.getHistory().then(
-                            function(historyItems) {
-                                ctrl.history.items = historyItems;
-                            }
-                        );
+                        loadHistory();
                     },
                     function(error) {
-                        $log.debug('Error saving history item: %s', error);
+                        $log.error('Error saving history item: %s', angular.toJson(error, true));
                     }
                 );
 
             }
         }
 
-        (function() {
-            $log.debug('Loading history...');
+        function loadHistory() {
             historyService.getHistory().then(
                 function (response) {
-                    $log.debug('%s history items loaded', response.length);
                     ctrl.history.items = response;
                 },
                 function (response) {
-                    $log.debug('Error loading history from local storage: %s', angular.toJson(response));
+                    $log.error('Error loading history from local storage: %s', angular.toJson(response, true));
                 }
             );
+        }
+
+        (function() {
+            loadHistory()
         })();
 
     }
