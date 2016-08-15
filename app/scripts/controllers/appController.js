@@ -44,22 +44,10 @@ angular.module('JaSON')
 
                 $http(buildHttpConfig()).then(
                     function (response) {
-
-                        // convert headers to an array of name/value pairs
-                        response.headers = _.map(response.headers(), function(value, name) {
-                            return { name: name, value: value};
-                        });
-
-                        // convert data to JSON string
-                        if (_.isObject(response.data)) {
-                            response.data = $filter('json')(response.data);
-                        }
-
-                        ctrl.response = response;
+                        ctrl.response = processHttpReponse(response);
                     },
                     function (response) {
-                        $log.error('Error: %s', angular.toJson(response, true));
-                        ctrl.response = response;
+                        ctrl.response = processHttpReponse(response);
                     }
                 ).finally(function () {
                     ctrl.response.time = new Date();
@@ -173,6 +161,21 @@ angular.module('JaSON')
             }
 
             return httpConfig;
+        }
+
+        function processHttpReponse(response) {
+
+            // convert headers to an array of name/value pairs
+            response.headers = _.map(response.headers(), function(value, name) {
+                return { name: name, value: value};
+            });
+
+            // convert data to JSON string
+            if (_.isObject(response.data)) {
+                response.data = $filter('json')(response.data);
+            }
+
+            return response;
         }
 
         /**
