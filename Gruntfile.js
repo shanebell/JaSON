@@ -41,17 +41,17 @@ module.exports = function (grunt) {
 			}
 		},
 
-		// 'goog-webfont-dl': { // loads fonts from google fonts
-		// 	roboto: {
-		// 		options: {
-		// 			ttf: true, eot: true, woff: true, woff2: true, svg: true,
-		// 			fontname: 'Roboto',
-		// 			fontstyles: '400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic',
-		// 			fontdest: 'app/fonts/',
-		// 			cssdest: 'app/fonts/fonts-roboto.css'
-		// 		}
-		// 	}
-		// },
+		'goog-webfont-dl': { // loads fonts from google fonts
+			roboto: {
+				options: {
+					ttf: true, eot: true, woff: true, woff2: true, svg: true,
+					fontname: 'Roboto',
+					fontstyles: '400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic',
+					fontdest: 'app/fonts/',
+					cssdest: 'app/css/roboto.css'
+				}
+			}
+		},
 
 		// compile less to css
 		less: {
@@ -85,6 +85,7 @@ module.exports = function (grunt) {
 						src: [
 							'css/**/*',
 							'images/**/*',
+							'fonts/**/*',
 							'lib/**/*',
 							'scripts/**/*',
 							'templates/**/*',
@@ -150,7 +151,7 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('default', [
 		'clean',
-		//'goog-webfont-dl',
+		'goog-webfont-dl',
 		'bower',
 		'less',
 		'copy',
