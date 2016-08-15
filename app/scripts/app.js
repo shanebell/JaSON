@@ -22,6 +22,7 @@ angular.module('JaSON', [
                 'GET',
                 'POST',
                 'PUT',
+                'PATCH',
                 'DELETE',
                 'HEAD'
             ],

@@ -77,7 +77,7 @@ angular.module('JaSON')
 
         // TODO check if request content is allowed for other content types
         ctrl.requestBodyAllowed = function () {
-            return (ctrl.request.method == 'POST' || ctrl.request.method == 'PUT');
+            return _.includes([ 'POST', 'PUT', 'PATCH' ], ctrl.request.method);
         };
 
         ctrl.getLength = function() {
