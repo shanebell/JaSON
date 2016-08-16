@@ -20,6 +20,10 @@ module.exports = function (grunt) {
 			dist: {
 				src: 'dist',
 				dot: true
+			},
+			lib: {
+				src: 'app/lib',
+				dot: true
 			}
 		},
 
