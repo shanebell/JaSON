@@ -13,6 +13,7 @@ angular.module('JaSON')
         ctrl.loading = false;
         ctrl.activeRequestTab = 0;
         ctrl.activeResponseTab = 0;
+        ctrl.requestBodyError = null;
 
         ctrl.history = defaultHistory();
         ctrl.request = defaultRequest();
@@ -34,7 +35,7 @@ angular.module('JaSON')
 
             ctrl.response = {};
 
-            if (ctrl.form.$invalid) {
+            if (!validForm()) {
                 ctrl.showErrors = true;
             } else {
                 ctrl.loading = true;
@@ -60,6 +61,25 @@ angular.module('JaSON')
 
             }
         };
+
+        function validForm() {
+
+            if (ctrl.requestBodyAllowed() && !_.isEmpty(ctrl.request.body)) {
+
+                // validate JSON
+                if (_.includes(['application/x-www-form-urlencoded', 'application/json'], ctrl.request.contentType)) {
+
+                    try {
+                        JSON.parse(ctrl.request.body);
+                        ctrl.requestBodyError = null;
+                    } catch (e) {
+                        ctrl.requestBodyError = e instanceof SyntaxError ? e.message : 'Unexpected error';
+                    }
+                }
+            }
+
+            return ctrl.form.$valid && !ctrl.requestBodyError;
+        }
 
         ctrl.resetFields = function () {
             ctrl.request = defaultRequest();
@@ -135,14 +155,14 @@ angular.module('JaSON')
 
         function buildHttpConfig() {
 
-            var headers = {
-                'Content-Type': ctrl.request.contentType
-            };
-
             // remove empty headers
             ctrl.request.headers = _.filter(ctrl.request.headers, function(header) {
                 return header.name && header.value;
             });
+
+            var headers = {
+                'Content-Type': ctrl.request.contentType
+            };
 
             _.forEach(ctrl.request.headers, function (header) {
                 headers[header.name] = header.value;
@@ -154,8 +174,8 @@ angular.module('JaSON')
                 headers: headers
             };
 
-            if (ctrl.request.contentType == 'application/x-www-form-urlencoded; charset=UTF-8' && ctrl.request.body) {
-                httpConfig.params = JSON.parse(ctrl.request.body);
+            if (ctrl.request.contentType == 'application/x-www-form-urlencoded' && ctrl.request.body) {
+                httpConfig.data = jQuery.param(JSON.parse(ctrl.request.body));
             } else {
                 httpConfig.data = ctrl.request.body;
             }

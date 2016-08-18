@@ -195,9 +195,11 @@
 				<!-- REQUEST BODY -->
 				<div class="row">
 					<div class="col-lg-12" id="request-body">
-						<div id="request-body-group" class="form-group">
-							<textarea class="form-control col-lg-12" rows="10" placeholder="{{ ctrl.requestBodyPlaceholder }}" ng-model="ctrl.request.body" ng-disabled="!ctrl.requestBodyAllowed()"></textarea>
-							<span id="request-body-error" class="help-block" style="display:none;"></span>
+						<div id="request-body-group" class="form-group" ng-class="{ 'has-error': ctrl.showErrors && ctrl.requestBodyError }">
+							<textarea class="form-control col-lg-12" rows="10" placeholder="{{ ctrl.requestBodyPlaceholder }}" name="requestBody" ng-model="ctrl.request.body" ng-disabled="!ctrl.requestBodyAllowed()"></textarea>
+							<error-message show="ctrl.showErrors && ctrl.requestBodyError">
+								Invalid JSON request body. {{ ctrl.requestBodyError }}
+							</error-message>
 						</div>
 					</div>
 				</div>

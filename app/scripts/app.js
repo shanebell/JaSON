@@ -42,11 +42,11 @@ angular.module('JaSON', [
                 },
                 {
                     name: 'Form encoded',
-                    value: 'application/x-www-form-urlencoded; charset=UTF-8'
+                    value: 'application/x-www-form-urlencoded'
                 },
                 {
                     name: 'None',
-                    value: ''
+                    value: undefined
                 }
             ],
 
