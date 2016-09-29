@@ -1,6 +1,6 @@
 {
 	"name": "JaSON",
-	"version": "3.0.3",
+	"version": "3.0.4",
 	"dependencies": {},
 	"devDependencies": {
 		"grunt": "~0.4.1",

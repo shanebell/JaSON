@@ -1,6 +1,6 @@
 {
 	"name": "JaSON",
-	"version": "3.0.3",
+	"version": "3.0.4",
 	"manifest_version": 2,
 	"description": "JaSON: JSON and XML web testing tool.",
 	"app": {
