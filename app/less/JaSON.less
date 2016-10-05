@@ -1,4 +1,7 @@
 @import '../lib/bootstrap/less/bootstrap.less';
+@import '../lib/font-awesome/less/font-awesome.less';
+
+@fa-font-path:   "../lib/font-awesome/fonts";
 
 @grey: #888;
 
@@ -25,6 +28,10 @@
 
 
 // COMMON
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
 
 html {
   position: relative;
