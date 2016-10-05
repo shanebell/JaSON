@@ -2,7 +2,8 @@
   "name": "JaSON",
   "version": "2.0.0",
   "dependencies": {
-    "angular": "1.4.12",
+    "angular": "1.5.8",
+    "angular-animate": "1.5.8",
     "angular-bootstrap": "2.1.4",
     "angular-highlightjs": "0.6.1",
     "angular-moment": "0.10.3",
@@ -14,8 +15,7 @@
     "jquery": "3.1.1",
     "highlightjs": "8.9.1",
     "sprintf": "1.0.3"
-  }
-,
+  },
   "exportsOverride": {
     "bootstrap": {
       "main": [
@@ -51,5 +51,8 @@
         "dist/sprintf.min.js"
       ]
     }
+  },
+  "resolutions": {
+    "angular": "1.5.8"
   }
 }

@@ -86,12 +86,14 @@ angular.module('JaSON')
             ctrl.response = {};
             ctrl.activeRequestTab = 0;
             ctrl.activeResponseTab = 0;
+            ctrl.requestBodyError = '';
         };
 
         ctrl.loadHistoryItem = function(historyItem) {
             ctrl.request = historyItem.request;
             ctrl.response = historyItem.response;
             ctrl.activeRequestTab = 0;
+            ctrl.activeResponseTab = 0;
             $window.scrollTo(0, 0);
         };
 

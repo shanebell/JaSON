@@ -1,8 +1,9 @@
 angular.module('JaSON', [
-        'ui.bootstrap',
-        'LocalStorageModule',
-        'hljs'
-    ])
+    'ngAnimate',
+    'ui.bootstrap',
+    'LocalStorageModule',
+    'hljs'
+])
 
     .config(function (hljsServiceProvider) {
         hljsServiceProvider.setOptions({
