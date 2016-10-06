@@ -63,6 +63,7 @@
 	<script src="/scripts/directives/errorMessage.js" type="text/javascript"></script>
 	<script src="/scripts/directives/onEnter.js" type="text/javascript"></script>
 	<script src="/scripts/directives/historyItem.js" type="text/javascript"></script>
+	<script src="/scripts/directives/animateOn.js" type="text/javascript"></script>
 	<link href="/css/JaSON.css" rel="stylesheet">
 
 </head>
@@ -116,21 +117,21 @@
 							<!-- REQUEST URL -->
 							<div class="col-lg-12">
 								<div class="form-group" ng-class="{ 'has-error': ctrl.showErrors && ctrl.form.url.$invalid }">
-									<input type="text" name="url" class="form-control input-sm" placeHolder="http://www.example.com/service.json" ng-model="ctrl.request.url" on-enter="ctrl.sendRequest()" required>
+									<input type="text" name="url" animate-on="loadHistoryItem" class="form-control input-sm" placeHolder="http://www.example.com/service.json" ng-model="ctrl.request.url" on-enter="ctrl.sendRequest()" required>
 								</div>
 							</div>
 
 							<!-- REQUEST METHOD -->
 							<div class="col-lg-12">
 								<div class="form-group">
-									<select name="method" class="form-control input-sm" ng-model="ctrl.request.method" ng-options="httpMethod for httpMethod in ctrl.httpMethods" on-enter="ctrl.sendRequest()"></select>
+									<select name="method" animate-on="loadHistoryItem" class="form-control input-sm" ng-model="ctrl.request.method" ng-options="httpMethod for httpMethod in ctrl.httpMethods" on-enter="ctrl.sendRequest()"></select>
 								</div>
 							</div>
 
 							<!-- CONTENT TYPE -->
 							<div class="col-lg-12">
 								<div class="form-group">
-									<select name="contentType" class="form-control input-sm" ng-model="ctrl.request.contentType" ng-options="contentType.value as contentType.name for contentType in ctrl.contentTypes" on-enter="ctrl.sendRequest()"></select>
+									<select name="contentType" animate-on="loadHistoryItem" class="form-control input-sm" ng-model="ctrl.request.contentType" ng-options="contentType.value as contentType.name for contentType in ctrl.contentTypes" on-enter="ctrl.sendRequest()"></select>
 								</div>
 							</div>
 
@@ -194,7 +195,7 @@
 				<div class="row">
 					<div class="col-lg-12" id="request-body">
 						<div id="request-body-group" class="form-group" ng-class="{ 'has-error': ctrl.showErrors && ctrl.requestBodyError }">
-							<textarea class="form-control col-lg-12" rows="10" placeholder="{{ ctrl.requestBodyPlaceholder }}" name="requestBody" ng-model="ctrl.request.body" ng-disabled="!ctrl.requestBodyAllowed()"></textarea>
+							<textarea animate-on="loadHistoryItem" class="form-control col-lg-12" rows="10" placeholder="{{ ctrl.requestBodyPlaceholder }}" name="requestBody" ng-model="ctrl.request.body" ng-disabled="!ctrl.requestBodyAllowed()"></textarea>
 							<error-message show="ctrl.showErrors && ctrl.requestBodyError">
 								Invalid JSON request body. {{ ctrl.requestBodyError }}
 							</error-message>
@@ -238,8 +239,8 @@
 		<div class="col-sm-12">
 
 			<div id="response-status">
-				<span class="label label-success" ng-if="ctrl.response.status">{{ ctrl.response.status }} ({{ ctrl.getStatusText(ctrl.response.status) }})</span>
-				<span class="label label-info" ng-if="ctrl.response.time">{{ ctrl.getDuration() }}ms</span>
+				<span class="label label-success fade-in" ng-if="ctrl.response.status">{{ ctrl.response.status }} ({{ ctrl.getStatusText(ctrl.response.status) }})</span>
+				<span class="label label-info fade-in" ng-if="ctrl.response.time">{{ ctrl.getDuration() }}ms</span>
 			</div>
 
 			<uib-tabset id="response-tabs" active="ctrl.activeResponseTab">
@@ -251,11 +252,11 @@
 						<i class="fa fa-reply fa-fw" aria-hidden="true"></i> Response
 					</uib-tab-heading>
 
-					<div ng-if="ctrl.response.data && ctrl.response.data.length < 100000">
+					<div ng-if="ctrl.response.data && ctrl.response.data.length < 100000" class="fade-in">
 						<div hljs hljs-source="ctrl.response.data"></div>
 					</div>
 
-					<div ng-if="ctrl.response.data && ctrl.response.data.length >= 100000">
+					<div ng-if="ctrl.response.data && ctrl.response.data.length >= 100000" class="fade-in">
 						<pre>{{ ctrl.response.data }}</pre>
 					</div>
 
@@ -309,7 +310,8 @@
 						</div>
 
 						<div class="history-list">
-							<history-item item="historyItem" ng-repeat="historyItem in ctrl.history.items | filter : ctrl.historyFilter | limitTo: ctrl.history.limit" ng-click="ctrl.loadHistoryItem(historyItem)"></history-item>
+							<div class="shane" history-item item="historyItem" ng-repeat="historyItem in ctrl.history.items | filter : ctrl.historyFilter | limitTo: ctrl.history.limit" ng-click="ctrl.loadHistoryItem(historyItem)"></div>
+							<!--<history-item item="historyItem" ng-repeat="historyItem in ctrl.history.items | filter : ctrl.historyFilter | limitTo: ctrl.history.limit" ng-click="ctrl.loadHistoryItem(historyItem)"></history-item>-->
 						</div>
 
 						<a href="" ng-click="ctrl.showMore()" class="btn btn-primary btn-sm pull-right show-more" ng-show="ctrl.history.limit < ctrl.history.items.length && !ctrl.history.search">

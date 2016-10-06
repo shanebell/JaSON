@@ -2,7 +2,7 @@ angular.module('JaSON')
     .directive('historyItem', function() {
 
         return {
-            restrict: 'E',
+            restrict: 'A',
             scope: {
                 item: '='
             },

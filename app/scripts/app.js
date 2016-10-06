@@ -15,6 +15,10 @@ angular.module('JaSON', [
         localStorageServiceProvider.setPrefix('JaSON');
     })
 
+    .config(function ($animateProvider) {
+        $animateProvider.classNameFilter(/^((?!(fa-spin)).)*$/);
+    })
+
     .constant('referenceData', {
 
             version: '3.0.4',
