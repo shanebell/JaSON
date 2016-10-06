@@ -164,7 +164,7 @@
 
 								<table id="request-headers" class="table table-condensed">
 									<tbody>
-									<tr ng-repeat="header in ctrl.request.headers track by $index">
+									<tr ng-repeat="header in ctrl.request.headers track by $index" class="fade-in">
 										<td>
 											<input type="text" class="name form-control input-sm" placeHolder="name" ng-model="header.name" on-enter="ctrl.sendRequest()">
 										</td>
