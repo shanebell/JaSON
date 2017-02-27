@@ -62,6 +62,7 @@
 	<script src="/scripts/controllers/appController.js" type="text/javascript"></script>
 	<script src="/scripts/directives/errorMessage.js" type="text/javascript"></script>
 	<script src="/scripts/directives/onEnter.js" type="text/javascript"></script>
+	<script src="/scripts/directives/response.js" type="text/javascript"></script>
 	<script src="/scripts/directives/historyItem.js" type="text/javascript"></script>
 	<script src="/scripts/directives/animateOn.js" type="text/javascript"></script>
 	<link href="/css/JaSON.css" rel="stylesheet">
@@ -252,13 +253,7 @@
 						<i class="fa fa-reply fa-fw" aria-hidden="true"></i> Response
 					</uib-tab-heading>
 
-					<div ng-if="ctrl.response.data && ctrl.response.data.length < 100000" class="fade-in">
-						<div hljs hljs-source="ctrl.response.data"></div>
-					</div>
-
-					<div ng-if="ctrl.response.data && ctrl.response.data.length >= 100000" class="fade-in">
-						<pre>{{ ctrl.response.data }}</pre>
-					</div>
+					<response ng-model="ctrl.response"></response>
 
 				</uib-tab>
 

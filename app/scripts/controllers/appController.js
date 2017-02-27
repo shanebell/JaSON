@@ -47,8 +47,8 @@ angular.module('JaSON')
                     function (response) {
                         ctrl.response = processHttpReponse(response);
                     },
-                    function (response) {
-                        ctrl.response = processHttpReponse(response);
+                    function (error) {
+                        ctrl.response = processHttpReponse(error);
                     }
                 ).finally(function () {
                     ctrl.response.time = new Date();
