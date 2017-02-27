@@ -54,7 +54,16 @@ module.exports = function (grunt) {
 					fontdest: 'app/fonts/',
 					cssdest: 'app/css/roboto.css'
 				}
-			}
+			},
+            sourceCodePro: {
+                options: {
+                    ttf: true, eot: true, woff: true, woff2: true, svg: true,
+                    fontname: 'Source Code Pro',
+                    fontstyles: '400,500,700',
+                    fontdest: 'app/fonts/',
+                    cssdest: 'app/css/source-code-pro.css'
+                }
+            }
 		},
 
 		// compile less to css
