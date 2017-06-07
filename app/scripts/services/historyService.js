@@ -2,7 +2,7 @@ angular.module('JaSON')
     .factory('historyService', function ($q, localStorageService) {
 
         var LOCAL_STORAGE_KEY = 'history';
-        var MAX_SIZE = 5000;
+        var MAX_SIZE = 2500;
 
         return {
 

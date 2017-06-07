@@ -21,7 +21,7 @@ angular.module('JaSON', [
 
     .constant('referenceData', {
 
-            version: '3.0.4',
+            version: '3.0.5',
 
             httpMethods: [
                 'GET',
