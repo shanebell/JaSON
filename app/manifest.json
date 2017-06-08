@@ -1,6 +1,6 @@
 {
 	"name": "JaSON",
-	"version": "3.0.5",
+	"version": "3.0.6",
 	"manifest_version": 2,
 	"description": "JaSON: JSON and XML web testing tool.",
 	"app": {
@@ -16,7 +16,6 @@
 	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 	"permissions": [
 		"http://*/",
-		"https://*/",
-		"unlimitedStorage"
+		"https://*/"
 	]
 }
