@@ -21,7 +21,7 @@ angular.module('JaSON', [
 
     .constant('referenceData', {
 
-            version: '3.0.6',
+            version: '3.0.7',
 
             httpMethods: [
                 'GET',
@@ -29,7 +29,8 @@ angular.module('JaSON', [
                 'PUT',
                 'PATCH',
                 'DELETE',
-                'HEAD'
+                'HEAD',
+                'OPTIONS'
             ],
 
             contentTypes: [
