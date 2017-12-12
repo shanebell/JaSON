@@ -1,13 +1,13 @@
-angular.module('JaSON')
-    .directive('animateOn', function($rootScope, $animate) {
+angular.module("JaSON")
+    .directive("animateOn", function($rootScope, $animate) {
 
         return {
-            restrict: 'A',
+            restrict: "A",
             scope: {
-                animateOn: '@'
+                animateOn: "@"
             },
             link: function(scope, element) {
-                var animateClass = 'animate';
+                var animateClass = "animate";
                 $rootScope.$on(scope.animateOn, function() {
                     $animate.addClass(element, animateClass).then(
                         function() {

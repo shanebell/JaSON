@@ -1,5 +1,5 @@
-angular.module('JaSON')
-    .directive('response', function() {
+angular.module("JaSON")
+    .directive("response", function() {
 
         var imageTypes = [
             "image/jpeg",
@@ -8,16 +8,16 @@ angular.module('JaSON')
         ];
 
         return {
-            restrict: 'E',
+            restrict: "E",
             require: "ngModel",
             scope: {
             },
-            templateUrl: '/templates/response.html',
+            templateUrl: "/templates/response.html",
             link: function(scope, element, attrs, ngModel) {
                 ngModel.$render = function() {
 
                     scope.response = ngModel.$viewValue;
-                    var contentType = _.get(_.find(scope.response.headers, { name: 'content-type' }), 'value');
+                    var contentType = _.get(_.find(scope.response.headers, { name: "content-type" }), "value");
 
                     // TODO render images inline in the template
                     scope.isImage = _.includes(imageTypes, contentType);

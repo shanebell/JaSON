@@ -1,31 +1,30 @@
 @import '../lib/bootstrap/less/bootstrap.less';
 @import '../lib/font-awesome/less/font-awesome.less';
 
-@fa-font-path:   "../lib/font-awesome/fonts";
+@fa-font-path: "../lib/font-awesome/fonts";
 
 @grey: #888;
 
-@gray-base:              #000;
-@gray-darker:            lighten(@gray-base, 13.5%); // #222
-@gray-dark:              #444;
-@gray:                   #777;
-@gray-light:             #808080;
-@gray-lighter:           #ddd;
+@gray-base: #000;
+@gray-darker: lighten(@gray-base, 13.5%); // #222
+@gray-dark: #444;
+@gray: #777;
+@gray-light: #808080;
+@gray-lighter: #ddd;
 
-@brand-primary:         #D9230F;
-@brand-success:         #469408;
-@brand-info:            #029ACF;
-@brand-warning:         #9B479F;
-@brand-danger:          #D9831F;
+@brand-primary: #D9230F;
+@brand-success: #469408;
+@brand-info: #029ACF;
+@brand-warning: #9B479F;
+@brand-danger: #D9831F;
 
-@body-bg:               #FCFCFC;
-@text-color:            @gray;
-@link-color:            @brand-primary;
-@link-hover-color:      darken(@link-color, 15%);
+@body-bg: #FCFCFC;
+@text-color: @gray;
+@link-color: @brand-primary;
+@link-hover-color: darken(@link-color, 15%);
 @link-hover-decoration: underline;
 
-@headings-color:        @gray-dark;
-
+@headings-color: @gray-dark;
 
 // COMMON
 
@@ -85,7 +84,6 @@ html {
 
 }
 
-
 // NAVBAR
 .navbar {
 
@@ -114,7 +112,6 @@ html {
 
 }
 
-
 // ABOUT MODAL
 .about-modal {
   text-align: center;
@@ -130,7 +127,6 @@ html {
   }
 }
 
-
 // ERRORS
 .error-message {
   color: @brand-danger;
@@ -141,7 +137,6 @@ html {
     margin-right: 2px;
   }
 }
-
 
 #request-body {
   textarea {
@@ -165,7 +160,6 @@ html {
   }
 }
 
-
 // REQUEST HISTORY
 #request-history {
 
@@ -174,7 +168,7 @@ html {
   .history-controls {
 
     margin-bottom: 10px;
-    
+
     .clear {
       text-align: right;
       margin-bottom: 5px;
@@ -243,13 +237,12 @@ html {
 
 }
 
-
 #request-headers {
   margin-top: 6px;
   td {
     border-top: none;
     padding: 2px;
-    
+
     a {
       line-height: 30px;
       margin-left: 5px;

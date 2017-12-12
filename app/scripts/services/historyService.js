@@ -1,7 +1,7 @@
-angular.module('JaSON')
-    .factory('historyService', function ($q, localStorageService) {
+angular.module("JaSON")
+    .factory("historyService", function ($q, localStorageService) {
 
-        var LOCAL_STORAGE_KEY = 'history';
+        var LOCAL_STORAGE_KEY = "history";
         var MAX_SIZE = 500;
 
         return {
@@ -13,7 +13,7 @@ angular.module('JaSON')
                     // add the new history item to the front of the array
                     historyItems.unshift(historyItem);
 
-                    // if we've hit the history limit then splice the extras from the end
+                    // if we"ve hit the history limit then splice the extras from the end
                     if (historyItems.length > MAX_SIZE) {
                         historyItems.splice(MAX_SIZE);
                     }

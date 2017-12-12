@@ -1,7 +1,7 @@
-angular.module('JaSON')
-    .controller('appController', function ($rootScope, $scope, $log, $http, $filter, $window, historyService, referenceData) {
+angular.module("JaSON")
+    .controller("appController", function ($rootScope, $scope, $log, $http, $filter, $window, historyService, referenceData) {
 
-        $log.info('     _       ____   ___  _   _\n    | | __ _/ ___| / _ \\| \\ | |\n _  | |/ _` \\___ \\| | | |  \\| |\n| |_| | (_| |___) | |_| | |\\  |\n \\___/ \\__,_|____/ \\___/|_| \\_| v%s\n\nhttps://github.com/shanebell/JaSON\n\n', referenceData.version);
+        $log.info("\n     _       ____   ___  _   _\n    | | __ _/ ___| / _ \\| \\ | |\n _  | |/ _` \\___ \\| | | |  \\| |\n| |_| | (_| |___) | |_| | |\\  |\n \\___/ \\__,_|____/ \\___/|_| \\_| v%s\n\nhttps://github.com/shanebell/JaSON\n\n", referenceData.version);
 
         var ctrl = this;
 
@@ -20,7 +20,7 @@ angular.module('JaSON')
         ctrl.response = {};
 
         ctrl.addHeader = function () {
-            ctrl.request.headers.push({name: '', value: ''});
+            ctrl.request.headers.push({name: "", value: ""});
         };
 
         ctrl.removeHeader = function (header) {
@@ -67,13 +67,13 @@ angular.module('JaSON')
             if (ctrl.requestBodyAllowed() && !_.isEmpty(ctrl.request.body)) {
 
                 // validate JSON
-                if (_.includes(['application/x-www-form-urlencoded', 'application/json'], ctrl.request.contentType)) {
+                if (_.includes(["application/x-www-form-urlencoded", "application/json"], ctrl.request.contentType)) {
 
                     try {
                         JSON.parse(ctrl.request.body);
                         ctrl.requestBodyError = null;
                     } catch (e) {
-                        ctrl.requestBodyError = e instanceof SyntaxError ? e.message : 'Unexpected error';
+                        ctrl.requestBodyError = e instanceof SyntaxError ? e.message : "Unexpected error";
                     }
                 }
             }
@@ -86,7 +86,7 @@ angular.module('JaSON')
             ctrl.response = {};
             ctrl.activeRequestTab = 0;
             ctrl.activeResponseTab = 0;
-            ctrl.requestBodyError = '';
+            ctrl.requestBodyError = "";
         };
 
         ctrl.loadHistoryItem = function(historyItem) {
@@ -95,18 +95,18 @@ angular.module('JaSON')
             ctrl.activeRequestTab = 0;
             ctrl.activeResponseTab = 0;
             $window.scrollTo(0, 0);
-            $rootScope.$emit('loadHistoryItem');
+            $rootScope.$emit("loadHistoryItem");
         };
 
         // TODO check if request content is allowed for other content types
         ctrl.requestBodyAllowed = function () {
-            return _.includes([ 'POST', 'PUT', 'PATCH' ], ctrl.request.method);
+            return _.includes([ "POST", "PUT", "PATCH" ], ctrl.request.method);
         };
 
         ctrl.getLength = function() {
             if (ctrl.response) {
                 var contentLength = _.find(ctrl.response.headers(), function(headerValue, headerName) {
-                    return headerName == 'content-length';
+                    return headerName == "content-length";
                 });
                 return contentLength || 0;
             }
@@ -132,27 +132,27 @@ angular.module('JaSON')
 
         function defaultRequest() {
             return {
-                url: 'https://httpbin.org/ip',
+                url: "https://httpbin.org/ip",
                 method: _.head(ctrl.httpMethods),
                 contentType: _.head(ctrl.contentTypes).value,
                 headers: [],
-                body: ''
+                body: ""
             };
         }
 
         function defaultHistory() {
             return {
                 items: [],
-                search: '',
+                search: "",
                 limit: 50
             }
         }
 
         function addProtocolIfMissing() {
 
-            // prefix URL with "http://" if it's not already present
+            // prefix URL with "http://" if it"s not already present
             if (!_.isEmpty(ctrl.request.url) && !/^http(s)?:\/\//.test(ctrl.request.url)) {
-                ctrl.request.url = sprintf('http://%s', ctrl.request.url);
+                ctrl.request.url = sprintf("http://%s", ctrl.request.url);
             }
         }
 
@@ -164,7 +164,7 @@ angular.module('JaSON')
             });
 
             var headers = {
-                'Content-Type': ctrl.request.contentType
+                "Content-Type": ctrl.request.contentType
             };
 
             _.forEach(ctrl.request.headers, function (header) {
@@ -177,7 +177,7 @@ angular.module('JaSON')
                 headers: headers
             };
 
-            if (ctrl.request.contentType == 'application/x-www-form-urlencoded' && ctrl.request.body) {
+            if (ctrl.request.contentType == "application/x-www-form-urlencoded" && ctrl.request.body) {
                 httpConfig.data = jQuery.param(JSON.parse(ctrl.request.body));
             } else {
                 httpConfig.data = ctrl.request.body;
@@ -195,7 +195,7 @@ angular.module('JaSON')
 
             // convert data to JSON string
             if (_.isObject(response.data)) {
-                response.data = $filter('json')(response.data);
+                response.data = $filter("json")(response.data);
             }
 
             return response;
@@ -219,7 +219,7 @@ angular.module('JaSON')
                         loadHistory();
                     },
                     function(error) {
-                        $log.error('Error saving history item: %s', angular.toJson(error, true));
+                        $log.error("Error saving history item: %s", angular.toJson(error, true));
                     }
                 );
 
@@ -232,7 +232,7 @@ angular.module('JaSON')
                     ctrl.history.items = response;
                 },
                 function (response) {
-                    $log.error('Error loading history from local storage: %s', angular.toJson(response, true));
+                    $log.error("Error loading history from local storage: %s", angular.toJson(response, true));
                 }
             );
         }

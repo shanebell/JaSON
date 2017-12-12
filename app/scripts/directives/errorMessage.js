@@ -1,11 +1,11 @@
-angular.module('JaSON')
-    .directive('errorMessage', function() {
+angular.module("JaSON")
+    .directive("errorMessage", function() {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                show: '='
+                show: "="
             },
             transclude: true,
-            templateUrl: '/templates/error-message.html'
+            templateUrl: "/templates/error-message.html"
         };
     });
