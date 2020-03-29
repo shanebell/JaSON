@@ -1,22 +1,17 @@
-Feature requests:
+TODO:
+- Update NOTICE
+- Update screenshots
+- Update Chrome Web Store description - specifically mention cookies
+- Update readme.md
+- Replace versions throughout with version from package.json
+
+Ideas:
 - star a history item
 - delete all except starred history items
 - save history to dropbox or export somehow?
-
-Random ideas:
 - share a history request with someone (export and email, click to send?)
 - group history by domain to make searching easier
 - filter history by domain, content type, request method, response status etc...
-
-TODO:
-- add all third party libraries to NOTICE
-- add angular-highlightjs for syntax highlighting
-
-Colors:
-- http://www.colourlovers.com/palettes/most-loved/all-time/meta
-- http://www.colourlovers.com/palette/49963/let_them_eat_cake
-- http://www.colourlovers.com/palette/292482/Terra
-- https://flatuicolors.com/
 
 Chrome screenshots:
 - in responsive mode set dimensions to 1423x889 to get 1280x800 screenshots

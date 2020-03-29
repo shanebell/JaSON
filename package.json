@@ -1,22 +1,39 @@
 {
-	"name": "JaSON",
-	"version": "4.0.0",
-	"dependencies": {},
-	"devDependencies": {
-		"grunt": "~0.4.1",
-		"grunt-bower-task": "~0.4.0",
-		"grunt-contrib-copy": "~0.5.0",
-		"grunt-contrib-jshint": "~0.9.2",
-		"grunt-contrib-clean": "~0.5.0",
-		"grunt-contrib-less": "~0.9.0",
-		"grunt-contrib-watch": "~0.6.1",
-		"grunt-goog-webfont-dl": "^0.1.1",
-		"load-grunt-tasks": "~0.4.0",
-		"time-grunt": "~0.3.1",
-		"jshint-stylish": "~0.1.5",
-		"grunt-contrib-compress": "~0.9.1"
-	},
-	"engines": {
-		"node": ">=0.8.0"
-	}
+  "name": "jason",
+  "version": "5.0.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.9.0",
+    "@material-ui/icons": "^4.5.1",
+    "@material-ui/styles": "^4.9.0",
+    "axios": "^0.19.2",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-scripts": "3.4.1",
+    "typeface-inconsolata": "0.0.72",
+    "typeface-roboto": "0.0.75"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "INLINE_RUNTIME_CHUNK=false react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }

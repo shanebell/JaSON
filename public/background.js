@@ -1,5 +1,5 @@
 chrome.browserAction.onClicked.addListener(function() {
     chrome.tabs.create({
-        "url": "JaSON.html"
+        "url": "index.html"
     });
 });

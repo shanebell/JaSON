@@ -1,9 +1,0 @@
-<div>
-    <div ng-if="response.data && response.data.length < 100000" class="fade-in">
-        <div hljs hljs-source="response.data"></div>
-    </div>
-
-    <div ng-if="response.data && response.data.length >= 100000" class="fade-in">
-        <pre>{{ response.data }}</pre>
-    </div>
-</div>
