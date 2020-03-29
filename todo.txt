@@ -4,6 +4,7 @@ TODO:
 - Update Chrome Web Store description - specifically mention cookies
 - Update readme.md
 - Replace versions throughout with version from package.json
+- Convert to Typescript
 
 Ideas:
 - star a history item

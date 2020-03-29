@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import 'typeface-roboto';
 import logo from './images/icon-128x128.png';
+import { TransitionProps } from '@material-ui/core/transitions/transition';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -40,12 +41,11 @@ const paragraphStyles = makeStyles((theme) => ({
     },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const Transition: React.ComponentType<TransitionProps> = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
 
-const Paragraph = (props) => {
-    const { text, href, target, linkText } = props;
+const Paragraph: React.FC<{text?: string, href: string, target: string, linkText: string}> = ({ text, href, target, linkText}) => {
     const classes = paragraphStyles();
     return (
         <Typography variant="body1" align="center" className={classes.paragraph}>
@@ -54,13 +54,13 @@ const Paragraph = (props) => {
     );
 };
 
-const About = (props) => {
+const About: React.FC<{ open: boolean, onClose: React.ReactEventHandler }> = ({open, onClose}) => {
     const classes = useStyles();
     return (
         <Dialog
-            open={props.open}
-            onBackdropClick={props.onClose}
-            onEscapeKeyDown={props.onClose}
+            open={open}
+            onBackdropClick={onClose}
+            onEscapeKeyDown={onClose}
             TransitionComponent={Transition}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
@@ -108,7 +108,7 @@ const About = (props) => {
                 </DialogContent>
             </DialogContent>
             <DialogActions className={classes.actions}>
-                <Button onClick={props.onClose} color="primary">
+                <Button onClick={onClose} color="primary">
                     Close
                 </Button>
             </DialogActions>

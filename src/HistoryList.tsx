@@ -87,19 +87,19 @@ const history = [
     }
 ];
 
-const HistoryList = () => {
+const HistoryList: React.FC = () => {
     const classes = useStyles();
 
-    const onHistorySelect = (historyItem) => {
+    const onHistorySelect = (historyItem: any) => {
         console.log(`onHistorySelect('${historyItem}`);
     };
 
-    const onHistoryDelete = (historyItem) => {
+    const onHistoryDelete = (historyItem: any) => {
         console.log(`onHistoryDelete('${historyItem}`);
     };
 
     return (
-        <React.Fragment>
+        <>
 
             {/* History actions */}
             <TextField
@@ -158,7 +158,7 @@ const HistoryList = () => {
                                     checkedIcon={<Favorite />}
                                     value={historyItem.favourite}
                                 />}
-                                <IconButton aria-label="delete" className={classes.margin} onClick={() => onHistoryDelete(historyItem.id)}>
+                                <IconButton aria-label="delete" onClick={() => onHistoryDelete(historyItem.id)}>
                                     <Delete fontSize="small" />
                                 </IconButton>
                             </ListItemSecondaryAction>
@@ -167,7 +167,7 @@ const HistoryList = () => {
                     </div>
                 ))}
             </List>
-        </React.Fragment>
+        </>
     );
 };
 
