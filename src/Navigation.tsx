@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Navigation = () => {
+const Navigation: React.FC = () => {
     const classes = useStyles();
     const [aboutOpen, setAboutOpen] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);

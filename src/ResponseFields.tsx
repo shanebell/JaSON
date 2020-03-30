@@ -31,12 +31,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ResponseFields = (props) => {
+const ResponseFields: React.FC<{response: any}> = ({ response }) => {
     const classes = useStyles();
-    const {response} = props;
     const [activeTab, setActiveTab] = React.useState(0);
 
-    function handleTabChange(event, newValue) {
+    function handleTabChange(event: any, newValue: number) {
         setActiveTab(newValue);
     }
 

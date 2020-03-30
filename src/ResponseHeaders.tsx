@@ -17,15 +17,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ResponseHeaders = (props) => {
+const ResponseHeaders: React.FC<{headers: any[]}> = ({ headers }) => {
     const classes = useStyles();
-    const {headers} = props;
 
     return (
         <TableContainer>
             <Table className={classes.root} size="small" aria-label="Response headers">
                 <TableBody>
-                    {_.map(headers, (headerValue, headerName) => (
+                    {_.map(headers, (headerValue: any, headerName: string) => (
                         <TableRow key={headerName}>
                             <TableCell className={classes.cell}>
                                 {headerName}

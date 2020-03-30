@@ -8,9 +8,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Loading = (props) => {
+const Loading: React.FC<{loading: boolean}> = ({loading}) => {
     const classes = useStyles();
-    const {loading} = props;
 
     return loading
         ? <LinearProgress className={classes.progress}/>

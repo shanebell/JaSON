@@ -21,9 +21,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const RequestHeaders = (props) => {
+const RequestHeaders: React.FC<{headers: any[], onChange: any}> = ({headers, onChange}) => {
     const classes = useStyles();
-    const {headers, onChange} = props;
 
     const addHeader = () => {
         const newHeaders = [
@@ -33,12 +32,12 @@ const RequestHeaders = (props) => {
         onChange(newHeaders);
     };
 
-    const removeHeader = (header) => {
+    const removeHeader = (header: any) => {
         const updatedHeaders = _.without(headers, header);
         onChange(updatedHeaders);
     };
 
-    const handleChange = (name, index) => event => {
+    const handleChange = (name: string, index: number) => (event: any) => {
         const updatedHeaders = [...headers];
         updatedHeaders[index][name] = event.target.value;
         onChange(updatedHeaders);
@@ -56,7 +55,7 @@ const RequestHeaders = (props) => {
                 Add header
             </Button>
 
-            <Grid container spacing={1} className={classes.grid}>
+            <Grid container spacing={1}>
                 {headers.map((header, index) => (
                     <Fragment key={index}>
                         <Grid item xs={5}>

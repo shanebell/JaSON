@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const statusCodes = {
+const statusCodes: Record<number, string> = {
 
     100: "Continue",
     101: "Switching Protocols",
@@ -90,10 +90,9 @@ const statusCodes = {
     511: "Network Authentication Required"
 };
 
-const isError = (statusCode) => _.toNumber(statusCode) >=400;
+const isError = (statusCode: number) => _.toNumber(statusCode) >=400;
 
-const StatusCode = (props) => {
-    const {status} = props;
+const StatusCode: React.FC<{status: number}> = ({ status }) => {
     const classes = useStyles();
 
     if (status) {

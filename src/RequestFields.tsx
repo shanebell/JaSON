@@ -87,28 +87,26 @@ const CONTENT_TYPES = [
     },
 ];
 
-const RequestFields = (props) => {
-    const classes = useStyles();
-    const {onSend, loading} = props;
-    const [activeTab, setActiveTab] = useState(0);
+const defaultRequestValues: any = {
+    url: 'https://httpbin.org/post',
+    method: 'POST',
+    contentType: 'application/json',
+    body: '{ \n' +
+        '  "name1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lacinia non purus a varius. Donec bibendum varius purus non volutpat. Nunc vel congue tortor, nec mollis arcu. Sed varius ante sed dictum pellentesque. Maecenas vel neque interdum, gravida elit et, aliquet dolor.",\n' +
+        '  "name2": 10,\n' +
+        '  "name3": false\n' +
+        '}',
+    headers: [],
+};
 
-    function handleTabChange(event, newValue) {
+const RequestFields: React.FC<{onSend: any, loading: boolean}> = ({onSend, loading}) => {
+    const classes = useStyles();
+    const [activeTab, setActiveTab] = useState(0);
+    const [requestValues, setRequestValues] = useState(defaultRequestValues);
+
+    function handleTabChange(event: any, newValue: number) {
         setActiveTab(newValue);
     }
-
-    const defaultRequestValues = {
-        url: 'https://httpbin.org/post',
-        method: 'POST',
-        contentType: 'application/json',
-        body: '{ \n' +
-            '  "name1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lacinia non purus a varius. Donec bibendum varius purus non volutpat. Nunc vel congue tortor, nec mollis arcu. Sed varius ante sed dictum pellentesque. Maecenas vel neque interdum, gravida elit et, aliquet dolor.",\n' +
-            '  "name2": 10,\n' +
-            '  "name3": false\n' +
-            '}',
-        headers: [],
-    };
-
-    const [requestValues, setRequestValues] = useState(defaultRequestValues);
 
     const handleReset = () => {
         setRequestValues(defaultRequestValues);
@@ -118,11 +116,11 @@ const RequestFields = (props) => {
         return _.find(HTTP_METHODS, {value: requestValues.method}).bodyAllowed;
     };
 
-    const handleChange = name => event => {
+    const handleChange = (name: string) => (event: any) => {
         setRequestValues({...requestValues, [name]: event.target.value});
     };
 
-    const onHeadersChange = (headers) => {
+    const onHeadersChange = (headers: any[]) => {
         setRequestValues({...requestValues, headers});
     };
 

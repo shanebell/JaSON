@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const typographyVariants = [
+const typographyVariants: any[] = [
     'h1',
     'h2',
     'h3',
@@ -33,7 +33,7 @@ const typographyVariants = [
     'inherit'
 ];
 
-const ThemeDebug = () => {
+const ThemeDebug: React.FC = () => {
     const classes = useStyles();
     const [visible, setVisible] = useState(false);
 
