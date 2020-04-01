@@ -41,10 +41,10 @@ const App = () => {
     const [response, setResponse] = useState({});
     const [loading, setLoading] = useState(false);
 
-    function handleSend(requestValues) {
+    function handleSend(requestValues: any) {
         setLoading(true);
         setResponse({});
-        sendRequest(requestValues, (response) => {
+        sendRequest(requestValues, (response: any) => {
             setResponse(response);
             setLoading(false);
         });
@@ -59,7 +59,7 @@ const App = () => {
                 <Divider className={classes.divider}/>
                 <ResponseFields response={response}/>
             </Container>
-            <ThemeDebug/>
+            <ThemeDebug />
         </ThemeProvider>
     );
 };

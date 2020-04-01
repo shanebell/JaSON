@@ -12,25 +12,31 @@ import {makeStyles} from '@material-ui/core/styles';
 import RequestHeaders from './RequestHeaders';
 import TabPanel from './TabPanel';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    button: {
-        marginTop: theme.spacing(1),
-        marginRight: theme.spacing(2),
-    },
-    tabs: {
-        marginBottom: theme.spacing(2),
-    },
-    monospace: {
-        fontFamily: '\'Inconsolata\', monospace',
-    },
-}));
+interface HttpMethod {
+    name: string;
+    value: string;
+    bodyAllowed: boolean;
+}
 
-const HTTP_METHODS = [
+interface ContentType {
+    name: string;
+    value: string;
+}
+
+interface RequestHeader {
+    name: string;
+    value: any;
+}
+
+interface RequestValues {
+    url: string;
+    method: string;
+    contentType: string;
+    body: string;
+    headers: RequestHeader[];
+}
+
+const HTTP_METHODS: HttpMethod[] = [
     {
         name: 'GET',
         value: 'GET',
@@ -68,7 +74,7 @@ const HTTP_METHODS = [
     },
 ];
 
-const CONTENT_TYPES = [
+const CONTENT_TYPES: ContentType[] = [
     {
         name: 'JSON (application/json)',
         value: 'application/json',
@@ -87,7 +93,7 @@ const CONTENT_TYPES = [
     },
 ];
 
-const defaultRequestValues: any = {
+const defaultRequestValues: RequestValues = {
     url: 'https://httpbin.org/post',
     method: 'POST',
     contentType: 'application/json',
@@ -98,6 +104,24 @@ const defaultRequestValues: any = {
         '}',
     headers: [],
 };
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    button: {
+        marginTop: theme.spacing(1),
+        marginRight: theme.spacing(2),
+    },
+    tabs: {
+        marginBottom: theme.spacing(2),
+    },
+    monospace: {
+        fontFamily: '\'Inconsolata\', monospace',
+    },
+}));
 
 const RequestFields: React.FC<{onSend: any, loading: boolean}> = ({onSend, loading}) => {
     const classes = useStyles();
@@ -113,7 +137,7 @@ const RequestFields: React.FC<{onSend: any, loading: boolean}> = ({onSend, loadi
     };
 
     const isRequestBodyAllowed = () => {
-        return _.find(HTTP_METHODS, {value: requestValues.method}).bodyAllowed;
+        return _.find(HTTP_METHODS, {value: requestValues.method})?.bodyAllowed || false;
     };
 
     const handleChange = (name: string) => (event: any) => {
