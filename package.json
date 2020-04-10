@@ -6,10 +6,6 @@
     "@material-ui/core": "^4.9.0",
     "@material-ui/icons": "^4.5.1",
     "@material-ui/styles": "^4.9.0",
-    "@types/jest": "^25.1.4",
-    "@types/node": "^13.9.5",
-    "@types/react": "^16.9.27",
-    "@types/react-dom": "^16.9.5",
     "axios": "^0.19.2",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
@@ -29,6 +25,9 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "prettier": {
+    "printWidth": 120
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -42,6 +41,12 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.149"
+    "@types/axios": "^0.14.0",
+    "@types/lodash": "^4.14.149",
+    "@types/moment": "^2.13.0",
+    "@types/node": "^13.9.5",
+    "@types/react": "^16.9.27",
+    "@types/react-dom": "^16.9.5",
+    "prettier": "^2.0.4"
   }
 }
