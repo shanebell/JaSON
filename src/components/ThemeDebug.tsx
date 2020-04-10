@@ -1,21 +1,36 @@
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { BugReport } from "@material-ui/icons";
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    marginTop: theme.spacing(2),
     padding: theme.spacing(4),
     position: "absolute",
     bottom: "0",
-    left: "0",
+    right: "0",
   },
-  typography: {
-    display: "block",
+  details: {
+    marginTop: theme.spacing(2),
+  },
+  box: {
+    padding: theme.spacing(2),
   },
 }));
+
+const colorVariants: any[] = [
+  "primary.main",
+  "secondary.main",
+  "error.main",
+  "warning.main",
+  "info.main",
+  "success.main",
+  "text.primary",
+  "text.secondary",
+];
 
 const typographyVariants: any[] = [
   "h1",
@@ -51,24 +66,22 @@ const ThemeDebug: React.FC = () => {
       </Button>
 
       {visible && (
-        <Fragment>
+        <div className={classes.details}>
           <Typography component="div" variant="body1">
-            <Box color="primary.main">primary.main</Box>
-            <Box color="secondary.main">secondary.main</Box>
-            <Box color="error.main">error.main</Box>
-            <Box color="warning.main">warning.main</Box>
-            <Box color="info.main">info.main</Box>
-            <Box color="success.main">success.main</Box>
-            <Box color="text.primary">text.primary</Box>
-            <Box color="text.secondary">text.secondary</Box>
-            <Box color="text.disabled">text.disabled</Box>
+            {colorVariants.map((color) => (
+              <Box key={color} bgcolor={color} color="white" className={classes.box}>
+                {color}
+              </Box>
+            ))}
           </Typography>
           {typographyVariants.map((variant) => (
-            <Typography key={variant} className={classes.typography} variant={variant}>
-              This is {variant}
-            </Typography>
+            <Box key={variant}>
+              <Typography key={variant} variant={variant}>
+                This is {variant}
+              </Typography>
+            </Box>
           ))}
-        </Fragment>
+        </div>
       )}
     </div>
   );

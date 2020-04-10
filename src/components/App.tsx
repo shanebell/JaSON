@@ -6,9 +6,10 @@ import React, { useState } from "react";
 import "typeface-inconsolata";
 import "typeface-roboto";
 import Loading from "./Loading";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Navigation from "./Navigation";
 import RequestFields from "./RequestFields";
-import { sendRequest } from "./requestHandler";
+import { sendRequest } from "../requestHandler";
 import ResponseFields from "./ResponseFields";
 import ThemeDebug from "./ThemeDebug";
 
@@ -26,6 +27,9 @@ const theme = createMuiTheme({
   palette: {
     primary: {
       main: "#d9230f",
+    },
+    background: {
+      default: "#fff",
     },
   },
 });
@@ -52,6 +56,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Navigation />
       <Loading loading={loading} />
       <Container maxWidth={false} className={classes.container}>

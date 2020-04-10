@@ -8,7 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import "typeface-roboto";
-import logo from "./images/icon-128x128.png";
+import logo from "../images/icon-128x128.png";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
 
 const useStyles = makeStyles((theme) => ({

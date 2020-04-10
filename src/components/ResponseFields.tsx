@@ -69,26 +69,24 @@ const ResponseFields: React.FC<{ response: any }> = ({ response }) => {
           <Tab label="Response" />
           <Tab label="Raw response" />
           <Tab label="Headers" />
-
-          {/* Status code */}
           <StatusCode status={response.status} />
         </Tabs>
 
-        {/* Formatted response */}
+        {/* FORMATTED RESPONSE */}
         <TabPanel isActive={activeTab === 0 && response.data}>
           <Paper className={classes.response} variant="outlined">
             <code className={classes.code}>{formatResponse(response)}</code>
           </Paper>
         </TabPanel>
 
-        {/* Raw response */}
+        {/* RAW RESPONSE */}
         <TabPanel isActive={activeTab === 1 && response.data}>
           <Paper className={classes.rawResponse} variant="outlined">
             <code className={classes.code}>{formatRawResponse(response)}</code>
           </Paper>
         </TabPanel>
 
-        {/* Response headers */}
+        {/* RESPONSE HEADERS */}
         <TabPanel isActive={activeTab === 2 && response.data}>
           <Paper className={classes.headers} variant="outlined">
             <ResponseHeaders headers={response.headers} />

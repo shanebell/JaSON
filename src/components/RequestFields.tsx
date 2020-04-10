@@ -11,10 +11,10 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import RequestHeaders from "./RequestHeaders";
 import TabPanel from "./TabPanel";
-import HttpMethod from "./types/HttpMethod";
-import ContentType from "./types/ContentType";
-import RequestValues from "./types/RequestValues";
-import RequestHeader from "./types/RequestHeader";
+import HttpMethod from "../types/HttpMethod";
+import ContentType from "../types/ContentType";
+import RequestValues from "../types/RequestValues";
+import RequestHeader from "../types/RequestHeader";
 
 const HTTP_METHODS: HttpMethod[] = [
   {

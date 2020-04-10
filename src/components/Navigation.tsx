@@ -10,7 +10,7 @@ import HistoryIcon from "@material-ui/icons/History";
 import React, { useState } from "react";
 import About from "./About";
 import HistoryList from "./HistoryList";
-import logo from "./images/icon-128x128.png";
+import logo from "../images/icon-128x128.png";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
   },
   logo: {
     height: "48px",
-    padding: "4px 0",
   },
 }));
 
@@ -34,7 +33,7 @@ const Navigation: React.FC = () => {
 
   return (
     <AppBar position="static">
-      <Toolbar className={classes.toolbar} variant="dense">
+      <Toolbar className={classes.toolbar}>
         <Tooltip arrow title="Request history" aria-label="Request history">
           <IconButton color="inherit" aria-label="open drawer" onClick={() => setDrawerOpen(true)} edge="start">
             <HistoryIcon />
