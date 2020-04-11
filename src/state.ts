@@ -33,13 +33,13 @@ const defaultMeta: RequestMetadata = {
 
 const Store = createStore({
   initialState: {
-    loading: false,
     requestValues: defaultRequestValues,
     response: defaultResponse,
     meta: defaultMeta,
+    loading: false,
+    activeTab: 0,
 
     // TODO
-    // active tab
     // history
   },
 
@@ -53,10 +53,18 @@ const Store = createStore({
       });
     },
 
+    setActiveTab: (activeTab: number) => ({ setState }) => {
+      setState({
+        activeTab,
+      });
+    },
+
     reset: () => ({ setState }) => {
       setState({
         requestValues: defaultRequestValues,
         response: defaultResponse,
+        meta: defaultMeta,
+        activeTab: 0,
       });
     },
 

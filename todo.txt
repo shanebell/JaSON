@@ -2,6 +2,8 @@ NEXT:
 - Change requestValues to AxiosRequest
 
 TODO
+- Make history work
+- Show time in ms next to status code
 - Update NOTICE
 - Update screenshots
 - Update Chrome Web Store description - specifically mention cookies
