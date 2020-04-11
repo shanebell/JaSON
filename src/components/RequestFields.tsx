@@ -14,7 +14,7 @@ import TabPanel from "./TabPanel";
 import useApplicationState from "../state";
 import HttpMethod from "../types/HttpMethod";
 import ContentType from "../types/ContentType";
-import RequestHeader from "../types/RequestHeader";
+import HttpHeader from "../types/HttpHeader";
 
 const HTTP_METHODS: HttpMethod[] = [
   {
@@ -103,14 +103,20 @@ const RequestFields: React.FC = () => {
   };
 
   const isRequestBodyAllowed = () => {
-    return _.find(HTTP_METHODS, { value: state.requestValues.method })?.bodyAllowed || false;
+    return _.find(HTTP_METHODS, { value: state.request.method })?.bodyAllowed || false;
   };
 
-  const handleChange = (name: string) => (event: any) => {
+  const handleFieldChange = (name: string) => (event: any) => {
     actions.updateRequestValues(name, event.target.value);
   };
 
-  const onHeadersChange = (headers: RequestHeader[]) => {
+  const handleKeyDown = (event: any) => {
+    if (event.key === "Enter") {
+      actions.send();
+    }
+  };
+
+  const onHeadersChange = (headers: HttpHeader[]) => {
     actions.updateRequestValues("headers", headers);
   };
 
@@ -131,9 +137,10 @@ const RequestFields: React.FC = () => {
             InputProps={{
               className: classes.monospace,
             }}
-            value={state.requestValues.url}
+            onKeyDown={handleKeyDown}
+            value={state.request.url}
             autoFocus
-            onChange={handleChange("url")}
+            onChange={handleFieldChange("url")}
           />
 
           <TextField
@@ -146,8 +153,8 @@ const RequestFields: React.FC = () => {
             InputProps={{
               className: classes.monospace,
             }}
-            value={state.requestValues.method}
-            onChange={handleChange("method")}
+            value={state.request.method}
+            onChange={handleFieldChange("method")}
           >
             {HTTP_METHODS.map((method) => (
               <MenuItem key={method.value} value={method.value} dense>
@@ -166,8 +173,8 @@ const RequestFields: React.FC = () => {
             InputProps={{
               className: classes.monospace,
             }}
-            value={state.requestValues.contentType}
-            onChange={handleChange("contentType")}
+            value={state.request.contentType}
+            onChange={handleFieldChange("contentType")}
           >
             {CONTENT_TYPES.map((contentType) => (
               <MenuItem key={contentType.value} value={contentType.value} dense>
@@ -178,7 +185,7 @@ const RequestFields: React.FC = () => {
         </TabPanel>
 
         <TabPanel isActive={activeTab === 1}>
-          <RequestHeaders headers={state.requestValues.headers} onChange={onHeadersChange} />
+          <RequestHeaders headers={state.request.headers} onChange={onHeadersChange} />
         </TabPanel>
       </Grid>
 
@@ -191,8 +198,8 @@ const RequestFields: React.FC = () => {
           InputProps={{
             className: classes.monospace,
           }}
-          value={state.requestValues.body}
-          onChange={handleChange("body")}
+          value={state.request.body}
+          onChange={handleFieldChange("body")}
           multiline
           rows={10}
           variant="outlined"

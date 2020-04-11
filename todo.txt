@@ -1,9 +1,13 @@
 NEXT:
-- Change requestValues to AxiosRequest
+- Response formatting
+- remove onHeadersChange from RequestFields
+- move images out of src? but they're imported?
 
 TODO
 - Make history work
+- Restrict size of response shown
 - Show time in ms next to status code
+- Tooltip on request body when not editable to explain why
 - Update NOTICE
 - Update screenshots
 - Update Chrome Web Store description - specifically mention cookies

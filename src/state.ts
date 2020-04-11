@@ -1,10 +1,9 @@
 import { createHook, createStore } from "react-sweet-state";
-import RequestValues from "./types/RequestValues";
-import { AxiosResponse } from "axios";
+import HttpRequest from "./types/HttpRequest";
+import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
-import RequestMetadata from "./types/RequestMetadata";
 
-const defaultRequestValues: RequestValues = {
+const defaultRequest: HttpRequest = {
   url: "https://httpbin.org/post",
   method: "POST",
   contentType: "application/json",
@@ -17,25 +16,18 @@ const defaultRequestValues: RequestValues = {
   headers: [],
 };
 
-const defaultResponse: AxiosResponse = {
-  data: "",
-  status: 0,
-  statusText: "",
-  headers: [],
-  config: {},
-  request: null,
-};
-
-const defaultMeta: RequestMetadata = {
+const defaultResponse: HttpResponse = {
   startTime: 0,
   endTime: 0,
+  status: 0,
+  contentType: "",
+  headers: {},
 };
 
 const Store = createStore({
   initialState: {
-    requestValues: defaultRequestValues,
+    request: defaultRequest,
     response: defaultResponse,
-    meta: defaultMeta,
     loading: false,
     activeTab: 0,
 
@@ -46,8 +38,8 @@ const Store = createStore({
   actions: {
     updateRequestValues: (name: string, value: any) => ({ setState, getState }) => {
       setState({
-        requestValues: {
-          ...getState().requestValues,
+        request: {
+          ...getState().request,
           [name]: value,
         },
       });
@@ -61,9 +53,8 @@ const Store = createStore({
 
     reset: () => ({ setState }) => {
       setState({
-        requestValues: defaultRequestValues,
+        request: defaultRequest,
         response: defaultResponse,
-        meta: defaultMeta,
         activeTab: 0,
       });
     },
@@ -72,19 +63,12 @@ const Store = createStore({
       setState({
         loading: true,
         response: defaultResponse,
-        meta: defaultMeta,
       });
 
-      const startTime = Date.now();
-      const response = await sendRequest(getState().requestValues);
-      const endTime = Date.now();
+      const response = await sendRequest(getState().request);
 
       setState({
         response,
-        meta: {
-          startTime,
-          endTime,
-        },
         loading: false,
       });
     },

@@ -8,8 +8,8 @@ import _ from "lodash";
 import ResponseHeaders from "./ResponseHeaders";
 import StatusCode from "./StatusCode";
 import TabPanel from "./TabPanel";
-import { AxiosResponse } from "axios";
 import useApplicationState from "../state";
+import HttpResponse from "../types/HttpResponse";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -34,15 +34,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const isJsonResponse = (response: AxiosResponse): boolean => {
-  return response && response.headers && _.isEqual("application/json", response.headers["content-type"]);
+const isJsonResponse = (response: HttpResponse): boolean => {
+  return response && _.isEqual("application/json", response.contentType);
 };
 
-const formatRawResponse = (response: AxiosResponse): string => {
-  return response?.request?.responseText || "";
+const formatRawResponse = (response: HttpResponse): string => {
+  return response?.responseText || "";
 };
 
-const formatResponse = (response: AxiosResponse): string => {
+const formatResponse = (response: HttpResponse): string => {
   // TODO handle other content types
   if (isJsonResponse(response)) {
     return JSON.stringify(response.data, null, 2);

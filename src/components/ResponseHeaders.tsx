@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ResponseHeaders: React.FC<{ headers: any[] }> = ({ headers }) => {
+const ResponseHeaders: React.FC<{ headers: any }> = ({ headers }) => {
   const classes = useStyles();
 
   return (
