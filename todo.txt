@@ -3,7 +3,6 @@ TODO:
 - Update screenshots
 - Update Chrome Web Store description - specifically mention cookies
 - Update readme.md
-- Replace versions throughout with version from package.json
 
 BUGS:
 - Switch to "Response" tab automatically on submit

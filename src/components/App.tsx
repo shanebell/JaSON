@@ -12,6 +12,7 @@ import RequestFields from "./RequestFields";
 import { sendRequest } from "../requestHandler";
 import ResponseFields from "./ResponseFields";
 import ThemeDebug from "./ThemeDebug";
+import config from "../config";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -35,7 +36,7 @@ const theme = createMuiTheme({
 });
 
 const consoleMessage = () => {
-  console.log(`JaSON v5.0.0`);
+  console.log(`JaSON v${config.version}`);
 };
 
 consoleMessage();

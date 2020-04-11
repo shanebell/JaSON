@@ -7,6 +7,7 @@ import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
+import config from "../config";
 import "typeface-roboto";
 import logo from "../images/icon-128x128.png";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
@@ -81,7 +82,7 @@ const About: React.FC<{ open: boolean; onClose: React.ReactEventHandler }> = ({ 
           JaSON
         </Typography>
         <Typography align="center" variant="body2">
-          v5.0.0
+          v{config.version}
         </Typography>
       </DialogTitle>
       <DialogContent>
