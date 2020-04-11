@@ -1,7 +1,6 @@
 import _ from "lodash";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import RequestValues from "./types/RequestValues";
-import RequestMetadata from "./types/RequestMetadata";
 
 // prefix request.URL with "http://" if it's not already present
 const addProtocolIfMissing = (request: RequestValues) => {
@@ -10,15 +9,7 @@ const addProtocolIfMissing = (request: RequestValues) => {
   }
 };
 
-const processResponse = (response: AxiosResponse, meta: RequestMetadata, onResponse: any) => {
-  meta.endTime = Date.now();
-  // TODO: show meta on the UI
-  // response.meta = meta;
-  console.log("response: %o", response);
-  onResponse(response);
-};
-
-export const sendRequest = async (request: RequestValues, onResponse: any) => {
+export const sendRequest = async (request: RequestValues) => {
   addProtocolIfMissing(request);
 
   const options: AxiosRequestConfig = {
@@ -42,14 +33,9 @@ export const sendRequest = async (request: RequestValues, onResponse: any) => {
     options.data = request.body;
   }
 
-  const meta: RequestMetadata = {
-    startTime: Date.now(),
-  };
-
   try {
-    const response: AxiosResponse = await axios(options);
-    processResponse(response, meta, onResponse);
+    return axios(options);
   } catch (error) {
-    processResponse(error.response, meta, onResponse);
+    return error.response;
   }
 };

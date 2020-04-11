@@ -9,6 +9,7 @@ import ResponseHeaders from "./ResponseHeaders";
 import StatusCode from "./StatusCode";
 import TabPanel from "./TabPanel";
 import { AxiosResponse } from "axios";
+import useApplicationState from "../state";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -49,9 +50,10 @@ const formatResponse = (response: AxiosResponse): string => {
   return formatRawResponse(response);
 };
 
-const ResponseFields: React.FC<{ response: any }> = ({ response }) => {
+const ResponseFields: React.FC = () => {
   const classes = useStyles();
   const [activeTab, setActiveTab] = React.useState(0);
+  const [state] = useApplicationState();
 
   const handleTabChange = (event: any, newValue: number) => {
     setActiveTab(newValue);
@@ -69,27 +71,27 @@ const ResponseFields: React.FC<{ response: any }> = ({ response }) => {
           <Tab label="Response" />
           <Tab label="Raw response" />
           <Tab label="Headers" />
-          <StatusCode status={response.status} />
+          <StatusCode status={state.response.status} />
         </Tabs>
 
         {/* FORMATTED RESPONSE */}
-        <TabPanel isActive={activeTab === 0 && response.data}>
+        <TabPanel isActive={activeTab === 0 && state.response.data}>
           <Paper className={classes.response} variant="outlined">
-            <code className={classes.code}>{formatResponse(response)}</code>
+            <code className={classes.code}>{formatResponse(state.response)}</code>
           </Paper>
         </TabPanel>
 
         {/* RAW RESPONSE */}
-        <TabPanel isActive={activeTab === 1 && response.data}>
+        <TabPanel isActive={activeTab === 1 && state.response.data}>
           <Paper className={classes.rawResponse} variant="outlined">
-            <code className={classes.code}>{formatRawResponse(response)}</code>
+            <code className={classes.code}>{formatRawResponse(state.response)}</code>
           </Paper>
         </TabPanel>
 
         {/* RESPONSE HEADERS */}
-        <TabPanel isActive={activeTab === 2 && response.data}>
+        <TabPanel isActive={activeTab === 2 && state.response.data}>
           <Paper className={classes.headers} variant="outlined">
-            <ResponseHeaders headers={response.headers} />
+            <ResponseHeaders headers={state.response.headers} />
           </Paper>
         </TabPanel>
       </Grid>

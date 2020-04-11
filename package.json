@@ -12,6 +12,7 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.4.1",
+    "react-sweet-state": "^2.0.2",
     "typeface-inconsolata": "0.0.72",
     "typeface-roboto": "0.0.75",
     "typescript": "^3.8.3"

@@ -11,9 +11,9 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import RequestHeaders from "./RequestHeaders";
 import TabPanel from "./TabPanel";
+import useApplicationState from "../state";
 import HttpMethod from "../types/HttpMethod";
 import ContentType from "../types/ContentType";
-import RequestValues from "../types/RequestValues";
 import RequestHeader from "../types/RequestHeader";
 
 const HTTP_METHODS: HttpMethod[] = [
@@ -73,19 +73,6 @@ const CONTENT_TYPES: ContentType[] = [
   },
 ];
 
-const defaultRequestValues: RequestValues = {
-  url: "https://httpbin.org/post",
-  method: "POST",
-  contentType: "application/json",
-  body:
-    "{ \n" +
-    '  "name1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lacinia non purus a varius. Donec bibendum varius purus non volutpat. Nunc vel congue tortor, nec mollis arcu. Sed varius ante sed dictum pellentesque. Maecenas vel neque interdum, gravida elit et, aliquet dolor.",\n' +
-    '  "name2": 10,\n' +
-    '  "name3": false\n' +
-    "}",
-  headers: [],
-};
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -106,33 +93,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RequestFields: React.FC<{ onSend: any; loading: boolean }> = ({ onSend, loading }) => {
+const RequestFields: React.FC = () => {
   const classes = useStyles();
   const [activeTab, setActiveTab] = useState(0);
-  const [requestValues, setRequestValues] = useState(defaultRequestValues);
+  const [state, actions] = useApplicationState();
 
   const handleTabChange = (event: any, newValue: number) => {
     setActiveTab(newValue);
   };
 
-  const handleReset = () => {
-    setRequestValues(defaultRequestValues);
-  };
-
   const isRequestBodyAllowed = () => {
-    return _.find(HTTP_METHODS, { value: requestValues.method })?.bodyAllowed || false;
+    return _.find(HTTP_METHODS, { value: state.requestValues.method })?.bodyAllowed || false;
   };
 
   const handleChange = (name: string) => (event: any) => {
-    setRequestValues({ ...requestValues, [name]: event.target.value });
+    actions.updateRequestValues(name, event.target.value);
   };
 
   const onHeadersChange = (headers: RequestHeader[]) => {
-    setRequestValues({ ...requestValues, headers });
-  };
-
-  const sendRequest = () => {
-    onSend(requestValues);
+    actions.updateRequestValues("headers", headers);
   };
 
   return (
@@ -152,7 +131,7 @@ const RequestFields: React.FC<{ onSend: any; loading: boolean }> = ({ onSend, lo
             InputProps={{
               className: classes.monospace,
             }}
-            value={requestValues.url}
+            value={state.requestValues.url}
             autoFocus
             onChange={handleChange("url")}
           />
@@ -167,7 +146,7 @@ const RequestFields: React.FC<{ onSend: any; loading: boolean }> = ({ onSend, lo
             InputProps={{
               className: classes.monospace,
             }}
-            value={requestValues.method}
+            value={state.requestValues.method}
             onChange={handleChange("method")}
           >
             {HTTP_METHODS.map((method) => (
@@ -187,7 +166,7 @@ const RequestFields: React.FC<{ onSend: any; loading: boolean }> = ({ onSend, lo
             InputProps={{
               className: classes.monospace,
             }}
-            value={requestValues.contentType}
+            value={state.requestValues.contentType}
             onChange={handleChange("contentType")}
           >
             {CONTENT_TYPES.map((contentType) => (
@@ -199,7 +178,7 @@ const RequestFields: React.FC<{ onSend: any; loading: boolean }> = ({ onSend, lo
         </TabPanel>
 
         <TabPanel isActive={activeTab === 1}>
-          <RequestHeaders headers={requestValues.headers} onChange={onHeadersChange} />
+          <RequestHeaders headers={state.requestValues.headers} onChange={onHeadersChange} />
         </TabPanel>
       </Grid>
 
@@ -212,7 +191,7 @@ const RequestFields: React.FC<{ onSend: any; loading: boolean }> = ({ onSend, lo
           InputProps={{
             className: classes.monospace,
           }}
-          value={requestValues.body}
+          value={state.requestValues.body}
           onChange={handleChange("body")}
           multiline
           rows={10}
@@ -225,9 +204,9 @@ const RequestFields: React.FC<{ onSend: any; loading: boolean }> = ({ onSend, lo
           variant="outlined"
           size="small"
           color="primary"
-          disabled={loading}
+          disabled={state.loading}
           className={classes.button}
-          onClick={sendRequest}
+          onClick={actions.send}
           endIcon={<SendIcon />}
         >
           Send request
@@ -235,9 +214,9 @@ const RequestFields: React.FC<{ onSend: any; loading: boolean }> = ({ onSend, lo
         <Button
           variant="outlined"
           size="small"
-          disabled={loading}
+          disabled={state.loading}
           className={classes.button}
-          onClick={handleReset}
+          onClick={actions.reset}
           endIcon={<RefreshIcon />}
         >
           Reset fields

@@ -1,4 +1,7 @@
-TODO:
+NEXT:
+- Change requestValues to AxiosRequest
+
+TODO
 - Update NOTICE
 - Update screenshots
 - Update Chrome Web Store description - specifically mention cookies
@@ -8,7 +11,7 @@ BUGS:
 - Switch to "Response" tab automatically on submit
 - Clear response fields on "Reset fields" button click
 
-Ideas:
+IDEAS:
 - star a history item
 - delete all except starred history items
 - save history to dropbox or export somehow?
@@ -16,5 +19,5 @@ Ideas:
 - group history by domain to make searching easier
 - filter history by domain, content type, request method, response status etc...
 
-Chrome screenshots:
+NOTES:
 - in responsive mode set dimensions to 1423x889 to get 1280x800 screenshots
