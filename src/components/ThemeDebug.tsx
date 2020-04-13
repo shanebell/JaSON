@@ -58,7 +58,8 @@ const ThemeDebug: React.FC = () => {
     <div className={classes.root}>
       <Button
         startIcon={<BugReport />}
-        variant="contained"
+        variant="outlined"
+        color="primary"
         size="small"
         onClick={() => (visible ? setVisible(false) : setVisible(true))}
       >

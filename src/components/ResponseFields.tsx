@@ -18,15 +18,15 @@ const useStyles = makeStyles((theme) => ({
   },
   response: {
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.grey[50],
+    // backgroundColor: theme.palette.grey[50],
   },
   rawResponse: {
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.grey[50],
+    // backgroundColor: theme.palette.grey[50],
   },
   headers: {
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.grey[50],
+    // backgroundColor: theme.palette.grey[50],
   },
   code: {
     fontFamily: "'Inconsolata', monospace",

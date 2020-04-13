@@ -2,6 +2,8 @@ NEXT:
 - Response formatting
 - remove onHeadersChange from RequestFields
 - move images out of src? but they're imported?
+- Logo
+  - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
 
 TODO
 - Make history work

@@ -9,24 +9,27 @@ import Typography from "@material-ui/core/Typography";
 import React from "react";
 import config from "../config";
 import "typeface-roboto";
-import logo from "../images/icon-128x128.png";
+// import logo from "../images/icon-128x128.png";
+import logo from "../images/jason.png";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
 
 const useStyles = makeStyles((theme) => ({
   title: {
     fontWeight: 300,
   },
-
   content: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
   },
   logo: {
-    width: "100%",
     display: "flex",
     justifyContent: "center",
     margin: theme.spacing(2),
+  },
+  img: {
+    width: "128px",
+    height: "128px",
   },
   actions: {
     display: "flex",
@@ -88,7 +91,7 @@ const About: React.FC<{ open: boolean; onClose: React.ReactEventHandler }> = ({ 
       <DialogContent>
         <DialogContent id="alert-dialog-description" className={classes.content} dividers>
           <div className={classes.logo}>
-            <img src={logo} alt="JaSON logo" />
+            <img src={logo} alt="JaSON logo" className={classes.img} />
           </div>
           <Paragraph
             text="Developed and maintained by"

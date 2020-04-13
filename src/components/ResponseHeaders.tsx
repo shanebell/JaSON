@@ -10,15 +10,13 @@ import React from "react";
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
+    fontSize: 16,
+    fontFamily: "'Inconsolata', monospace",
   },
   tableRow: {
     "&:last-child td": {
       borderBottom: 0,
     },
-  },
-  cell: {
-    fontSize: 16,
-    fontFamily: "'Inconsolata', monospace",
   },
 }));
 
@@ -31,8 +29,8 @@ const ResponseHeaders: React.FC<{ headers: any }> = ({ headers }) => {
         <TableBody>
           {_.map(headers, (headerValue: any, headerName: string) => (
             <TableRow key={headerName} className={classes.tableRow}>
-              <TableCell className={classes.cell}>{headerName}</TableCell>
-              <TableCell className={classes.cell}>{headerValue}</TableCell>
+              <TableCell>{headerName}</TableCell>
+              <TableCell>{headerValue}</TableCell>
             </TableRow>
           ))}
         </TableBody>

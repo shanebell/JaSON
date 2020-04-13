@@ -10,30 +10,31 @@ import HistoryIcon from "@material-ui/icons/History";
 import React, { useState } from "react";
 import About from "./About";
 import HistoryList from "./HistoryList";
-import logo from "../images/icon-128x128.png";
+// import logo from "../images/icon-128x128.png";
+import logo from "../images/jason.png";
+import Settings from "./Settings";
 
 const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     fontWeight: 300,
-  },
-  toolbar: {
-    backgroundColor: theme.palette.grey[100],
-    color: theme.palette.grey[900],
+    color: theme.palette.primary.main,
   },
   logo: {
     height: "48px",
+    marginRight: theme.spacing(2),
   },
 }));
 
 const Navigation: React.FC = () => {
   const classes = useStyles();
-  const [aboutOpen, setAboutOpen] = useState(false);
+  const [aboutOpen, showAbout] = useState(false);
+  const [settingsOpen, showSettings] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <AppBar position="static">
-      <Toolbar className={classes.toolbar}>
+    <AppBar position="static" color="inherit">
+      <Toolbar>
         <Tooltip arrow title="Request history" aria-label="Request history">
           <IconButton color="inherit" aria-label="open drawer" onClick={() => setDrawerOpen(true)} edge="start">
             <HistoryIcon />
@@ -43,11 +44,15 @@ const Navigation: React.FC = () => {
         <Typography variant="h5" className={classes.title}>
           JaSON
         </Typography>
-        <Button color="inherit" onClick={() => setAboutOpen(true)}>
+        <Button color="inherit" onClick={() => showSettings(true)}>
+          Settings
+        </Button>
+        <Button color="inherit" onClick={() => showAbout(true)}>
           About
         </Button>
       </Toolbar>
-      <About open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <About open={aboutOpen} onClose={() => showAbout(false)} />
+      <Settings open={settingsOpen} onClose={() => showSettings(false)} />
       <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <HistoryList />
       </Drawer>
