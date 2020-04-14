@@ -13,7 +13,7 @@
   "icons": {
     "128": "jason-128x128.png",
     "256": "jason-256x256.png",
-    "512": "jason-256x256.png",
+    "512": "jason-256x256.png"
   },
   "permissions": [
     "http://*/",
