@@ -11,11 +11,9 @@
     "default_title": "JaSON"
   },
   "icons": {
-    "16": "icon-16x16.png",
-    "48": "icon-48x48.png",
-    "96": "icon-96x96.png",
-    "128": "icon-128x128.png",
-    "256": "icon-256x256.png"
+    "128": "jason-128x128.png",
+    "256": "jason-256x256.png",
+    "512": "jason-256x256.png",
   },
   "permissions": [
     "http://*/",

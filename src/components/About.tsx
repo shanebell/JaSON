@@ -9,7 +9,6 @@ import Typography from "@material-ui/core/Typography";
 import React from "react";
 import config from "../config";
 import "typeface-roboto";
-// import logo from "../images/icon-128x128.png";
 import logo from "../images/jason.png";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
 

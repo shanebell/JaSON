@@ -12,7 +12,6 @@ import HistoryIcon from "@material-ui/icons/History";
 import React, { useState } from "react";
 import About from "./About";
 import HistoryList from "./HistoryList";
-// import logo from "../images/icon-128x128.png";
 import logo from "../images/jason.png";
 import useApplicationState from "../state";
 
