@@ -29,3 +29,21 @@ IDEAS:
 
 NOTES:
 - in responsive mode set dimensions to 1423x889 to get 1280x800 screenshots
+
+
+--------------------------------------------------------------------------------
+
+const colorSchemes = [
+  // { primary: "#fba875", secondary: "#b07466" }, // default for "dark" theme
+  // { primary: "#515570", secondary: "#f85565" }, // default for "light" theme
+  // { primary: "#d7d8dd", secondary: "#b07466" },
+  // { primary: "#fba875", secondary: "#d7d8dd" },
+  // { primary: "#d7d8dd", secondary: "#fba875" },
+  // { primary: "#ffbb94", secondary: "#d7d8dd" },
+  // { primary: "#d7d8dd", secondary: "#ffbb94" },
+  // { primary: "#ffbb94", secondary: "#515570" },
+  // { primary: "#e16428", secondary: "#f6e9e9" },
+  // { primary: "#f8615a", secondary: "#ffd868" },
+  // { primary: "#ff6363", secondary: "#ffbd69" },
+  // { primary: "#ffa34d", secondary: "#f67575" },
+];

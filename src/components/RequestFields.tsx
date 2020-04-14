@@ -5,7 +5,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import TextField from "@material-ui/core/TextField";
-import React, { useState } from "react";
+import React from "react";
 import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
@@ -95,11 +95,10 @@ const useStyles = makeStyles((theme) => ({
 
 const RequestFields: React.FC = () => {
   const classes = useStyles();
-  const [activeTab, setActiveTab] = useState(0);
   const [state, actions] = useApplicationState();
 
   const handleTabChange = (event: any, newValue: number) => {
-    setActiveTab(newValue);
+    actions.setRequestTab(newValue);
   };
 
   const isRequestBodyAllowed = () => {
@@ -123,11 +122,11 @@ const RequestFields: React.FC = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={4}>
-        <Tabs value={activeTab} onChange={handleTabChange} aria-label="Request details" className={classes.tabs}>
+        <Tabs value={state.requestTab} onChange={handleTabChange} aria-label="Request details" className={classes.tabs}>
           <Tab label="HTTP request" />
           <Tab label="Headers" />
         </Tabs>
-        <TabPanel isActive={activeTab === 0}>
+        <TabPanel isActive={state.requestTab === 0}>
           <TextField
             id="url"
             label="Url"
@@ -184,7 +183,7 @@ const RequestFields: React.FC = () => {
           </TextField>
         </TabPanel>
 
-        <TabPanel isActive={activeTab === 1}>
+        <TabPanel isActive={state.requestTab === 1}>
           <RequestHeaders headers={state.request.headers} onChange={onHeadersChange} />
         </TabPanel>
       </Grid>

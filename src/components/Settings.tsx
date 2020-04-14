@@ -6,13 +6,12 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import _ from "lodash";
 import React from "react";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
-import { Switch, FormControlLabel, TextField, MenuItem } from "@material-ui/core";
+import { FormControlLabel, Switch } from "@material-ui/core";
 import useApplicationState from "../state";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   title: {
     fontWeight: 300,
   },
@@ -24,6 +23,11 @@ const useStyles = makeStyles(() => ({
   actions: {
     display: "flex",
     justifyContent: "center",
+  },
+  darkMode: {
+    justifyContent: "center",
+    marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(5),
   },
 }));
 
@@ -37,10 +41,6 @@ const Settings: React.FC<{ open: boolean; onClose: React.ReactEventHandler }> = 
 
   const handleThemeChange = (event: any) => {
     actions.setTheme(event.target.checked ? "dark" : "light");
-  };
-
-  const handleColorSchemeChange = (event: any) => {
-    actions.setColorScheme(event.target.value);
   };
 
   return (
@@ -62,6 +62,7 @@ const Settings: React.FC<{ open: boolean; onClose: React.ReactEventHandler }> = 
       <DialogContent>
         <DialogContent id="alert-dialog-description" className={classes.content} dividers>
           <FormControlLabel
+            className={classes.darkMode}
             control={
               <Switch
                 checked={state.theme === "dark"}
@@ -72,22 +73,6 @@ const Settings: React.FC<{ open: boolean; onClose: React.ReactEventHandler }> = 
             }
             label="Dark mode"
           />
-          <TextField
-            id="color-scheme"
-            label="Color scheme"
-            margin="dense"
-            select
-            required
-            fullWidth
-            value={state.colorScheme}
-            onChange={handleColorSchemeChange}
-          >
-            {_.times(5, (index) => (
-              <MenuItem key={index} value={index}>
-                {index}
-              </MenuItem>
-            ))}
-          </TextField>
         </DialogContent>
       </DialogContent>
       <DialogActions className={classes.actions}>

@@ -28,21 +28,6 @@ const consoleMessage = () => {
   console.log(`JaSON v${config.version}`);
 };
 
-const colorSchemes = [
-  { primary: "#fba875", secondary: "#b07466" }, // default for "dark" theme
-  { primary: "#515570", secondary: "#f85565" }, // default for "light" theme
-  { primary: "#d7d8dd", secondary: "#b07466" },
-  { primary: "#fba875", secondary: "#d7d8dd" },
-  { primary: "#d7d8dd", secondary: "#fba875" },
-  { primary: "#ffbb94", secondary: "#d7d8dd" },
-  { primary: "#d7d8dd", secondary: "#ffbb94" },
-  // { primary: "#ffbb94", secondary: "#515570" },
-  // { primary: "#e16428", secondary: "#f6e9e9" },
-  // { primary: "#f8615a", secondary: "#ffd868" },
-  // { primary: "#ff6363", secondary: "#ffbd69" },
-  // { primary: "#ffa34d", secondary: "#f67575" },
-];
-
 const palette: Record<string, PaletteOptions> = {
   dark: {
     type: "dark",
@@ -72,15 +57,6 @@ const App = () => {
   const theme = createMuiTheme({
     spacing: 4,
     palette: palette[state.theme],
-    // palette: {
-    //   type: state.theme,
-    //   primary: {
-    //     main: colorSchemes[state.colorScheme].primary,
-    //   },
-    //   secondary: {
-    //     main: colorSchemes[state.colorScheme].secondary,
-    //   },
-    // },
   });
   return (
     <ThemeProvider theme={theme}>
