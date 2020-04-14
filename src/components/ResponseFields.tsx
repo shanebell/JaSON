@@ -64,7 +64,7 @@ const ACE_EDITOR_MODES: Record<string, string> = {
 
 const getEditorMode = (response: HttpResponse) => {
   const editorMode = _.find(ACE_EDITOR_MODES, (mode, contentType) => {
-    return _.startsWith(contentType, response.contentType);
+    return _.startsWith(response.contentType, contentType);
   });
   return editorMode || "text";
 };
