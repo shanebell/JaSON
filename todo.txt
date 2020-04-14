@@ -1,17 +1,18 @@
 NEXT:
-- Response formatting
-  - Prismjs
-  - Code Mirror
-  - etc
+- Get AceEditor component working
+  - choose dark and light theme
+  - finalise font size etc (fix typeface- imports etc)
+  - https://ace.c9.io/build/kitchen-sink.html
+
+TODO
+- Make history work
+- Restrict size of response shown
 - Add logo attribution
   - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
   - Attribution details: https://creativecommons.org/licenses/by/4.0/
 - request data - form encoded
   - Does Axios support this?
-
-TODO
-- Make history work
-- Restrict size of response shown
+- New images for Chrome Web Store
 - Tooltip on request body when not editable to explain why
 - Update NOTICE
 - Update screenshots
@@ -19,8 +20,6 @@ TODO
 - Update readme.md
 
 BUGS:
-- Switch to "Response" tab automatically on submit
-- Clear response fields on "Reset fields" button click
 
 IDEAS:
 - star a history item

@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import React from "react";
+import AceEditor from "react-ace";
 import _ from "lodash";
 import ResponseHeaders from "./ResponseHeaders";
 import StatusCode from "./StatusCode";
@@ -11,6 +12,13 @@ import TabPanel from "./TabPanel";
 import useApplicationState from "../state";
 import HttpResponse from "../types/HttpResponse";
 import ResponseTime from "./ResponseTime";
+import "ace-builds/src-noconflict/mode-json";
+import "ace-builds/src-noconflict/mode-html";
+import "ace-builds/src-noconflict/mode-xml";
+import "ace-builds/src-noconflict/theme-ambiance";
+import "ace-builds/src-noconflict/theme-clouds_midnight";
+import "ace-builds/src-noconflict/theme-merbivore_soft";
+import "ace-builds/src-noconflict/theme-mono_industrial";
 
 const useStyles = makeStyles((theme) => ({
   responseTabs: {
@@ -42,6 +50,15 @@ const isJsonResponse = (response: HttpResponse): boolean => {
 
 const formatRawResponse = (response: HttpResponse): string => {
   return response?.responseText || "";
+};
+
+const ACE_EDITOR_MODES: Record<string, string> = {
+  "application/json": "json",
+  "text/json": "json",
+  "application/xml": "xml",
+  "text/xml": "xml",
+  "text/html": "html",
+  "application/html": "html",
 };
 
 const formatResponse = (response: HttpResponse): string => {
@@ -82,7 +99,26 @@ const ResponseFields: React.FC = () => {
         {/* FORMATTED RESPONSE */}
         <TabPanel isActive={state.responseTab === 0 && state.response.data}>
           <Paper className={classes.response} variant="outlined">
-            <code className={classes.code}>{formatResponse(state.response)}</code>
+            {/* themes: mono_industrial, merbivore_soft, ambiance, clouds_midnight  */}
+            <AceEditor
+              mode={_.get(ACE_EDITOR_MODES, state.response.contentType, "none")}
+              theme="mono_industrial"
+              fontSize={18}
+              name="formatted-response"
+              width="100%"
+              maxLines={100}
+              readOnly
+              wrapEnabled
+              value={formatResponse(state.response)}
+              setOptions={{
+                useWorker: false,
+                showLineNumbers: false,
+                showPrintMargin: false,
+                // @ts-ignore
+                foldStyle: "markbeginend",
+                fontFamily: "'Source Code Pro', monospace",
+              }}
+            />
           </Paper>
         </TabPanel>
 
