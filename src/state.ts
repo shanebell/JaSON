@@ -3,6 +3,8 @@ import HttpRequest from "./types/HttpRequest";
 import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
 
+const LOCAL_STORAGE_THEME_KEY = "theme";
+
 const defaultRequest: HttpRequest = {
   url: "https://httpbin.org/post",
   method: "POST",
@@ -24,7 +26,7 @@ const defaultResponse: HttpResponse = {
   headers: {},
 };
 
-type ThemeType = "dark" | "light";
+const defaultTheme: string = localStorage.getItem(LOCAL_STORAGE_THEME_KEY) || "dark";
 
 interface State {
   request: HttpRequest;
@@ -32,7 +34,7 @@ interface State {
   loading: boolean;
   requestTab: number;
   responseTab: number;
-  theme: ThemeType;
+  theme: string;
 }
 
 type StoreApi = StoreActionApi<State>;
@@ -83,8 +85,10 @@ const actions = {
   },
 
   toggleTheme: () => ({ setState, getState }: StoreApi) => {
+    const theme = getState().theme === "dark" ? "light" : "dark";
+    localStorage.setItem(LOCAL_STORAGE_THEME_KEY, theme);
     setState({
-      theme: getState().theme === "dark" ? "light" : "dark",
+      theme,
     });
   },
 };
@@ -93,10 +97,10 @@ const Store = createStore<State, typeof actions>({
   initialState: {
     request: defaultRequest,
     response: defaultResponse,
+    theme: defaultTheme,
     loading: false,
     requestTab: 0,
     responseTab: 0,
-    theme: "dark",
 
     // TODO
     // history

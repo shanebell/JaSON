@@ -12,8 +12,8 @@ import RequestFields from "./RequestFields";
 import ResponseFields from "./ResponseFields";
 import ThemeDebug from "./ThemeDebug";
 import config from "../config";
-import useApplicationState from "../state";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
+import useApplicationState from "../state";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -56,12 +56,15 @@ consoleMessage();
 const App = () => {
   const classes = useStyles();
   const [state] = useApplicationState();
-  const theme = createMuiTheme({
+  console.log("state: %o", state);
+
+  const muiTheme = createMuiTheme({
     spacing: 4,
     palette: palette[state.theme],
   });
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={muiTheme}>
       <CssBaseline />
       <Navigation />
       <Loading />
