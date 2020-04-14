@@ -10,27 +10,29 @@ import StatusCode from "./StatusCode";
 import TabPanel from "./TabPanel";
 import useApplicationState from "../state";
 import HttpResponse from "../types/HttpResponse";
+import ResponseTime from "./ResponseTime";
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
   responseTabs: {
     marginBottom: theme.spacing(4),
   },
   response: {
     padding: theme.spacing(2),
-    // backgroundColor: theme.palette.grey[50],
   },
   rawResponse: {
     padding: theme.spacing(2),
-    // backgroundColor: theme.palette.grey[50],
   },
   headers: {
     padding: theme.spacing(2),
-    // backgroundColor: theme.palette.grey[50],
   },
   code: {
     fontFamily: "'Inconsolata', monospace",
     whiteSpace: "pre-wrap",
+  },
+  chips: {
+    position: "absolute",
+    right: theme.spacing(2),
+    marginTop: theme.spacing(1),
   },
 }));
 
@@ -59,8 +61,13 @@ const ResponseFields: React.FC = () => {
   };
 
   return (
-    <Grid container spacing={2} className={classes.root}>
+    <Grid container spacing={2}>
       <Grid item xs={12}>
+        <div className={classes.chips}>
+          <StatusCode status={state.response.status} />
+          <ResponseTime response={state.response} />
+        </div>
+
         <Tabs
           className={classes.responseTabs}
           value={state.responseTab}
@@ -70,7 +77,6 @@ const ResponseFields: React.FC = () => {
           <Tab label="Response" />
           <Tab label="Raw response" />
           <Tab label="Headers" />
-          <StatusCode status={state.response.status} />
         </Tabs>
 
         {/* FORMATTED RESPONSE */}

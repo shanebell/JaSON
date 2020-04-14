@@ -6,9 +6,6 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: theme.spacing(2),
-    position: "absolute",
-    right: 0,
-    bottom: 0,
   },
   success: {
     color: theme.palette.success.main,

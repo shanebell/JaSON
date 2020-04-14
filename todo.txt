@@ -1,5 +1,4 @@
 NEXT:
-- Theme - save in local storage
 - Response formatting
   - Prismjs
   - Code Mirror
@@ -7,14 +6,12 @@ NEXT:
 - Finalize logo and color scheme
   - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
   - Include attribution as per: https://creativecommons.org/licenses/by/4.0/
-    -
 - request data - form encoded
   - Does Axios support this?
 
 TODO
 - Make history work
 - Restrict size of response shown
-- Show time in ms next to status code
 - Tooltip on request body when not editable to explain why
 - Update NOTICE
 - Update screenshots
