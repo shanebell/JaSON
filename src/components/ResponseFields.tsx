@@ -55,7 +55,7 @@ const ResponseFields: React.FC = () => {
   const [state, actions] = useApplicationState();
 
   const handleTabChange = (event: any, newValue: number) => {
-    actions.setActiveTab(newValue);
+    actions.setResponseTab(newValue);
   };
 
   return (
@@ -63,7 +63,7 @@ const ResponseFields: React.FC = () => {
       <Grid item xs={12}>
         <Tabs
           className={classes.responseTabs}
-          value={state.activeTab}
+          value={state.requestTab}
           onChange={handleTabChange}
           aria-label="Response details"
         >
@@ -74,21 +74,21 @@ const ResponseFields: React.FC = () => {
         </Tabs>
 
         {/* FORMATTED RESPONSE */}
-        <TabPanel isActive={state.activeTab === 0 && state.response.data}>
+        <TabPanel isActive={state.requestTab === 0 && state.response.data}>
           <Paper className={classes.response} variant="outlined">
             <code className={classes.code}>{formatResponse(state.response)}</code>
           </Paper>
         </TabPanel>
 
         {/* RAW RESPONSE */}
-        <TabPanel isActive={state.activeTab === 1 && state.response.data}>
+        <TabPanel isActive={state.requestTab === 1 && state.response.data}>
           <Paper className={classes.rawResponse} variant="outlined">
             <code className={classes.code}>{formatRawResponse(state.response)}</code>
           </Paper>
         </TabPanel>
 
         {/* RESPONSE HEADERS */}
-        <TabPanel isActive={state.activeTab === 2 && state.response.data}>
+        <TabPanel isActive={state.requestTab === 2 && state.response.data}>
           <Paper className={classes.headers} variant="outlined">
             <ResponseHeaders headers={state.response.headers} />
           </Paper>

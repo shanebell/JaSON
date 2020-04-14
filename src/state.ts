@@ -30,9 +30,9 @@ interface State {
   request: HttpRequest;
   response: HttpResponse;
   loading: boolean;
-  activeTab: number;
+  requestTab: number;
+  responseTab: number;
   theme: ThemeType;
-  colorScheme: number;
 }
 
 type StoreApi = StoreActionApi<State>;
@@ -47,9 +47,15 @@ const actions = {
     });
   },
 
-  setActiveTab: (activeTab: number) => ({ setState }: StoreApi) => {
+  setRequestTab: (tab: number) => ({ setState }: StoreApi) => {
     setState({
-      activeTab,
+      requestTab: tab,
+    });
+  },
+
+  setResponseTab: (tab: number) => ({ setState }: StoreApi) => {
+    setState({
+      responseTab: tab,
     });
   },
 
@@ -57,7 +63,8 @@ const actions = {
     setState({
       request: defaultRequest,
       response: defaultResponse,
-      activeTab: 0,
+      requestTab: 0,
+      responseTab: 0,
     });
   },
 
@@ -80,12 +87,6 @@ const actions = {
       theme,
     });
   },
-
-  setColorScheme: (colorScheme: number) => ({ setState }: StoreApi) => {
-    setState({
-      colorScheme,
-    });
-  },
 };
 
 const Store = createStore<State, typeof actions>({
@@ -93,9 +94,9 @@ const Store = createStore<State, typeof actions>({
     request: defaultRequest,
     response: defaultResponse,
     loading: false,
-    activeTab: 0,
+    requestTab: 0,
+    responseTab: 0,
     theme: "dark",
-    colorScheme: 1,
 
     // TODO
     // history

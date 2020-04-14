@@ -88,8 +88,8 @@ const RequestHeaders: React.FC<{ headers: any[]; onChange: any }> = ({ headers, 
               />
             </Grid>
             <Grid item xs={2} className={classes.remove}>
-              <IconButton size="small" onClick={() => removeHeader(header)}>
-                <DeleteIcon />
+              <IconButton onClick={() => removeHeader(header)}>
+                <DeleteIcon fontSize="small" />
               </IconButton>
             </Grid>
           </Fragment>
