@@ -3,9 +3,9 @@ NEXT:
   - Prismjs
   - Code Mirror
   - etc
-- Finalize logo and color scheme
+- Add logo attribution
   - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
-  - Include attribution as per: https://creativecommons.org/licenses/by/4.0/
+  - Attribution details: https://creativecommons.org/licenses/by/4.0/
 - request data - form encoded
   - Does Axios support this?
 
