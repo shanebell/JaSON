@@ -4,6 +4,7 @@ import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import React from "react";
 import "typeface-inconsolata";
+import "typeface-source-code-pro";
 import "typeface-roboto";
 import Loading from "./Loading";
 import CssBaseline from "@material-ui/core/CssBaseline";
