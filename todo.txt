@@ -1,4 +1,5 @@
 NEXT:
+- Theme - save in local storage
 - Response formatting
   - Prismjs
   - Code Mirror
@@ -8,7 +9,6 @@ NEXT:
 - request data - form encoded
   - Does Axios support this?
 - Reusable modal?
-- remove onHeadersChange from RequestFields
 - move images out of src? but they're imported?
 
 TODO

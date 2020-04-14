@@ -6,6 +6,8 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { makeStyles } from "@material-ui/core/styles";
+import HttpHeader from "../types/HttpHeader";
+import useApplicationState from "../state";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -21,23 +23,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RequestHeaders: React.FC<{ headers: any[]; onChange: any }> = ({ headers, onChange }) => {
+const RequestHeaders: React.FC = () => {
   const classes = useStyles();
+  const [state, actions] = useApplicationState();
 
   const addHeader = () => {
-    const newHeaders = [...headers, { name: "", value: "" }];
-    onChange(newHeaders);
+    const updatedHeaders: HttpHeader[] = [...state.request.headers, { name: "", value: "" }];
+    actions.updateRequestValues("headers", updatedHeaders);
   };
 
   const removeHeader = (header: any) => {
-    const updatedHeaders = _.without(headers, header);
-    onChange(updatedHeaders);
+    const updatedHeaders: HttpHeader[] = _.without(state.request.headers, header);
+    actions.updateRequestValues("headers", updatedHeaders);
   };
 
   const handleChange = (name: string, index: number) => (event: any) => {
-    const updatedHeaders = [...headers];
+    const updatedHeaders: any = [...state.request.headers];
     updatedHeaders[index][name] = event.target.value;
-    onChange(updatedHeaders);
+    actions.updateRequestValues("headers", updatedHeaders);
   };
 
   return (
@@ -47,7 +50,7 @@ const RequestHeaders: React.FC<{ headers: any[]; onChange: any }> = ({ headers, 
       </Button>
 
       <Grid container spacing={1}>
-        {_.map(headers, (header, index) => (
+        {_.map(state.request.headers, (header, index) => (
           <Fragment key={index}>
             <Grid item xs={5}>
               <TextField
@@ -65,7 +68,7 @@ const RequestHeaders: React.FC<{ headers: any[]; onChange: any }> = ({ headers, 
                 margin="dense"
                 size="small"
                 onChange={handleChange("name", index)}
-                value={headers[index].name}
+                value={state.request.headers[index].name}
               />
             </Grid>
             <Grid item xs={5}>
@@ -84,7 +87,7 @@ const RequestHeaders: React.FC<{ headers: any[]; onChange: any }> = ({ headers, 
                 margin="dense"
                 size="small"
                 onChange={handleChange("value", index)}
-                value={headers[index].value}
+                value={state.request.headers[index].value}
               />
             </Grid>
             <Grid item xs={2} className={classes.remove}>

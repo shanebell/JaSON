@@ -14,7 +14,6 @@ import TabPanel from "./TabPanel";
 import useApplicationState from "../state";
 import HttpMethod from "../types/HttpMethod";
 import ContentType from "../types/ContentType";
-import HttpHeader from "../types/HttpHeader";
 
 const HTTP_METHODS: HttpMethod[] = [
   {
@@ -115,10 +114,6 @@ const RequestFields: React.FC = () => {
     }
   };
 
-  const onHeadersChange = (headers: HttpHeader[]) => {
-    actions.updateRequestValues("headers", headers);
-  };
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={4}>
@@ -184,7 +179,7 @@ const RequestFields: React.FC = () => {
         </TabPanel>
 
         <TabPanel isActive={state.requestTab === 1}>
-          <RequestHeaders headers={state.request.headers} onChange={onHeadersChange} />
+          <RequestHeaders />
         </TabPanel>
       </Grid>
 
