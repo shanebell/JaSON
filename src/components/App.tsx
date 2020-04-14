@@ -32,10 +32,12 @@ const palette: Record<string, PaletteOptions> = {
   dark: {
     type: "dark",
     primary: {
-      main: "#fba875",
+      // main: "#fba875",
+      main: "#d7d8dd",
     },
     secondary: {
-      main: "#b07466",
+      // main: "#b07466",
+      main: "#fba875",
     },
   },
   light: {
@@ -44,7 +46,7 @@ const palette: Record<string, PaletteOptions> = {
       main: "#515570",
     },
     secondary: {
-      main: "#f85565",
+      main: "#b07466",
     },
   },
 };
