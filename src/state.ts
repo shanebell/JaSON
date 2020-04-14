@@ -82,9 +82,9 @@ const actions = {
     });
   },
 
-  setTheme: (theme: ThemeType) => ({ setState }: StoreApi) => {
+  toggleTheme: () => ({ setState, getState }: StoreApi) => {
     setState({
-      theme,
+      theme: getState().theme === "dark" ? "light" : "dark",
     });
   },
 };

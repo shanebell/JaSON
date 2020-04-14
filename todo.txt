@@ -1,9 +1,15 @@
 NEXT:
 - Response formatting
+  - Prismjs
+  - Code Mirror
+  - etc
+- Finalize logo and color scheme
+  - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
+- request data - form encoded
+  - Does Axios support this?
+- Reusable modal?
 - remove onHeadersChange from RequestFields
 - move images out of src? but they're imported?
-- Logo
-  - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
 
 TODO
 - Make history work
