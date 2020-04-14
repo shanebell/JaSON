@@ -15,6 +15,7 @@ import ResponseTime from "./ResponseTime";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/mode-html";
 import "ace-builds/src-noconflict/mode-xml";
+import "ace-builds/src-noconflict/mode-text";
 import "ace-builds/src-noconflict/theme-ambiance";
 import "ace-builds/src-noconflict/theme-clouds_midnight";
 import "ace-builds/src-noconflict/theme-merbivore_soft";
@@ -61,6 +62,13 @@ const ACE_EDITOR_MODES: Record<string, string> = {
   "application/html": "html",
 };
 
+const getEditorMode = (response: HttpResponse) => {
+  const editorMode = _.find(ACE_EDITOR_MODES, (mode, contentType) => {
+    return _.startsWith(contentType, response.contentType);
+  });
+  return editorMode || "text";
+};
+
 const formatResponse = (response: HttpResponse): string => {
   // TODO handle other content types
   if (isJsonResponse(response)) {
@@ -101,9 +109,9 @@ const ResponseFields: React.FC = () => {
           <Paper className={classes.response} variant="outlined">
             {/* themes: mono_industrial, merbivore_soft, ambiance, clouds_midnight  */}
             <AceEditor
-              mode={_.get(ACE_EDITOR_MODES, state.response.contentType, "none")}
+              mode={getEditorMode(state.response)}
               theme="mono_industrial"
-              fontSize={18}
+              fontSize={16}
               name="formatted-response"
               width="100%"
               maxLines={100}
