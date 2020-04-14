@@ -5,7 +5,10 @@ import HttpResponse from "../types/HttpResponse";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    color: theme.palette.text.secondary,
+    borderColor: theme.palette.text.secondary,
   },
 }));
 
@@ -14,9 +17,7 @@ const ResponseTime: React.FC<{ response: HttpResponse }> = ({ response }) => {
 
   if (response.startTime > 0 && response.endTime > 0) {
     const timeInMillis = response.endTime - response.startTime;
-    return (
-      <Chip className={classes.root} label={`${timeInMillis} ms`} size="small" variant="outlined" color="primary" />
-    );
+    return <Chip className={classes.root} label={`${timeInMillis} ms`} size="small" variant="outlined" />;
   } else {
     return null;
   }
