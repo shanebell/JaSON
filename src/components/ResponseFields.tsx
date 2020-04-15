@@ -4,22 +4,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import React from "react";
-import AceEditor from "react-ace";
-import _ from "lodash";
 import ResponseHeaders from "./ResponseHeaders";
 import StatusCode from "./StatusCode";
 import TabPanel from "./TabPanel";
 import useApplicationState from "../state";
-import HttpResponse from "../types/HttpResponse";
 import ResponseTime from "./ResponseTime";
-import "ace-builds/src-noconflict/mode-json";
-import "ace-builds/src-noconflict/mode-html";
-import "ace-builds/src-noconflict/mode-xml";
-import "ace-builds/src-noconflict/mode-text";
-import "ace-builds/src-noconflict/theme-ambiance";
-import "ace-builds/src-noconflict/theme-clouds_midnight";
-import "ace-builds/src-noconflict/theme-merbivore_soft";
-import "ace-builds/src-noconflict/theme-mono_industrial";
+import AceComponent from "./AceComponent";
 
 const useStyles = makeStyles((theme) => ({
   responseTabs: {
@@ -35,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   code: {
-    fontFamily: "'Inconsolata', monospace",
+    fontFamily: "'Source Code Pro', monospace",
+    fontSize: "16px",
     whiteSpace: "pre-wrap",
   },
   chips: {
@@ -44,38 +35,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
 }));
-
-const isJsonResponse = (response: HttpResponse): boolean => {
-  return response && _.startsWith(response.contentType, "application/json");
-};
-
-const formatRawResponse = (response: HttpResponse): string => {
-  return response?.responseText || "";
-};
-
-const ACE_EDITOR_MODES: Record<string, string> = {
-  "application/json": "json",
-  "text/json": "json",
-  "application/xml": "xml",
-  "text/xml": "xml",
-  "text/html": "html",
-  "application/html": "html",
-};
-
-const getEditorMode = (response: HttpResponse) => {
-  const editorMode = _.find(ACE_EDITOR_MODES, (mode, contentType) => {
-    return _.startsWith(response.contentType, contentType);
-  });
-  return editorMode || "text";
-};
-
-const formatResponse = (response: HttpResponse): string => {
-  // TODO handle other content types
-  if (isJsonResponse(response)) {
-    return JSON.stringify(response.data, null, 2);
-  }
-  return formatRawResponse(response);
-};
 
 const ResponseFields: React.FC = () => {
   const classes = useStyles();
@@ -107,34 +66,14 @@ const ResponseFields: React.FC = () => {
         {/* FORMATTED RESPONSE */}
         <TabPanel isActive={state.responseTab === 0 && state.response.data}>
           <Paper className={classes.response} variant="outlined">
-            {/* themes: mono_industrial, merbivore_soft, ambiance, clouds_midnight  */}
-            <AceEditor
-              mode={getEditorMode(state.response)}
-              theme="mono_industrial"
-              fontSize={16}
-              name="formatted-response"
-              width="100%"
-              maxLines={10000}
-              readOnly
-              wrapEnabled
-              value={formatResponse(state.response)}
-              editorProps={{ $blockScrolling: true }}
-              setOptions={{
-                useWorker: false,
-                showLineNumbers: false,
-                showPrintMargin: false,
-                // @ts-ignore
-                foldStyle: "markbeginend",
-                fontFamily: "'Source Code Pro', monospace",
-              }}
-            />
+            <AceComponent response={state.response} />
           </Paper>
         </TabPanel>
 
         {/* RAW RESPONSE */}
         <TabPanel isActive={state.responseTab === 1 && state.response.data}>
           <Paper className={classes.rawResponse} variant="outlined">
-            <code className={classes.code}>{formatRawResponse(state.response)}</code>
+            <AceComponent response={state.response} formatted={false} />
           </Paper>
         </TabPanel>
 

@@ -5,5 +5,5 @@ export default interface HttpResponse {
   contentType: string;
   headers: any;
   data?: any;
-  responseText?: string;
+  responseText: string;
 }

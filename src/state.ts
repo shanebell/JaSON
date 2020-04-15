@@ -23,6 +23,7 @@ const defaultResponse: HttpResponse = {
   endTime: 0,
   status: 0,
   contentType: "",
+  responseText: "",
   headers: {},
 };
 

@@ -115,7 +115,7 @@ const RequestFields: React.FC = () => {
   };
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={4}>
       <Grid item xs={4}>
         <Tabs value={state.requestTab} onChange={handleTabChange} aria-label="Request details" className={classes.tabs}>
           <Tab label="HTTP request" />
