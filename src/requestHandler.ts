@@ -48,10 +48,10 @@ export const sendRequest = async (request: HttpRequest): Promise<HttpResponse> =
   return {
     startTime,
     endTime,
-    status: axiosResponse.status,
-    contentType: axiosResponse.headers["content-type"],
-    headers: axiosResponse.headers,
-    data: axiosResponse.data,
-    responseText: axiosResponse.request.responseText,
+    status: axiosResponse?.status || 999,
+    contentType: axiosResponse?.headers["content-type"],
+    headers: axiosResponse?.headers,
+    data: axiosResponse?.data,
+    responseText: axiosResponse?.request.responseText,
   };
 };
