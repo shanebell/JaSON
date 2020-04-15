@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const isJsonResponse = (response: HttpResponse): boolean => {
-  return response && _.isEqual("application/json", response.contentType);
+  return response && _.startsWith(response.contentType, "application/json");
 };
 
 const formatRawResponse = (response: HttpResponse): string => {
@@ -114,10 +114,11 @@ const ResponseFields: React.FC = () => {
               fontSize={16}
               name="formatted-response"
               width="100%"
-              maxLines={100}
+              maxLines={10000}
               readOnly
               wrapEnabled
               value={formatResponse(state.response)}
+              editorProps={{ $blockScrolling: true }}
               setOptions={{
                 useWorker: false,
                 showLineNumbers: false,
