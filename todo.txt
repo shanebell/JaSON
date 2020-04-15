@@ -3,9 +3,16 @@ NEXT:
   - choose dark and light theme
   - finalise font size etc (fix typeface- imports etc)
   - https://ace.c9.io/build/kitchen-sink.html
+  - Fix weird selection error - doesn't highlight selection correctly
+  - Validate body before send (maybe not mandatory)
 
 TODO
+- Layout split vertically down the middle?
+  - Request fields on left
+  - Response fields on right
+- Handle network errors
 - Make history work
+- Add feature to cancel a network request
 - Restrict size of response shown
 - Add logo attribution
   - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
