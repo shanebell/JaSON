@@ -4,8 +4,6 @@ import HttpResponse from "../types/HttpResponse";
 import useApplicationState from "../state";
 import prettier from "prettier/standalone";
 import parserBabel from "prettier/parser-babel";
-import parserHtml from "prettier/parser-html";
-import parserPostCss from "prettier/parser-postcss";
 import parserXml from "@prettier/plugin-xml/src/plugin";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-json";
@@ -15,8 +13,7 @@ import "ace-builds/src-noconflict/mode-text";
 import "ace-builds/src-noconflict/theme-tomorrow_night";
 import "ace-builds/src-noconflict/theme-tomorrow";
 
-// TODO handle other content types
-const CONFIG: any = {
+const CONTENT_TYPE_CONFIG: any = {
   "application/json": {
     mode: "json",
     parser: "json",
@@ -33,34 +30,31 @@ const CONFIG: any = {
     mode: "xml",
     parser: "xml",
   },
-  "text/html": {
-    mode: "html",
-    parser: "html",
-  },
-  "application/html": {
-    mode: "html",
-    parser: "html",
-  },
   "application/javascript": {
     mode: "javascript",
     parser: "babel",
   },
+  "text/javascript": {
+    mode: "javascript",
+    parser: "babel",
+  },
+  "application/html": {
+    mode: "html",
+  },
+  "text/html": {
+    mode: "html",
+  },
 };
 
 const getConfig = (response: HttpResponse) => {
-  const config = _.find(CONFIG, (value, key) => {
+  const config = _.find(CONTENT_TYPE_CONFIG, (value, key) => {
     return _.startsWith(response.contentType, key);
   });
-  return (
-    config || {
-      mode: "text",
-      parser: null,
-    }
-  );
+  return config || { mode: "text" };
 };
 
 const formatResponse = (response: HttpResponse, parser: any): string => {
-  const plugins = [parserBabel, parserHtml, parserPostCss, parserBabel, parserXml];
+  const plugins = [parserBabel, parserXml];
   if (parser) {
     return prettier.format(response.responseText, { parser, plugins });
   } else {

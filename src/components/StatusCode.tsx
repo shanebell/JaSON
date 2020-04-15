@@ -87,16 +87,22 @@ const statusCodes: Record<number, string> = {
   511: "Network Authentication Required",
 };
 
-const isError = (statusCode: number) => _.toNumber(statusCode) >= 400;
+const isError = (status: number) => _.toNumber(status) >= 400;
+
+const getLabel = (status: number) => {
+  if (status === 999) {
+    return "Request failed";
+  }
+  const statusText = statusCodes[status];
+  return statusText ? `${status} - ${statusText}` : status;
+};
 
 const StatusCode: React.FC<{ status: number }> = ({ status }) => {
   const classes = useStyles();
 
   if (status) {
-    const statusText = statusCodes[status];
-    const label = statusText ? `${status} - ${statusText}` : status;
+    const label = getLabel(status);
     const classNames = `${classes.root} ${isError(status) ? classes.error : classes.success}`;
-
     return <Chip className={classNames} label={label} size="small" variant="outlined" color="primary" />;
   } else {
     return null;
