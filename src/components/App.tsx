@@ -3,7 +3,6 @@ import Divider from "@material-ui/core/Divider";
 import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import React from "react";
-import "typeface-inconsolata";
 import "typeface-source-code-pro";
 import "typeface-roboto";
 import Loading from "./Loading";
