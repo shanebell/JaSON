@@ -1,19 +1,16 @@
 NEXT:
 - Get AceEditor component working
-  - choose dark and light theme
-  - finalise font size etc (fix typeface- imports etc)
+  - - CMD-F doesn't work when AceEditor has focus - disable keyboard shortcuts?
   - https://ace.c9.io/build/kitchen-sink.html
-  - Fix weird selection error - doesn't highlight selection correctly
-  - Validate body before send (maybe not mandatory)
 
 TODO
-- Layout split vertically down the middle?
-  - Request fields on left
-  - Response fields on right
-- Handle network errors
 - Make history work
 - Add feature to cancel a network request
+- Validate body before send (maybe not mandatory)
+- Verify cookies are being sent correctly
 - Restrict size of response shown
+- Only save the request details to reduce history size
+- Limit the size of a request
 - Add logo attribution
   - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
   - Attribution details: https://creativecommons.org/licenses/by/4.0/
@@ -31,6 +28,8 @@ BUGS:
 IDEAS:
 - star a history item
 - delete all except starred history items
+- allow a file upload of a request body
+- download as CURL (etc) for a request history item
 - save history to dropbox or export somehow?
 - share a history request with someone (export and email, click to send?)
 - group history by domain to make searching easier
