@@ -1,17 +1,10 @@
 import _ from "lodash";
 import React from "react";
 import HttpResponse from "../types/HttpResponse";
-import useApplicationState from "../state";
 import prettier from "prettier/standalone";
 import parserBabel from "prettier/parser-babel";
 import parserXml from "@prettier/plugin-xml/src/plugin";
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-json";
-import "ace-builds/src-noconflict/mode-html";
-import "ace-builds/src-noconflict/mode-xml";
-import "ace-builds/src-noconflict/mode-text";
-import "ace-builds/src-noconflict/theme-tomorrow_night";
-import "ace-builds/src-noconflict/theme-tomorrow";
+import WrappedAceEditor from "./WrappedAceEditor";
 
 const CONTENT_TYPE_CONFIG: any = {
   "application/json": {
@@ -62,33 +55,15 @@ const formatResponse = (response: HttpResponse, parser: any): string => {
   }
 };
 
-const AceComponent: React.FC<{ response: HttpResponse; formatted?: boolean }> = ({ response, formatted = true }) => {
-  const [state] = useApplicationState();
+const ResponseData: React.FC<{ response: HttpResponse; formatted?: boolean }> = ({ response, formatted = true }) => {
   const config = getConfig(response);
 
   return (
-    <AceEditor
+    <WrappedAceEditor
       mode={formatted ? config.mode : "text"}
-      theme={state.theme === "dark" ? "tomorrow_night" : "tomorrow"}
-      fontSize={16}
-      name="formatted-response"
-      width="100%"
-      maxLines={10000}
-      readOnly
-      wrapEnabled
       value={formatted ? formatResponse(response, config.parser) : response.responseText}
-      editorProps={{ $blockScrolling: true }}
-      setOptions={{
-        useWorker: false,
-        showLineNumbers: false,
-        showPrintMargin: false,
-        highlightSelectedWord: false,
-        // @ts-ignore
-        foldStyle: "markbeginend",
-        fontFamily: "'Source Code Pro', monospace",
-      }}
     />
   );
 };
 
-export default AceComponent;
+export default ResponseData;

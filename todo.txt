@@ -1,16 +1,14 @@
 NEXT:
-- Get AceEditor component working
-  - - CMD-F doesn't work when AceEditor has focus - disable keyboard shortcuts?
-  - https://ace.c9.io/build/kitchen-sink.html
+- Make history work
+  - Only save the request details to reduce history size
+  - Limit the size of a request
 
 TODO
-- Make history work
+- Add AceEditor to request field
 - Add feature to cancel a network request
 - Validate body before send (maybe not mandatory)
 - Verify cookies are being sent correctly
 - Restrict size of response shown
-- Only save the request details to reduce history size
-- Limit the size of a request
 - Add logo attribution
   - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
   - Attribution details: https://creativecommons.org/licenses/by/4.0/
