@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   monospace: {
-    fontFamily: "'Inconsolata', monospace",
+    fontFamily: "'Source Code Pro', monospace",
   },
 }));
 
