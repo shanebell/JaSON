@@ -56,7 +56,6 @@ consoleMessage();
 const App = () => {
   const classes = useStyles();
   const [state] = useApplicationState();
-  console.log("state: %o", state);
 
   const muiTheme = createMuiTheme({
     spacing: 4,
