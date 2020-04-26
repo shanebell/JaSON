@@ -45,7 +45,10 @@ const paragraphStyles = makeStyles((theme) => ({
   },
 }));
 
-const Transition: React.ComponentType<TransitionProps> = React.forwardRef(function Transition(props, ref) {
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & { children?: React.ReactElement<any, any> },
+  ref: React.Ref<unknown>
+) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
 
