@@ -2,7 +2,6 @@ NEXT:
 - Make history work
   - show url params, hash in url
     - remove host from from of URL
-  - Only save the request details to reduce history size
   - Limit the size of a request
 
   react-window (to handle large lists - use this for history)
@@ -10,6 +9,10 @@ NEXT:
 
 
 TODO
+- Prevent tabs from re-rendering too often
+  - load a large response then try typing in the request URL
+  - every keystroke causes the response to be re-rendered and is very slow
+- Migrate old history from previous version
 - Add AceEditor to request field
 - Add feature to cancel a network request
 - Validate body before send (maybe not mandatory)
