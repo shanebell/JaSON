@@ -14,6 +14,7 @@ import TabPanel from "./TabPanel";
 import useApplicationState from "../state";
 import HttpMethod from "../types/HttpMethod";
 import ContentType from "../types/ContentType";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const HTTP_METHODS: HttpMethod[] = [
   {
@@ -131,6 +132,9 @@ const RequestFields: React.FC = () => {
             InputProps={{
               className: classes.monospace,
             }}
+            inputProps={{
+              maxLength: 1024,
+            }}
             onKeyDown={handleKeyDown}
             value={state.request.url}
             autoFocus
@@ -184,20 +188,25 @@ const RequestFields: React.FC = () => {
       </Grid>
 
       <Grid item xs={8}>
-        <TextField
-          id="body"
-          label="Request body"
-          fullWidth
-          disabled={!isRequestBodyAllowed()}
-          InputProps={{
-            className: classes.monospace,
-          }}
-          value={state.request.body}
-          onChange={handleFieldChange("body")}
-          multiline
-          rows={10}
-          variant="outlined"
-        />
+        <Tooltip
+          arrow
+          title={isRequestBodyAllowed() ? "" : "Request body can only be set for HTTP methods that allow it"}
+        >
+          <TextField
+            id="body"
+            label="Request body"
+            fullWidth
+            disabled={!isRequestBodyAllowed()}
+            InputProps={{
+              className: classes.monospace,
+            }}
+            value={state.request.body}
+            onChange={handleFieldChange("body")}
+            multiline
+            rows={10}
+            variant="outlined"
+          />
+        </Tooltip>
       </Grid>
 
       <Grid item xs={12} className={classes.actions}>
