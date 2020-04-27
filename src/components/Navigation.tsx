@@ -24,21 +24,20 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     height: "48px",
     marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
 }));
 
 const Navigation: React.FC = () => {
   const classes = useStyles();
   const [aboutOpen, showAbout] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [state, actions] = useApplicationState();
 
   return (
     <AppBar position="static" color="inherit">
       <Toolbar>
         <Tooltip arrow title="Request history" aria-label="Request history">
-          <IconButton color="inherit" aria-label="open drawer" onClick={() => setDrawerOpen(true)} edge="start">
+          <IconButton color="inherit" aria-label="open drawer" onClick={() => actions.showHistory()} edge="start">
             <HistoryIcon />
           </IconButton>
         </Tooltip>
@@ -56,7 +55,7 @@ const Navigation: React.FC = () => {
         </Button>
       </Toolbar>
       <About open={aboutOpen} onClose={() => showAbout(false)} />
-      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+      <Drawer open={state.historyOpen} onClose={() => actions.hideHistory()}>
         <HistoryList />
       </Drawer>
     </AppBar>

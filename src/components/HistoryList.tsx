@@ -1,5 +1,4 @@
-import { Divider, ListItemAvatar } from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
+import { Divider, Button } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -15,6 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { Delete, Favorite, FavoriteBorder } from "@material-ui/icons";
 import SearchIcon from "@material-ui/icons/Search";
 import React from "react";
+import useApplicationState, { HistoryItem } from "../state";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -23,15 +23,18 @@ const useStyles = makeStyles((theme) => ({
   searchIcon: {
     color: theme.palette.grey[600],
   },
+  clearHistory: {
+    marginLeft: theme.spacing(4),
+    marginRight: theme.spacing(4),
+  },
   list: {
-    width: "100%",
+    // width: "100%",
+    width: 400,
     maxWidth: 400,
   },
-  listItemAvatar: {
-    minWidth: "48px",
-  },
   method: {
-    margin: `${theme.spacing(2)}px 0`,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   date: {
     display: "inline !important",
@@ -48,55 +51,19 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(8),
     fontSize: theme.spacing(4),
   },
+  actions: {
+    display: "flex",
+    flexDirection: "column",
+  },
 }));
-
-const history = [
-  {
-    id: "ac689307-ce26-4f5f-a8bf-14ab68c0b62e",
-    url: "https://consent-api.appspot.com/api/customer/d4d21f61-b516-4045-841c-8ee58a87992d",
-    path: "/api/customer/d4d21f61-b516-4045-841c-8ee58a87992d",
-    domain: "https://consent-api.appspot.com",
-    method: "GET",
-    avatar: "G",
-    date: "01/01/2020 12:00:00",
-    favourite: true,
-  },
-  {
-    id: "149df1f7-a764-45e3-a5ec-c33af7b8dc1d",
-    url: "https://consent-api.appspot.com/api/customer",
-    path: "/api/customer",
-    domain: "https://consent-api.appspot.com",
-    method: "POST",
-    avatar: "T",
-    date: "01/01/2020 12:00:00",
-    favourite: false,
-  },
-  {
-    id: "5badacd7-37dc-42d0-9fc2-fbe4f92c1a7a",
-    url: "http://wwww.facebook.com/the/quick/brown/fox/jumps/over/the/lazy/dog",
-    path: "/the/quick/brown/fox/jumps/over/the/lazy/dog",
-    domain: "https://www.facebook.com",
-    method: "DELETE",
-    avatar: "F",
-    date: "01/01/2020 12:00:00",
-    favourite: false,
-  },
-];
 
 const HistoryList: React.FC = () => {
   const classes = useStyles();
-
-  const onHistorySelect = (historyItem: any) => {
-    console.log(`onHistorySelect('${historyItem}`);
-  };
-
-  const onHistoryDelete = (historyItem: any) => {
-    console.log(`onHistoryDelete('${historyItem}`);
-  };
+  const [state, actions] = useApplicationState();
 
   return (
     <>
-      {/* History actions */}
+      {/* HISTORY ACTIONS */}
       <TextField
         className={classes.search}
         label="Search request history"
@@ -109,26 +76,24 @@ const HistoryList: React.FC = () => {
           ),
         }}
       />
+      {state.history.length > 0 && (
+        <Button className={classes.clearHistory} variant="outlined" onClick={() => actions.clearHistory()}>
+          Clear history
+        </Button>
+      )}
 
-      {/* History items */}
+      {/* HISTORY ITEMS */}
       <List dense className={classes.list}>
-        {history.map((historyItem) => (
+        {state.history.map((historyItem) => (
           <div key={historyItem.id}>
-            <ListItem dense button alignItems="flex-start" onClick={() => onHistorySelect(historyItem.id)}>
-              {false && (
-                <ListItemAvatar className={classes.listItemAvatar}>
-                  <Avatar variant="circle" className={classes.small}>
-                    {historyItem.avatar}
-                  </Avatar>
-                </ListItemAvatar>
-              )}
+            <ListItem dense button alignItems="flex-start" onClick={() => actions.selectHistoryItem(historyItem)}>
               <Tooltip arrow enterDelay={250} title={historyItem.url} aria-label={historyItem.url}>
                 <ListItemText
                   primary={<div className={classes.trim}>{historyItem.path}</div>}
                   secondary={
                     <>
                       <Typography component="span" variant="body2" className={classes.trim}>
-                        {historyItem.domain}
+                        {historyItem.host}
                       </Typography>
                       <Chip
                         className={classes.method}
@@ -147,16 +112,10 @@ const HistoryList: React.FC = () => {
                   }}
                 />
               </Tooltip>
-              <ListItemSecondaryAction>
-                {false && (
-                  <Checkbox
-                    size="small"
-                    icon={<FavoriteBorder />}
-                    checkedIcon={<Favorite />}
-                    value={historyItem.favourite}
-                  />
-                )}
-                <IconButton aria-label="delete" onClick={() => onHistoryDelete(historyItem.id)}>
+              <ListItemSecondaryAction className={classes.actions}>
+                {/* TODO implement "favourite" */}
+                {false && <Checkbox size="small" icon={<FavoriteBorder />} checkedIcon={<Favorite />} value={false} />}
+                <IconButton aria-label="delete" onClick={() => actions.removeHistoryItem(historyItem)}>
                   <Delete fontSize="small" />
                 </IconButton>
               </ListItemSecondaryAction>

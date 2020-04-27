@@ -1,9 +1,54 @@
 import { createHook, createStore, StoreActionApi } from "react-sweet-state";
+import { v4 as uuidv4 } from "uuid";
 import HttpRequest from "./types/HttpRequest";
 import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
+import HttpHeader from "./types/HttpHeader";
+import { Method } from "axios";
+import moment from "moment";
+import _ from "lodash";
 
 const LOCAL_STORAGE_THEME_KEY = "theme";
+const LOCAL_STORAGE_HISTORY_KEY = "history";
+const MAX_HISTORY_SIZE = 500;
+
+export interface HistoryItem {
+  id: string;
+  url: string;
+  method: Method;
+  contentType: string;
+  path: string;
+  host: string;
+  date: string;
+  body: string;
+  headers: HttpHeader[];
+
+  // TODO
+  // favourite: boolean
+}
+
+const toHistoryItem = (request: HttpRequest): HistoryItem => {
+  const url = new URL(request.url);
+  return {
+    id: uuidv4(),
+    url: request.url,
+    method: request.method,
+    contentType: request.contentType,
+    date: moment().format("DD/MM/YY HH:mm:ss"),
+    path: url.pathname,
+    host: url.host,
+    body: request.body,
+    headers: request.headers,
+  };
+};
+
+const getLocalStorageHistory = (): HistoryItem[] => {
+  return JSON.parse(localStorage.getItem(LOCAL_STORAGE_HISTORY_KEY) || "[]");
+};
+
+const setLocalStorageHistory = (history: HistoryItem[]) => {
+  localStorage.setItem(LOCAL_STORAGE_HISTORY_KEY, JSON.stringify(history));
+};
 
 const defaultRequest: HttpRequest = {
   url: "https://httpbin.org/post",
@@ -36,6 +81,8 @@ interface State {
   requestTab: number;
   responseTab: number;
   theme: string;
+  historyOpen: boolean;
+  history: HistoryItem[];
 }
 
 type StoreApi = StoreActionApi<State>;
@@ -77,10 +124,24 @@ const actions = {
       response: defaultResponse,
     });
 
-    const response = await sendRequest(getState().request);
+    const request = getState().request;
+    const response = await sendRequest(request);
+
+    const historyItem = toHistoryItem(request);
+
+    const history: HistoryItem[] = getLocalStorageHistory();
+    history.unshift(historyItem);
+
+    // if we"ve hit the history limit then splice any extras from the end
+    if (history.length > MAX_HISTORY_SIZE) {
+      history.splice(MAX_HISTORY_SIZE);
+    }
+
+    setLocalStorageHistory(history);
 
     setState({
       response,
+      history,
       loading: false,
     });
   },
@@ -90,6 +151,48 @@ const actions = {
     localStorage.setItem(LOCAL_STORAGE_THEME_KEY, theme);
     setState({
       theme,
+    });
+  },
+
+  showHistory: () => ({ setState }: StoreApi) => {
+    setState({
+      historyOpen: true,
+    });
+  },
+
+  hideHistory: () => ({ setState }: StoreApi) => {
+    setState({
+      historyOpen: false,
+    });
+  },
+
+  clearHistory: () => ({ setState }: StoreApi) => {
+    const history: HistoryItem[] = [];
+    setLocalStorageHistory(history);
+    setState({
+      history,
+    });
+  },
+
+  selectHistoryItem: (historyItem: HistoryItem) => ({ setState }: StoreApi) => {
+    setState({
+      request: {
+        url: historyItem.url,
+        method: historyItem.method,
+        contentType: historyItem.contentType,
+        body: historyItem.body,
+        headers: historyItem.headers,
+      },
+      historyOpen: false,
+    });
+  },
+
+  removeHistoryItem: (historyItem: HistoryItem) => ({ setState }: StoreApi) => {
+    const history = getLocalStorageHistory();
+    _.remove(history, { id: historyItem.id });
+    setLocalStorageHistory(history);
+    setState({
+      history,
     });
   },
 };
@@ -102,9 +205,8 @@ const Store = createStore<State, typeof actions>({
     loading: false,
     requestTab: 0,
     responseTab: 0,
-
-    // TODO
-    // history
+    historyOpen: false,
+    history: getLocalStorageHistory(),
   },
   actions,
 });

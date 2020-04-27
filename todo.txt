@@ -1,7 +1,13 @@
 NEXT:
 - Make history work
+  - show url params, hash in url
+    - remove host from from of URL
   - Only save the request details to reduce history size
   - Limit the size of a request
+
+  react-window (to handle large lists - use this for history)
+  https://github.com/bvaughn/react-window
+
 
 TODO
 - Add AceEditor to request field
@@ -15,7 +21,6 @@ TODO
 - request data - form encoded
   - Does Axios support this?
 - New images for Chrome Web Store
-- Tooltip on request body when not editable to explain why
 - Update NOTICE
 - Update screenshots
 - Update Chrome Web Store description - specifically mention cookies
@@ -24,7 +29,9 @@ TODO
 BUGS:
 
 IDEAS:
+- JaSON Website with video and screenshots (GitHub pages)
 - star a history item
+- Render images, other media types
 - delete all except starred history items
 - allow a file upload of a request body
 - download as CURL (etc) for a request history item
@@ -32,6 +39,9 @@ IDEAS:
 - share a history request with someone (export and email, click to send?)
 - group history by domain to make searching easier
 - filter history by domain, content type, request method, response status etc...
+
+
+
 
 NOTES:
 - in responsive mode set dimensions to 1423x889 to get 1280x800 screenshots
