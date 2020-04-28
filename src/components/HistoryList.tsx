@@ -13,8 +13,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { Delete, Favorite, FavoriteBorder, MoreVert, Search } from "@material-ui/icons";
 import React, { useState } from "react";
-import useApplicationState, { HistoryItem } from "../state";
+import useApplicationState from "../state";
 import _ from "lodash";
+import HistoryItem from "../types/HistoryItem";
 
 const useStyles = makeStyles((theme) => ({
   search: {
