@@ -12,8 +12,9 @@ import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { Delete, Favorite, FavoriteBorder, MoreVert, Search } from "@material-ui/icons";
-import React from "react";
-import useApplicationState from "../state";
+import React, { useState } from "react";
+import useApplicationState, { HistoryItem } from "../state";
+import _ from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -26,8 +27,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
   },
+  noResults: {
+    padding: theme.spacing(4),
+  },
   list: {
-    // width: "100%",
     width: 400,
     maxWidth: 400,
   },
@@ -59,8 +62,18 @@ const useStyles = makeStyles((theme) => ({
 const HistoryList: React.FC = () => {
   const classes = useStyles();
   const [state, actions] = useApplicationState();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const open = Boolean(anchorEl);
+
+  const handleSearch = (event: any) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // filter the history based on the search term
+  const history = _.filter(state.history, (historyItem: HistoryItem) => {
+    return _.isEmpty(searchTerm.trim()) ? true : historyItem.url.toLowerCase().includes(searchTerm);
+  });
 
   return (
     <>
@@ -94,11 +107,15 @@ const HistoryList: React.FC = () => {
         inputProps={{
           padding: "18px",
         }}
+        value={searchTerm}
+        onChange={handleSearch}
       />
+
+      {_.isEmpty(history) && <div className={classes.noResults}>No results</div>}
 
       {/* HISTORY ITEMS */}
       <List dense className={classes.list}>
-        {state.history.map((historyItem) => (
+        {history.map((historyItem) => (
           <div key={historyItem.id}>
             <ListItem dense button alignItems="flex-start" onClick={() => actions.selectHistoryItem(historyItem)}>
               <Tooltip arrow enterDelay={250} title={historyItem.url} aria-label={historyItem.url}>
