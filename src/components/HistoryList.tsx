@@ -66,6 +66,19 @@ const HistoryList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const open = Boolean(anchorEl);
 
+  const showMenu = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const hideMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const clearHistory = () => {
+    actions.clearHistory();
+    hideMenu();
+  };
+
   const handleSearch = (event: any) => {
     setSearchTerm(event.target.value);
   };
@@ -90,16 +103,11 @@ const HistoryList: React.FC = () => {
           ),
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={(event: any) => setAnchorEl(event.currentTarget)}
-              >
+              <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={showMenu}>
                 <MoreVert fontSize="small" />
               </IconButton>
-              <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
-                <MenuItem onClick={actions.clearHistory}>Clear all history items</MenuItem>
+              <Menu anchorEl={anchorEl} open={open} onClose={hideMenu}>
+                <MenuItem onClick={clearHistory}>Clear all history items</MenuItem>
               </Menu>
             </InputAdornment>
           ),
