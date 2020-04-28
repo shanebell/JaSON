@@ -1,46 +1,13 @@
 import { createHook, createStore, StoreActionApi } from "react-sweet-state";
-import { v4 as uuidv4 } from "uuid";
 import HttpRequest from "./types/HttpRequest";
 import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
-import HttpHeader from "./types/HttpHeader";
-import { Method } from "axios";
-import moment from "moment";
 import _ from "lodash";
+import HistoryItem, { toHistoryItem } from "./types/HistoryItem";
 
 const LOCAL_STORAGE_THEME_KEY = "theme";
 const LOCAL_STORAGE_HISTORY_KEY = "history";
 const MAX_HISTORY_SIZE = 500;
-
-export interface HistoryItem {
-  id: string;
-  url: string;
-  method: Method;
-  contentType: string;
-  path: string;
-  host: string;
-  date: string;
-  body: string;
-  headers: HttpHeader[];
-
-  // TODO
-  // favourite: boolean
-}
-
-const toHistoryItem = (request: HttpRequest): HistoryItem => {
-  const url = new URL(request.url);
-  return {
-    id: uuidv4(),
-    url: request.url,
-    method: request.method,
-    contentType: request.contentType,
-    date: moment().format("DD/MM/YY HH:mm:ss"),
-    path: url.pathname,
-    host: url.host,
-    body: request.body,
-    headers: request.headers,
-  };
-};
 
 const getLocalStorageHistory = (): HistoryItem[] => {
   return JSON.parse(localStorage.getItem(LOCAL_STORAGE_HISTORY_KEY) || "[]");

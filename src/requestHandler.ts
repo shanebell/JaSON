@@ -1,14 +1,7 @@
 import _ from "lodash";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import HttpRequest from "./types/HttpRequest";
-import HttpResponse from "./types/HttpResponse";
-
-// prefix request.URL with "http://" if it's not already present
-const addProtocolIfMissing = (request: HttpRequest) => {
-  if (!_.isEmpty(request.url) && !/^http(s)?:\/\//.test(request.url)) {
-    request.url = `http://${request.url}`;
-  }
-};
+import HttpRequest, { addProtocolIfMissing } from "./types/HttpRequest";
+import HttpResponse, { toHttpResponse } from "./types/HttpResponse";
 
 const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosResponse> => {
   try {
@@ -45,13 +38,5 @@ export const sendRequest = async (request: HttpRequest): Promise<HttpResponse> =
   const axiosResponse = await sendAxiosRequest(config);
   const endTime = Date.now();
 
-  return {
-    startTime,
-    endTime,
-    status: axiosResponse?.status || 999,
-    contentType: axiosResponse?.headers["content-type"],
-    headers: axiosResponse?.headers,
-    data: axiosResponse?.data,
-    responseText: axiosResponse?.request.responseText,
-  };
+  return toHttpResponse(axiosResponse, startTime, endTime);
 };
