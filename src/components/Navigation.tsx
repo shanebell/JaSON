@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import HistoryIcon from "@material-ui/icons/History";
-import React, { useState } from "react";
+import React from "react";
 import About from "./About";
 import HistoryList from "./HistoryList";
 import logo from "../images/jason.png";
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Navigation: React.FC = () => {
   const classes = useStyles();
-  const [aboutOpen, showAbout] = useState(false);
   const [state, actions] = useApplicationState();
 
   return (
@@ -50,11 +49,11 @@ const Navigation: React.FC = () => {
             {state.theme === "dark" ? <LightThemeIcon /> : <DarkThemeIcon />}
           </IconButton>
         </Tooltip>
-        <Button color="inherit" onClick={() => showAbout(true)}>
+        <Button color="inherit" onClick={() => actions.showAbout()}>
           About
         </Button>
       </Toolbar>
-      <About open={aboutOpen} onClose={() => showAbout(false)} />
+      <About open={state.aboutOpen} onClose={() => actions.hideAbout()} />
       <Drawer open={state.historyOpen} onClose={() => actions.hideHistory()}>
         <HistoryList />
       </Drawer>
