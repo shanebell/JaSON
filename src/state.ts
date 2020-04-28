@@ -83,6 +83,7 @@ interface State {
   theme: string;
   historyOpen: boolean;
   history: HistoryItem[];
+  aboutOpen: boolean;
 }
 
 type StoreApi = StoreActionApi<State>;
@@ -195,6 +196,18 @@ const actions = {
       history,
     });
   },
+
+  showAbout: () => ({ setState }: StoreApi) => {
+    setState({
+      aboutOpen: true,
+    });
+  },
+
+  hideAbout: () => ({ setState }: StoreApi) => {
+    setState({
+      aboutOpen: false,
+    });
+  },
 };
 
 const Store = createStore<State, typeof actions>({
@@ -207,6 +220,7 @@ const Store = createStore<State, typeof actions>({
     responseTab: 0,
     historyOpen: false,
     history: getLocalStorageHistory(),
+    aboutOpen: false,
   },
   actions,
 });

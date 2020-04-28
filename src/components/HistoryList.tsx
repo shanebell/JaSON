@@ -1,4 +1,4 @@
-import { Divider, Button } from "@material-ui/core";
+import { Divider, Menu, MenuItem } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -11,10 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
-import { Delete, Favorite, FavoriteBorder } from "@material-ui/icons";
-import SearchIcon from "@material-ui/icons/Search";
+import { Delete, Favorite, FavoriteBorder, MoreVert, Search } from "@material-ui/icons";
 import React from "react";
-import useApplicationState, { HistoryItem } from "../state";
+import useApplicationState from "../state";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -23,9 +22,9 @@ const useStyles = makeStyles((theme) => ({
   searchIcon: {
     color: theme.palette.grey[600],
   },
-  clearHistory: {
-    marginLeft: theme.spacing(4),
-    marginRight: theme.spacing(4),
+  searchInput: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
   },
   list: {
     // width: "100%",
@@ -60,6 +59,8 @@ const useStyles = makeStyles((theme) => ({
 const HistoryList: React.FC = () => {
   const classes = useStyles();
   const [state, actions] = useApplicationState();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
 
   return (
     <>
@@ -67,20 +68,33 @@ const HistoryList: React.FC = () => {
       <TextField
         className={classes.search}
         label="Search request history"
-        margin="dense"
         InputProps={{
+          className: classes.searchInput,
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon className={classes.searchIcon} />
+              <Search className={classes.searchIcon} />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={(event: any) => setAnchorEl(event.currentTarget)}
+              >
+                <MoreVert fontSize="small" />
+              </IconButton>
+              <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
+                <MenuItem onClick={actions.clearHistory}>Clear all history items</MenuItem>
+              </Menu>
             </InputAdornment>
           ),
         }}
+        inputProps={{
+          padding: "18px",
+        }}
       />
-      {state.history.length > 0 && (
-        <Button className={classes.clearHistory} variant="outlined" onClick={() => actions.clearHistory()}>
-          Clear history
-        </Button>
-      )}
 
       {/* HISTORY ITEMS */}
       <List dense className={classes.list}>
