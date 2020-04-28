@@ -128,21 +128,26 @@ const actions = {
     const request = getState().request;
     const response = await sendRequest(request);
 
-    const historyItem = toHistoryItem(request);
+    if (response.status < 400) {
+      const historyItem = toHistoryItem(request);
 
-    const history: HistoryItem[] = getLocalStorageHistory();
-    history.unshift(historyItem);
+      const history: HistoryItem[] = getLocalStorageHistory();
+      history.unshift(historyItem);
 
-    // if we"ve hit the history limit then splice any extras from the end
-    if (history.length > MAX_HISTORY_SIZE) {
-      history.splice(MAX_HISTORY_SIZE);
+      // if we"ve hit the history limit then splice any extras from the end
+      if (history.length > MAX_HISTORY_SIZE) {
+        history.splice(MAX_HISTORY_SIZE);
+      }
+
+      setLocalStorageHistory(history);
+
+      setState({
+        history,
+      });
     }
-
-    setLocalStorageHistory(history);
 
     setState({
       response,
-      history,
       loading: false,
     });
   },
