@@ -5,6 +5,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import TextField from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
 import React from "react";
 import _ from "lodash";
 import Button from "@material-ui/core/Button";
@@ -15,6 +16,7 @@ import useApplicationState from "../state";
 import HttpMethod from "../types/HttpMethod";
 import ContentType from "../types/ContentType";
 import Tooltip from "@material-ui/core/Tooltip";
+import WrappedAceEditor from "./WrappedAceEditor";
 
 const HTTP_METHODS: HttpMethod[] = [
   {
@@ -73,6 +75,13 @@ const CONTENT_TYPES: ContentType[] = [
   },
 ];
 
+const EDITOR_MODES: Record<string, string> = {
+  "application/json": "json",
+  "text/xml": "xml",
+  "application/xml": "xml",
+  "application/x-www-form-urlencoded": "json",
+};
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -90,6 +99,9 @@ const useStyles = makeStyles((theme) => ({
   },
   monospace: {
     fontFamily: "'Source Code Pro', monospace",
+  },
+  requestBody: {
+    padding: theme.spacing(2),
   },
 }));
 
@@ -192,20 +204,21 @@ const RequestFields: React.FC = () => {
           arrow
           title={isRequestBodyAllowed() ? "" : "Request body can only be set for HTTP methods that allow it"}
         >
-          <TextField
-            id="body"
-            label="Request body"
-            fullWidth
-            disabled={!isRequestBodyAllowed()}
-            InputProps={{
-              className: classes.monospace,
-            }}
-            value={state.request.body}
-            onChange={handleFieldChange("body")}
-            multiline
-            rows={10}
-            variant="outlined"
-          />
+          <>
+            <InputLabel>Request body</InputLabel>
+            <div className={classes.requestBody}>
+              <WrappedAceEditor
+                mode={EDITOR_MODES[state.request.contentType]}
+                value={state.request.body}
+                minLines={9}
+                maxLines={20}
+                readOnly={false}
+                onChange={(value: string) => {
+                  actions.updateRequestValues("body", value);
+                }}
+              />
+            </div>
+          </>
         </Tooltip>
       </Grid>
 
