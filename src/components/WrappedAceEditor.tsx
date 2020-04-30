@@ -9,7 +9,14 @@ import "ace-builds/src-noconflict/theme-tomorrow_night";
 import "ace-builds/src-noconflict/theme-tomorrow";
 import useApplicationState from "../state";
 
-const WrappedAceEditor: React.FC<{ mode: string; value: string }> = ({ mode, value }) => {
+const WrappedAceEditor: React.FC<{
+  mode: string;
+  value: string;
+  readOnly: boolean;
+  onChange?: any;
+  minLines?: number;
+  maxLines?: number;
+}> = ({ mode, value, readOnly, onChange, minLines, maxLines }) => {
   const [state] = useApplicationState();
 
   return (
@@ -18,10 +25,11 @@ const WrappedAceEditor: React.FC<{ mode: string; value: string }> = ({ mode, val
       theme={state.theme === "dark" ? "tomorrow_night" : "tomorrow"}
       fontSize={16}
       width="100%"
-      maxLines={10000}
-      readOnly
+      minLines={minLines ? minLines : 1}
+      maxLines={maxLines ? maxLines : 10000}
+      readOnly={readOnly}
+      highlightActiveLine={readOnly ? false : true}
       wrapEnabled
-      highlightActiveLine={false}
       showGutter={true}
       value={value}
       editorProps={{ $blockScrolling: true }}
@@ -42,6 +50,7 @@ const WrappedAceEditor: React.FC<{ mode: string; value: string }> = ({ mode, val
       style={{
         padding: "8px",
       }}
+      onChange={onChange ? onChange : () => {}}
     />
   );
 };

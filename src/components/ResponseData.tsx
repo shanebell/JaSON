@@ -62,6 +62,7 @@ const ResponseData: React.FC<{ response: HttpResponse; formatted?: boolean }> = 
     <WrappedAceEditor
       mode={formatted ? config.mode : "text"}
       value={formatted ? formatResponse(response, config.parser) : response.responseText}
+      readOnly
     />
   );
 };
