@@ -10,10 +10,19 @@ export default interface HttpRequest {
   headers: HttpHeader[];
 }
 
-// prefix request.URL with "http://" if it's not already present
+// prefix request.url with "http://" if it's not already there
 const addProtocolIfMissing = (request: HttpRequest) => {
-  if (!_.isEmpty(request.url) && !/^http(s)?:\/\//.test(request.url)) {
-    request.url = `http://${request.url}`;
+  if (!_.isEmpty(request.url)) {
+    try {
+      // this handles common typos like - "http:www.example.com"
+      const url = new URL(request.url);
+      request.url = url.href;
+    } catch (e) {
+      // URL is invalid so assume HTTP
+      if (!/^http(s)?:\/\//.test(request.url)) {
+        request.url = `http://${request.url}`;
+      }
+    }
   }
 };
 
