@@ -7,6 +7,7 @@ import "ace-builds/src-noconflict/mode-text";
 import "ace-builds/src-noconflict/mode-yaml";
 import "ace-builds/src-noconflict/theme-tomorrow_night";
 import "ace-builds/src-noconflict/theme-tomorrow";
+import "ace-builds/src-noconflict/ext-language_tools";
 import useApplicationState from "../state";
 
 const WrappedAceEditor: React.FC<{
@@ -29,6 +30,7 @@ const WrappedAceEditor: React.FC<{
       maxLines={maxLines ? maxLines : 10000}
       readOnly={readOnly}
       highlightActiveLine={readOnly ? false : true}
+      enableBasicAutocompletion={readOnly ? false : true}
       wrapEnabled
       showGutter={true}
       value={value}
