@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "'Source Code Pro', monospace",
   },
   requestBody: {
-    padding: theme.spacing(2),
+    paddingTop: theme.spacing(2),
   },
 }));
 
