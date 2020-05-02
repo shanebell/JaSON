@@ -27,7 +27,7 @@ const defaultRequest: HttpRequest = {
     '  "name2": 10,\n' +
     '  "name3": false\n' +
     "}",
-  headers: [],
+  headers: "Authorization: Bearer: 11111111-1111-1111-1111-111111111111",
 };
 
 const defaultResponse: HttpResponse = {
@@ -48,7 +48,6 @@ interface State {
   requestTab: number;
   responseTab: number;
   theme: string;
-  historyOpen: boolean;
   history: HistoryItem[];
   aboutOpen: boolean;
 }
@@ -127,18 +126,6 @@ const actions = {
     });
   },
 
-  showHistory: () => ({ setState }: StoreApi) => {
-    setState({
-      historyOpen: true,
-    });
-  },
-
-  hideHistory: () => ({ setState }: StoreApi) => {
-    setState({
-      historyOpen: false,
-    });
-  },
-
   clearHistory: () => ({ setState }: StoreApi) => {
     const history: HistoryItem[] = [];
     setLocalStorageHistory(history);
@@ -156,7 +143,7 @@ const actions = {
         body: historyItem.body,
         headers: historyItem.headers,
       },
-      historyOpen: false,
+      response: defaultResponse,
     });
   },
 
@@ -182,7 +169,7 @@ const actions = {
   },
 };
 
-const Store = createStore<State, typeof actions>({
+const store = createStore<State, typeof actions>({
   initialState: {
     request: defaultRequest,
     response: defaultResponse,
@@ -190,13 +177,30 @@ const Store = createStore<State, typeof actions>({
     loading: false,
     requestTab: 0,
     responseTab: 0,
-    historyOpen: false,
     history: getLocalStorageHistory(),
     aboutOpen: false,
   },
   actions,
 });
 
-const useApplicationState = createHook(Store);
+const useApplicationState = createHook(store);
 
-export default useApplicationState;
+const useHistory = createHook(store, {
+  selector: (state: State) => {
+    return state.history;
+  },
+});
+
+const useTheme = createHook(store, {
+  selector: (state: State) => {
+    return state.theme;
+  },
+});
+
+const useLoading = createHook(store, {
+  selector: (state: State) => {
+    return state.loading;
+  },
+});
+
+export { useApplicationState, useHistory, useTheme, useLoading };

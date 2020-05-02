@@ -6,7 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import React from "react";
 import StatusCode from "./StatusCode";
 import TabPanel from "./TabPanel";
-import useApplicationState from "../state";
+import { useApplicationState } from "../state";
 import ResponseTime from "./ResponseTime";
 import ResponseData from "./ResponseData";
 import ResponseHeaders from "./ResponseHeaders";
@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(2),
     marginTop: theme.spacing(1),
   },
+  grid: {
+    position: "relative",
+  },
 }));
 
 const ResponseFields: React.FC = () => {
@@ -31,7 +34,7 @@ const ResponseFields: React.FC = () => {
   };
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} className={classes.grid}>
       <Grid item xs={12}>
         <div className={classes.chips}>
           <StatusCode status={state.response.status} />
@@ -44,28 +47,28 @@ const ResponseFields: React.FC = () => {
           onChange={handleTabChange}
           aria-label="Response details"
         >
-          <Tab label="Response" />
+          <Tab label="Response data" />
           <Tab label="Raw response" />
-          <Tab label="Headers" />
+          <Tab label="Response headers" />
         </Tabs>
 
         {/* FORMATTED RESPONSE */}
         <TabPanel isActive={state.responseTab === 0 && state.response.data}>
-          <Paper variant="outlined">
+          <Paper square variant="outlined">
             <ResponseData response={state.response} />
           </Paper>
         </TabPanel>
 
         {/* RAW RESPONSE */}
         <TabPanel isActive={state.responseTab === 1 && state.response.data}>
-          <Paper variant="outlined">
+          <Paper square variant="outlined">
             <ResponseData response={state.response} formatted={false} />
           </Paper>
         </TabPanel>
 
         {/* RESPONSE HEADERS */}
         <TabPanel isActive={state.responseTab === 2 && state.response.data}>
-          <Paper variant="outlined">
+          <Paper square variant="outlined">
             <ResponseHeaders headers={state.response.headers} />
           </Paper>
         </TabPanel>
