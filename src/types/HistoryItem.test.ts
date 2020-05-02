@@ -6,7 +6,7 @@ describe("toHistoryItem", () => {
     const request: HttpRequest = {
       body: '{ "name": "value" }',
       contentType: "application/json",
-      headers: [{ name: "header1", value: "value1" }],
+      headers: "header1: value1\n header2:  value2 ",
       method: "GET",
       url: "https://www.example.com/path/to/resource?param1=value1&param2=value2#123",
     };

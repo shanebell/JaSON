@@ -6,7 +6,7 @@ import HttpResponse from "../types/HttpResponse";
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(2),
-    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(2),
     color: theme.palette.text.secondary,
     borderColor: theme.palette.text.secondary,
   },

@@ -5,7 +5,6 @@ import { ThemeProvider } from "@material-ui/styles";
 import React from "react";
 import "typeface-source-code-pro";
 import "typeface-roboto";
-import Loading from "./Loading";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Navigation from "./Navigation";
 import RequestFields from "./RequestFields";
@@ -13,14 +12,29 @@ import ResponseFields from "./ResponseFields";
 import ThemeDebug from "./ThemeDebug";
 import config from "../config";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
-import useApplicationState from "../state";
+import { useTheme } from "../state";
+import { Grid } from "@material-ui/core";
+import HistoryList from "./HistoryList";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    paddingTop: theme.spacing(2),
+    paddingTop: 64 + theme.spacing(2),
+    height: "100%",
   },
   divider: {
-    margin: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+  gridContainer: {
+    height: "100%",
+  },
+  gridColumnLeft: {
+    height: "100%",
+    overflowY: "scroll",
+  },
+  gridColumnRight: {
+    height: "100%",
+    overflowY: "scroll",
   },
 }));
 
@@ -55,22 +69,28 @@ consoleMessage();
 
 const App = () => {
   const classes = useStyles();
-  const [state] = useApplicationState();
+  const [theme] = useTheme();
 
   const muiTheme = createMuiTheme({
     spacing: 4,
-    palette: palette[state.theme],
+    palette: palette[theme],
   });
 
   return (
     <ThemeProvider theme={muiTheme}>
       <CssBaseline />
       <Navigation />
-      <Loading />
       <Container maxWidth={false} className={classes.container}>
-        <RequestFields />
-        <Divider className={classes.divider} />
-        <ResponseFields />
+        <Grid container spacing={4} className={classes.gridContainer}>
+          <Grid item xs={8} xl={9} className={classes.gridColumnLeft}>
+            <RequestFields />
+            <Divider className={classes.divider} />
+            <ResponseFields />
+          </Grid>
+          <Grid item xs={4} xl={3} className={classes.gridColumnRight}>
+            <HistoryList />
+          </Grid>
+        </Grid>
       </Container>
       <ThemeDebug />
     </ThemeProvider>

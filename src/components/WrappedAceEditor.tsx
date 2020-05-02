@@ -5,10 +5,11 @@ import "ace-builds/src-noconflict/mode-html";
 import "ace-builds/src-noconflict/mode-xml";
 import "ace-builds/src-noconflict/mode-text";
 import "ace-builds/src-noconflict/mode-yaml";
+import "ace-builds/src-noconflict/mode-properties";
 import "ace-builds/src-noconflict/theme-tomorrow_night";
 import "ace-builds/src-noconflict/theme-tomorrow";
 import "ace-builds/src-noconflict/ext-language_tools";
-import useApplicationState from "../state";
+import { useApplicationState } from "../state";
 
 const WrappedAceEditor: React.FC<{
   mode: string;
@@ -29,7 +30,7 @@ const WrappedAceEditor: React.FC<{
       minLines={minLines ? minLines : 1}
       maxLines={maxLines ? maxLines : 10000}
       readOnly={readOnly}
-      highlightActiveLine={readOnly ? false : true}
+      highlightActiveLine={false}
       enableBasicAutocompletion={readOnly ? false : true}
       wrapEnabled
       showGutter={true}
@@ -37,6 +38,7 @@ const WrappedAceEditor: React.FC<{
       editorProps={{ $blockScrolling: true }}
       setOptions={{
         useWorker: false,
+        fixedWidthGutter: true,
         showLineNumbers: false,
         showPrintMargin: false,
         highlightSelectedWord: false,

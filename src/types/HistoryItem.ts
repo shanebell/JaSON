@@ -1,4 +1,3 @@
-import HttpHeader from "./HttpHeader";
 import { Method } from "axios";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
@@ -13,7 +12,7 @@ export default interface HistoryItem {
   host: string;
   date: string;
   body: string;
-  headers: HttpHeader[];
+  headers: string;
 
   // TODO
   // favourite: boolean

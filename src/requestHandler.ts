@@ -1,6 +1,6 @@
 import _ from "lodash";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import HttpRequest, { addProtocolIfMissing } from "./types/HttpRequest";
+import HttpRequest, { processHeaders, sanitizeUrl } from "./types/HttpRequest";
 import HttpResponse, { toHttpResponse } from "./types/HttpResponse";
 
 const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosResponse> => {
@@ -12,22 +12,17 @@ const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosRespon
 };
 
 export const sendRequest = async (request: HttpRequest): Promise<HttpResponse> => {
-  addProtocolIfMissing(request);
-
   const config: AxiosRequestConfig = {
-    url: request.url,
+    url: sanitizeUrl(request.url),
     method: request.method,
     headers: {
       "Content-Type": request.contentType,
     },
   };
 
-  _.forEach(request.headers, (header) => {
-    const name = _.trim(header.name);
-    const value = _.trim(header.value);
-    if (!_.isEmpty(name) && !_.isEmpty(value)) {
-      config.headers[name] = value;
-    }
+  const headers = processHeaders(request.headers);
+  _.forEach(headers, (header) => {
+    config.headers[header.name] = header.value;
   });
 
   if (!_.isEmpty(request.body)) {

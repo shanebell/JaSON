@@ -1,6 +1,6 @@
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { makeStyles } from "@material-ui/core/styles";
-import useApplicationState from "../state";
+import { useLoading } from "../state";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -11,9 +11,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Loading: React.FC = () => {
   const classes = useStyles();
-  const [state] = useApplicationState();
+  const [loading] = useLoading();
 
-  return state.loading ? <LinearProgress className={classes.progress} /> : <div className={classes.progress} />;
+  return loading ? <LinearProgress className={classes.progress} /> : <div className={classes.progress} />;
 };
 
 export default Loading;

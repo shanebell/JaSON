@@ -2,20 +2,17 @@ import Grid from "@material-ui/core/Grid";
 import SendIcon from "@material-ui/icons/Send";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import MenuItem from "@material-ui/core/MenuItem";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
+import Tooltip from "@material-ui/core/Tooltip";
+import Paper from "@material-ui/core/Paper";
 import React from "react";
 import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import RequestHeaders from "./RequestHeaders";
-import TabPanel from "./TabPanel";
-import useApplicationState from "../state";
+import { useApplicationState } from "../state";
 import HttpMethod from "../types/HttpMethod";
 import ContentType from "../types/ContentType";
-import Tooltip from "@material-ui/core/Tooltip";
 import WrappedAceEditor from "./WrappedAceEditor";
 
 const HTTP_METHODS: HttpMethod[] = [
@@ -100,136 +97,137 @@ const useStyles = makeStyles((theme) => ({
   monospace: {
     fontFamily: "'Source Code Pro', monospace",
   },
-  requestBody: {
-    paddingTop: theme.spacing(2),
+  label: {
+    marginBottom: theme.spacing(2),
   },
 }));
 
 const RequestFields: React.FC = () => {
   const classes = useStyles();
-  const [state, actions] = useApplicationState();
-
-  const handleTabChange = (event: any, newValue: number) => {
-    actions.setRequestTab(newValue);
-  };
+  const [{ request, loading }, { updateRequestValues, send, reset }] = useApplicationState();
 
   const isRequestBodyAllowed = () => {
-    return _.find(HTTP_METHODS, { value: state.request.method })?.bodyAllowed || false;
+    return _.find(HTTP_METHODS, { value: request.method })?.bodyAllowed || false;
   };
 
   const handleFieldChange = (name: string) => (event: any) => {
-    actions.updateRequestValues(name, event.target.value);
+    updateRequestValues(name, event.target.value);
   };
 
-  const handleKeyDown = (event: any) => {
+  const handleKeyDown = async (event: any) => {
     if (event.key === "Enter") {
-      actions.send();
+      await send();
     }
   };
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={4}>
-        <Tabs value={state.requestTab} onChange={handleTabChange} aria-label="Request details" className={classes.tabs}>
-          <Tab label="HTTP request" />
-          <Tab label="Headers" />
-        </Tabs>
-        <TabPanel isActive={state.requestTab === 0}>
-          <TextField
-            id="url"
-            label="Url"
-            margin="dense"
-            required
-            fullWidth
-            InputProps={{
-              className: classes.monospace,
-            }}
-            inputProps={{
-              maxLength: 1024,
-            }}
-            onKeyDown={handleKeyDown}
-            value={state.request.url}
-            autoFocus
-            onChange={handleFieldChange("url")}
-          />
-
-          <TextField
-            id="method"
-            label="Method"
-            margin="dense"
-            select
-            required
-            fullWidth
-            InputProps={{
-              className: classes.monospace,
-            }}
-            value={state.request.method}
-            onChange={handleFieldChange("method")}
-          >
-            {HTTP_METHODS.map((method) => (
-              <MenuItem key={method.value} value={method.value} dense>
-                {method.name}
-              </MenuItem>
-            ))}
-          </TextField>
-
-          <TextField
-            id="content-type"
-            label="Content type"
-            margin="dense"
-            select
-            required
-            fullWidth
-            InputProps={{
-              className: classes.monospace,
-            }}
-            value={state.request.contentType}
-            onChange={handleFieldChange("contentType")}
-          >
-            {CONTENT_TYPES.map((contentType) => (
-              <MenuItem key={contentType.value} value={contentType.value} dense>
-                {contentType.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        </TabPanel>
-
-        <TabPanel isActive={state.requestTab === 1}>
-          <RequestHeaders />
-        </TabPanel>
+      <Grid item xs={12} xl={6}>
+        <TextField
+          id="url"
+          label="Url"
+          margin="dense"
+          required
+          fullWidth
+          InputProps={{
+            className: classes.monospace,
+          }}
+          inputProps={{
+            maxLength: 1024,
+          }}
+          onKeyDown={handleKeyDown}
+          value={request.url}
+          autoFocus
+          onChange={handleFieldChange("url")}
+        />
+      </Grid>
+      <Grid item xs={6} xl={3}>
+        <TextField
+          id="method"
+          label="Method"
+          margin="dense"
+          select
+          required
+          fullWidth
+          InputProps={{
+            className: classes.monospace,
+          }}
+          value={request.method}
+          onChange={handleFieldChange("method")}
+        >
+          {HTTP_METHODS.map((method) => (
+            <MenuItem key={method.value} value={method.value} dense>
+              {method.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Grid>
+      <Grid item xs={6} xl={3}>
+        <TextField
+          id="content-type"
+          label="Content type"
+          margin="dense"
+          select
+          required
+          fullWidth
+          InputProps={{
+            className: classes.monospace,
+          }}
+          value={request.contentType}
+          onChange={handleFieldChange("contentType")}
+        >
+          {CONTENT_TYPES.map((contentType) => (
+            <MenuItem key={contentType.value} value={contentType.value} dense>
+              {contentType.name}
+            </MenuItem>
+          ))}
+        </TextField>
       </Grid>
 
-      <Grid item xs={8}>
-        <Tooltip
-          arrow
-          title={isRequestBodyAllowed() ? "" : "Request body can only be set for HTTP methods that allow it"}
-        >
-          <>
-            <InputLabel>Request body</InputLabel>
-            <div className={classes.requestBody}>
-              <WrappedAceEditor
-                mode={EDITOR_MODES[state.request.contentType]}
-                value={state.request.body}
-                minLines={9}
-                maxLines={20}
-                readOnly={false}
-                onChange={(value: string) => {
-                  actions.updateRequestValues("body", value);
-                }}
-              />
-            </div>
-          </>
+      <Grid item xs={12}>
+        <InputLabel className={classes.label}>Request headers</InputLabel>
+        <Tooltip title="One header per line. eg: Content-Type: application/json">
+          <Paper square variant="outlined">
+            <WrappedAceEditor
+              mode="properties"
+              value={request.headers}
+              minLines={5}
+              maxLines={10}
+              readOnly={false}
+              onChange={(value: string) => {
+                updateRequestValues("headers", value);
+              }}
+            />
+          </Paper>
         </Tooltip>
       </Grid>
 
+      {isRequestBodyAllowed() && (
+        <Grid item xs={12}>
+          <InputLabel className={classes.label}>Request body</InputLabel>
+          <Paper square variant="outlined">
+            <WrappedAceEditor
+              mode={EDITOR_MODES[request.contentType]}
+              value={request.body}
+              minLines={10}
+              maxLines={20}
+              readOnly={false}
+              onChange={(value: string) => {
+                updateRequestValues("body", value);
+              }}
+            />
+          </Paper>
+        </Grid>
+      )}
+
       <Grid item xs={12} className={classes.actions}>
         <Button
-          variant="outlined"
+          variant="contained"
           size="small"
           color="primary"
-          disabled={state.loading}
+          disabled={loading}
           className={classes.button}
-          onClick={actions.send}
+          onClick={send}
           endIcon={<SendIcon />}
         >
           Send request
@@ -237,9 +235,10 @@ const RequestFields: React.FC = () => {
         <Button
           variant="outlined"
           size="small"
-          disabled={state.loading}
+          color="default"
+          disabled={loading}
           className={classes.button}
-          onClick={actions.reset}
+          onClick={reset}
           endIcon={<RefreshIcon />}
         >
           Reset fields
