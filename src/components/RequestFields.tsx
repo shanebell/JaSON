@@ -9,11 +9,12 @@ import Paper from "@material-ui/core/Paper";
 import React from "react";
 import _ from "lodash";
 import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useApplicationState } from "../state";
 import HttpMethod from "../types/HttpMethod";
 import ContentType from "../types/ContentType";
 import WrappedAceEditor from "./WrappedAceEditor";
+import Typography from "@material-ui/core/Typography";
 
 const HTTP_METHODS: HttpMethod[] = [
   {
@@ -79,7 +80,7 @@ const EDITOR_MODES: Record<string, string> = {
   "application/x-www-form-urlencoded": "json",
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     display: "flex",
@@ -99,6 +100,16 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     marginBottom: theme.spacing(2),
+  },
+  tooltip: {
+    maxWidth: 500,
+  },
+  tooltipCode: {
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: "bold",
+    margin: 0,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
 }));
 
@@ -186,7 +197,18 @@ const RequestFields: React.FC = () => {
 
       <Grid item xs={12}>
         <InputLabel className={classes.label}>Request headers</InputLabel>
-        <Tooltip title="One header per line. eg: Content-Type: application/json">
+        <Tooltip
+          arrow
+          classes={{ tooltip: classes.tooltip }}
+          title={
+            <>
+              <Typography variant="caption">One header per line. Name and value separated by colon. eg:</Typography>
+              <pre className={classes.tooltipCode}>Content-Type: application/json</pre>
+            </>
+          }
+          enterDelay={500}
+          enterNextDelay={500}
+        >
           <Paper square variant="outlined">
             <WrappedAceEditor
               mode="properties"
