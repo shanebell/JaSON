@@ -21,12 +21,7 @@ const defaultRequest: HttpRequest = {
   url: "https://httpbin.org/post",
   method: "POST",
   contentType: "application/json",
-  body:
-    "{ \n" +
-    '  "name1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lacinia non purus a varius. Donec bibendum varius purus non volutpat. Nunc vel congue tortor, nec mollis arcu. Sed varius ante sed dictum pellentesque. Maecenas vel neque interdum, gravida elit et, aliquet dolor.",\n' +
-    '  "name2": 10,\n' +
-    '  "name3": false\n' +
-    "}",
+  body: "{ \n" + '  "name1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",\n' + "}",
   headers: "Authorization: Bearer 11111111-1111-1111-1111-111111111111",
 };
 
@@ -48,7 +43,6 @@ interface State {
   responseTab: number;
   theme: string;
   history: HistoryItem[];
-  aboutOpen: boolean;
 }
 
 type StoreApi = StoreActionApi<State>;
@@ -147,18 +141,6 @@ const actions = {
       history,
     });
   },
-
-  showAbout: () => ({ setState }: StoreApi) => {
-    setState({
-      aboutOpen: true,
-    });
-  },
-
-  hideAbout: () => ({ setState }: StoreApi) => {
-    setState({
-      aboutOpen: false,
-    });
-  },
 };
 
 const store = createStore<State, typeof actions>({
@@ -169,12 +151,9 @@ const store = createStore<State, typeof actions>({
     loading: false,
     responseTab: 0,
     history: getLocalStorageHistory(),
-    aboutOpen: false,
   },
   actions,
 });
-
-const useApplicationState = createHook(store);
 
 const useHistory = createHook(store, {
   selector: (state: State) => {
@@ -209,4 +188,4 @@ const useResponse = createHook(store, {
   },
 });
 
-export { useApplicationState, useRequest, useResponse, useHistory, useTheme, useLoading };
+export { useRequest, useResponse, useHistory, useTheme, useLoading };

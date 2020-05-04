@@ -18,8 +18,7 @@ const WrappedAceEditor: React.FC<{
   onChange?: any;
   minLines?: number;
   maxLines?: number;
-  showGutter?: boolean;
-}> = ({ mode, value, readOnly, onChange = () => {}, minLines = 1, maxLines = 5000, showGutter = true }) => {
+}> = ({ mode, value, readOnly, onChange = () => {}, minLines = 5, maxLines = 40 }) => {
   const [theme] = useTheme();
 
   return (
@@ -34,7 +33,7 @@ const WrappedAceEditor: React.FC<{
       highlightActiveLine={false}
       enableBasicAutocompletion={readOnly ? false : true}
       wrapEnabled
-      showGutter={showGutter}
+      showGutter={true}
       value={value}
       editorProps={{ $blockScrolling: true }}
       setOptions={{

@@ -227,7 +227,6 @@ const RequestFields: React.FC = () => {
               minLines={3}
               maxLines={10}
               readOnly={false}
-              showGutter={false}
               onChange={(value: string) => {
                 updateRequestValues("headers", value);
               }}
