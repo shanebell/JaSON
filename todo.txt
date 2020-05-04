@@ -4,8 +4,6 @@ NEXT:
     - remove host from from of URL
   - Limit the size of a request
 
-  react-window (to handle large lists - use this for history)
-  https://github.com/bvaughn/react-window
 
 
 TODO
@@ -28,6 +26,8 @@ TODO
 - Update screenshots
 - Update Chrome Web Store description - specifically mention cookies
 - Update readme.md
+- react-window (to handle large lists - use this for history)
+  - https://github.com/bvaughn/react-window
 
 BUGS:
 
@@ -79,4 +79,35 @@ if (process.env.NODE_ENV === "production") {
   chrome.storage.local.set({ "jason-history": history }, () => {
     console.log("jason-history is set...");
   });
+}
+
+
+if (maxLength) {
+  const doc = editor.session.doc;
+  doc.applyAnyDelta = doc.applyAnyDelta || doc.applyDelta;
+  doc.applyDelta = function (delta: any) {
+    const joinedLines = delta.lines.join("\n");
+    const currentLength = this.getValue().length;
+    const newLength = currentLength + joinedLines.length;
+    if (delta.action === "insert" && newLength > maxLength) {
+      const pasteLength = maxLength - currentLength;
+      if (pasteLength > 0) {
+        delta.lines = joinedLines.substr(0, pasteLength).split("\n");
+        if (delta.lines.length === 1 && delta.start.row === delta.end.row) {
+          delta.end = {
+            row: delta.start.row,
+            column: delta.start.column + pasteLength,
+          };
+        } else {
+          delta.end = {
+            row: delta.start.row + delta.lines.length,
+            column: delta.lines[delta.lines.length - 1].length,
+          };
+        }
+      } else {
+        return false;
+      }
+    }
+    return this.applyAnyDelta(delta);
+  };
 }

@@ -7,10 +7,10 @@ import LightThemeIcon from "@material-ui/icons/Brightness7";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
+import React, { useState } from "react";
 import About from "./About";
 import logo from "../images/jason.png";
-import { useApplicationState } from "../state";
+import { useTheme } from "../state";
 import Loading from "./Loading";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +28,16 @@ const useStyles = makeStyles((theme) => ({
 
 const Navigation: React.FC = () => {
   const classes = useStyles();
-  const [{ theme, aboutOpen }, { toggleTheme, showAbout, hideAbout }] = useApplicationState();
+  const [aboutOpen, setAboutOpen] = useState<boolean>(false);
+  const [theme, { toggleTheme }] = useTheme();
+
+  const showAbout = () => {
+    setAboutOpen(true);
+  };
+
+  const hideAbout = () => {
+    setAboutOpen(false);
+  };
 
   return (
     <AppBar position="fixed" color="inherit">
