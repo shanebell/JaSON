@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
   },
   actions: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
   },
   button: {
     marginRight: theme.spacing(2),
@@ -110,6 +110,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 0,
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
+  },
+  gridItem: {
+    paddingTop: "0 !important",
+  },
+  textField: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -134,8 +141,9 @@ const RequestFields: React.FC = () => {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12} xl={6}>
+      <Grid item xs={12} xl={6} className={classes.gridItem}>
         <TextField
+          className={classes.textField}
           id="url"
           label="Url"
           margin="dense"
@@ -153,8 +161,9 @@ const RequestFields: React.FC = () => {
           onChange={handleFieldChange("url")}
         />
       </Grid>
-      <Grid item xs={6} xl={3}>
+      <Grid item xs={6} xl={3} className={classes.gridItem}>
         <TextField
+          className={classes.textField}
           id="method"
           label="Method"
           margin="dense"
@@ -174,8 +183,9 @@ const RequestFields: React.FC = () => {
           ))}
         </TextField>
       </Grid>
-      <Grid item xs={6} xl={3}>
+      <Grid item xs={6} xl={3} className={classes.gridItem}>
         <TextField
+          className={classes.textField}
           id="content-type"
           label="Content type"
           margin="dense"
@@ -196,7 +206,7 @@ const RequestFields: React.FC = () => {
         </TextField>
       </Grid>
 
-      <Grid item xs={12}>
+      <Grid item xs={12} className={classes.gridItem}>
         <InputLabel className={classes.label}>Request headers</InputLabel>
         <Tooltip
           arrow
@@ -214,9 +224,10 @@ const RequestFields: React.FC = () => {
             <WrappedAceEditor
               mode="properties"
               value={request.headers}
-              minLines={5}
+              minLines={3}
               maxLines={10}
               readOnly={false}
+              showGutter={false}
               onChange={(value: string) => {
                 updateRequestValues("headers", value);
               }}
@@ -226,7 +237,7 @@ const RequestFields: React.FC = () => {
       </Grid>
 
       {isRequestBodyAllowed() && (
-        <Grid item xs={12}>
+        <Grid item xs={12} className={classes.gridItem}>
           <InputLabel className={classes.label}>Request body</InputLabel>
           <Paper square variant="outlined">
             <WrappedAceEditor
@@ -243,7 +254,7 @@ const RequestFields: React.FC = () => {
         </Grid>
       )}
 
-      <Grid item xs={12} className={classes.actions}>
+      <Grid item xs={12} className={`${classes.actions} ${classes.gridItem}`}>
         <Button
           variant="contained"
           size="small"

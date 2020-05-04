@@ -66,3 +66,17 @@ const colorSchemes = [
   // { primary: "#ff6363", secondary: "#ffbd69" },
   // { primary: "#ffa34d", secondary: "#f67575" },
 ];
+
+
+
+if (process.env.NODE_ENV === "production") {
+  chrome.storage.local.get("jason-history", (result: any) => {
+    console.log("result: %o", result);
+  });
+}
+
+if (process.env.NODE_ENV === "production") {
+  chrome.storage.local.set({ "jason-history": history }, () => {
+    console.log("jason-history is set...");
+  });
+}
