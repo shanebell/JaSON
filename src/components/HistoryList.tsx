@@ -1,4 +1,4 @@
-import { Divider, Menu, MenuItem } from "@material-ui/core";
+import { Divider, Menu, MenuItem, Theme } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -18,7 +18,7 @@ import HistoryItem from "../types/HistoryItem";
 import FormControl from "@material-ui/core/FormControl";
 import { useHistory } from "../state";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   search: {
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "90%",
     overflow: "hidden",
     textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   },
   small: {
     width: theme.spacing(8),
