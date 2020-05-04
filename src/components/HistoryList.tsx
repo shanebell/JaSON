@@ -56,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
   },
+  tooltip: {
+    maxWidth: 500,
+  },
 }));
 
 const HistoryList: React.FC = () => {
@@ -130,7 +133,14 @@ const HistoryList: React.FC = () => {
         {filteredHistory.map((historyItem) => (
           <div key={historyItem.id}>
             <ListItem dense button alignItems="flex-start" onClick={() => selectHistoryItem(historyItem)}>
-              <Tooltip arrow enterDelay={250} title={historyItem.url} aria-label={historyItem.url}>
+              <Tooltip
+                arrow
+                enterDelay={250}
+                enterNextDelay={250}
+                classes={{ tooltip: classes.tooltip }}
+                title={<Typography variant="caption">{historyItem.url}</Typography>}
+                aria-label={historyItem.url}
+              >
                 <ListItemText
                   primary={<div className={classes.trim}>{historyItem.path}</div>}
                   secondary={
