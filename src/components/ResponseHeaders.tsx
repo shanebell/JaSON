@@ -11,7 +11,7 @@ const toString = (headers: HttpHeader[]): string => {
 };
 
 const ResponseHeaders: React.FC<{ headers: HttpHeader[] }> = ({ headers }) => {
-  return <WrappedAceEditor mode="yaml" value={toString(headers)} readOnly />;
+  return <WrappedAceEditor mode="yaml" value={toString(headers)} readOnly minLines={1} maxLines={100} />;
 };
 
 export default ResponseHeaders;

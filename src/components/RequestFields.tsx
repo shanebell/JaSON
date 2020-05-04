@@ -243,7 +243,7 @@ const RequestFields: React.FC = () => {
               mode={EDITOR_MODES[request.contentType]}
               value={request.body}
               minLines={10}
-              maxLines={20}
+              maxLines={5000}
               readOnly={false}
               onChange={(value: string) => {
                 updateRequestValues("body", value);

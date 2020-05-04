@@ -1,9 +1,8 @@
 NEXT:
+- Limit the size of a request
 - Make history work
   - show url params, hash in url
     - remove host from from of URL
-  - Limit the size of a request
-
 
 
 TODO
