@@ -9,7 +9,7 @@ import "ace-builds/src-noconflict/mode-properties";
 import "ace-builds/src-noconflict/theme-tomorrow_night";
 import "ace-builds/src-noconflict/theme-tomorrow";
 import "ace-builds/src-noconflict/ext-language_tools";
-import { useApplicationState } from "../state";
+import { useTheme } from "../state";
 
 const WrappedAceEditor: React.FC<{
   mode: string;
@@ -19,12 +19,12 @@ const WrappedAceEditor: React.FC<{
   minLines?: number;
   maxLines?: number;
 }> = ({ mode, value, readOnly, onChange, minLines, maxLines }) => {
-  const [state] = useApplicationState();
+  const [theme] = useTheme();
 
   return (
     <AceEditor
       mode={mode}
-      theme={state.theme === "dark" ? "tomorrow_night" : "tomorrow"}
+      theme={theme === "dark" ? "tomorrow_night" : "tomorrow"}
       fontSize={16}
       width="100%"
       minLines={minLines ? minLines : 1}
