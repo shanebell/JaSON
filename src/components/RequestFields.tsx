@@ -10,7 +10,7 @@ import React from "react";
 import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { useApplicationState } from "../state";
+import { useLoading, useRequest } from "../state";
 import HttpMethod from "../types/HttpMethod";
 import ContentType from "../types/ContentType";
 import WrappedAceEditor from "./WrappedAceEditor";
@@ -115,7 +115,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const RequestFields: React.FC = () => {
   const classes = useStyles();
-  const [{ request, loading }, { updateRequestValues, send, reset }] = useApplicationState();
+  const [request, { updateRequestValues, send, reset }] = useRequest();
+  const [loading] = useLoading();
 
   const isRequestBodyAllowed = () => {
     return _.find(HTTP_METHODS, { value: request.method })?.bodyAllowed || false;

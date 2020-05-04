@@ -27,7 +27,7 @@ const defaultRequest: HttpRequest = {
     '  "name2": 10,\n' +
     '  "name3": false\n' +
     "}",
-  headers: "Authorization: Bearer: 11111111-1111-1111-1111-111111111111",
+  headers: "Authorization: Bearer 11111111-1111-1111-1111-111111111111",
 };
 
 const defaultResponse: HttpResponse = {
@@ -45,7 +45,6 @@ interface State {
   request: HttpRequest;
   response: HttpResponse;
   loading: boolean;
-  requestTab: number;
   responseTab: number;
   theme: string;
   history: HistoryItem[];
@@ -64,12 +63,6 @@ const actions = {
     });
   },
 
-  setRequestTab: (tab: number) => ({ setState }: StoreApi) => {
-    setState({
-      requestTab: tab,
-    });
-  },
-
   setResponseTab: (tab: number) => ({ setState }: StoreApi) => {
     setState({
       responseTab: tab,
@@ -80,7 +73,6 @@ const actions = {
     setState({
       request: defaultRequest,
       response: defaultResponse,
-      requestTab: 0,
       responseTab: 0,
     });
   },
@@ -175,7 +167,6 @@ const store = createStore<State, typeof actions>({
     response: defaultResponse,
     theme: defaultTheme,
     loading: false,
-    requestTab: 0,
     responseTab: 0,
     history: getLocalStorageHistory(),
     aboutOpen: false,
@@ -203,4 +194,19 @@ const useLoading = createHook(store, {
   },
 });
 
-export { useApplicationState, useHistory, useTheme, useLoading };
+const useRequest = createHook(store, {
+  selector: (state: State) => {
+    return state.request;
+  },
+});
+
+const useResponse = createHook(store, {
+  selector: (state: State) => {
+    return {
+      response: state.response,
+      responseTab: state.responseTab,
+    };
+  },
+});
+
+export { useApplicationState, useRequest, useResponse, useHistory, useTheme, useLoading };
