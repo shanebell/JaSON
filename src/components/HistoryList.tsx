@@ -15,7 +15,6 @@ import { Delete, Favorite, FavoriteBorder, MoreVert, Search } from "@material-ui
 import React, { useState } from "react";
 import _ from "lodash";
 import HistoryItem from "../types/HistoryItem";
-import FormControl from "@material-ui/core/FormControl";
 import { useHistory } from "../state";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -98,34 +97,31 @@ const HistoryList: React.FC = () => {
   return (
     <>
       {/* HISTORY ACTIONS */}
-      <FormControl fullWidth className={classes.search}>
-        <TextField
-          label="Search request history"
-          InputProps={{
-            className: classes.searchInput,
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search className={classes.searchIcon} />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={showMenu}>
-                  <MoreVert fontSize="small" />
-                </IconButton>
-                <Menu anchorEl={anchorEl} open={open} onClose={hideMenu}>
-                  <MenuItem onClick={clearAll}>Clear all history items</MenuItem>
-                </Menu>
-              </InputAdornment>
-            ),
-          }}
-          inputProps={{
-            padding: "18px",
-          }}
-          value={searchTerm}
-          onChange={handleSearch}
-        />
-      </FormControl>
+      <TextField
+        className={classes.search}
+        label="Search request history"
+        fullWidth
+        InputProps={{
+          className: classes.searchInput,
+          startAdornment: (
+            <InputAdornment position="start">
+              <Search className={classes.searchIcon} />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={showMenu}>
+                <MoreVert fontSize="small" />
+              </IconButton>
+              <Menu anchorEl={anchorEl} open={open} onClose={hideMenu}>
+                <MenuItem onClick={clearAll}>Clear all history items</MenuItem>
+              </Menu>
+            </InputAdornment>
+          ),
+        }}
+        value={searchTerm}
+        onChange={handleSearch}
+      />
 
       {_.isEmpty(filteredHistory) && <div className={classes.noResults}>No results</div>}
 
