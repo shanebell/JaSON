@@ -21,7 +21,7 @@ const defaultRequest: HttpRequest = {
   url: "https://httpbin.org/post",
   method: "POST",
   contentType: "application/json",
-  body: "{ \n" + '  "name1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",\n' + "}",
+  body: '{\n    "name1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",\n}',
   headers: "Authorization: Bearer 11111111-1111-1111-1111-111111111111",
 };
 
