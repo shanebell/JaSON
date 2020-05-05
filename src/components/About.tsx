@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
   },
   img: {
-    width: "128px",
-    height: "128px",
+    width: "200px",
+    height: "200px",
   },
   actions: {
     display: "flex",
