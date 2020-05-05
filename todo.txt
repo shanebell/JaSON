@@ -1,7 +1,4 @@
 NEXT:
-- Make history work
-  - show url params, hash in url
-    - remove host from from of URL
 - Limit the size of a request
 
 Replace localStorage with one of these:

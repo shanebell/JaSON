@@ -1,6 +1,6 @@
 import Container from "@material-ui/core/Container";
 import Divider from "@material-ui/core/Divider";
-import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
+import { createMuiTheme, makeStyles, Theme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import React from "react";
 import "typeface-source-code-pro";
@@ -16,14 +16,13 @@ import { useTheme } from "../state";
 import { Grid } from "@material-ui/core";
 import HistoryList from "./HistoryList";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     paddingTop: 64 + theme.spacing(2),
     height: "100%",
   },
   divider: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+    margin: theme.spacing(2, 2),
   },
   gridContainer: {
     height: "100%",
@@ -31,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   gridColumnLeft: {
     height: "100%",
     overflowY: "scroll",
+    paddingRight: `${theme.spacing(2)}px !important`,
   },
   gridColumnRight: {
     height: "100%",

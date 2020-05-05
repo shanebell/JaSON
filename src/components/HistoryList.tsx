@@ -16,6 +16,7 @@ import React, { useState } from "react";
 import _ from "lodash";
 import HistoryItem from "../types/HistoryItem";
 import { useHistory } from "../state";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 const useStyles = makeStyles((theme: Theme) => ({
   search: {
@@ -46,11 +47,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
-  },
-  small: {
-    width: theme.spacing(8),
-    height: theme.spacing(8),
-    fontSize: theme.spacing(4),
   },
   actions: {
     display: "flex",
@@ -114,7 +110,9 @@ const HistoryList: React.FC = () => {
                 <MoreVert fontSize="small" />
               </IconButton>
               <Menu anchorEl={anchorEl} open={open} onClose={hideMenu}>
-                <MenuItem onClick={clearAll}>Clear all history items</MenuItem>
+                <MenuItem onClick={clearAll}>
+                  <ListItemText>Clear request history</ListItemText>
+                </MenuItem>
               </Menu>
             </InputAdornment>
           ),
