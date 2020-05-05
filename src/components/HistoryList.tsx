@@ -16,7 +16,6 @@ import React, { useState } from "react";
 import _ from "lodash";
 import HistoryItem from "../types/HistoryItem";
 import { useHistory } from "../state";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 const useStyles = makeStyles((theme: Theme) => ({
   search: {
