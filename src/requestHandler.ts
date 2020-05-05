@@ -31,7 +31,6 @@ export const sendRequest = async (request: HttpRequest): Promise<HttpResponse> =
 
   const startTime = Date.now();
   const axiosResponse = await sendAxiosRequest(config);
-  console.log("Response: %s", JSON.stringify(axiosResponse, null, 2));
   const endTime = Date.now();
 
   return toHttpResponse(axiosResponse, startTime, endTime);

@@ -21,5 +21,7 @@
     "512": "jason-256x256.png"
   },
   "permissions": [
+    "http://*/*",
+    "https://*/*",
   ]
 }
