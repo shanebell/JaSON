@@ -22,6 +22,6 @@
   },
   "permissions": [
     "http://*/*",
-    "https://*/*",
+    "https://*/*"
   ]
 }
