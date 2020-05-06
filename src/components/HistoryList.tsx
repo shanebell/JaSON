@@ -12,10 +12,12 @@ import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { Delete, Favorite, FavoriteBorder, MoreVert, Search } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 import HistoryItem from "../types/HistoryItem";
-import { useHistory } from "../state";
+import { useHistoryTimestamp } from "../state";
+import database from "../database";
+import useDebounce from "../useDebounced";
 
 const useStyles = makeStyles((theme: Theme) => ({
   search: {
@@ -58,10 +60,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const HistoryList: React.FC = () => {
   const classes = useStyles();
-  const [history, { clearHistory, selectHistoryItem, removeHistoryItem }] = useHistory();
+
   const [anchorEl, setAnchorEl] = useState(null);
-  const [searchTerm, setSearchTerm] = useState<string>("");
   const open = Boolean(anchorEl);
+
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const debouncedSearchTerm = useDebounce<string>(searchTerm, 100);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [historyTimestamp, { selectHistoryItem }] = useHistoryTimestamp();
 
   const showMenu = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -71,23 +77,44 @@ const HistoryList: React.FC = () => {
     setAnchorEl(null);
   };
 
+  const clearHistory = () => {
+    // TODO move into a history service
+    database.history.limit(100).delete();
+  };
+
+  const removeHistoryItem = (historyItem: HistoryItem) => {
+    // TODO move into a history service
+    database.history.where("id").equals(historyItem.id).delete();
+  };
+
   const clearAll = () => {
     clearHistory();
     hideMenu();
   };
 
-  const handleSearch = (event: any) => {
-    setSearchTerm(event.target.value);
-  };
+  const loadHistory = useCallback((term: string) => {
+    // TODO move into a history service
+    console.log("Searching history with term: %s", term);
+    if (term.length > 0) {
+      database.history
+        .filter((historyItem) => {
+          return (
+            historyItem.url.toLowerCase().includes(term) ||
+            historyItem.method.toLowerCase().includes(term) ||
+            historyItem.body.toLowerCase().includes(term)
+          );
+        })
+        .limit(100)
+        .reverse()
+        .sortBy("date", setHistory);
+    } else {
+      database.history.limit(100).reverse().sortBy("date", setHistory);
+    }
+  }, []);
 
-  const filteredHistory = _.filter(history, (historyItem: HistoryItem) => {
-    const term = searchTerm.trim().toLowerCase();
-    return _.isEmpty(term)
-      ? true
-      : historyItem.url.toLowerCase().includes(term) ||
-          historyItem.method.toLowerCase().includes(term) ||
-          historyItem.body.toLowerCase().includes(term);
-  });
+  useEffect(() => {
+    loadHistory(debouncedSearchTerm);
+  }, [loadHistory, debouncedSearchTerm, historyTimestamp]);
 
   return (
     <>
@@ -117,14 +144,14 @@ const HistoryList: React.FC = () => {
           ),
         }}
         value={searchTerm}
-        onChange={handleSearch}
+        onChange={(event) => setSearchTerm(event.target.value)}
       />
 
-      {_.isEmpty(filteredHistory) && <div className={classes.noResults}>No results</div>}
+      {_.isEmpty(history) && <div className={classes.noResults}>No results</div>}
 
       {/* HISTORY ITEMS */}
       <List dense>
-        {filteredHistory.map((historyItem) => (
+        {history.map((historyItem) => (
           <div key={historyItem.id}>
             <ListItem dense button alignItems="flex-start" onClick={() => selectHistoryItem(historyItem)}>
               <Tooltip

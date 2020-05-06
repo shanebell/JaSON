@@ -8,6 +8,8 @@ Replace localStorage with one of these:
 - https://dexie.org/
 - https://github.com/erikolson186/zangodb
 
+https://github.com/stutrek/dexie-hooks/blob/master/index.ts
+
 - https://developer.chrome.com/extensions/storage
   - requires permission when installing
   - provides sync

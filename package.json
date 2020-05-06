@@ -9,6 +9,7 @@
     "@prettier/plugin-xml": "^0.7.2",
     "ace-builds": "^1.4.9",
     "axios": "^0.19.2",
+    "dexie": "^3.0.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "prettier": "^2.0.4",
