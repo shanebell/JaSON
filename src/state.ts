@@ -3,6 +3,7 @@ import HttpRequest from "./types/HttpRequest";
 import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
 import _ from "lodash";
+import database from "./database";
 import HistoryItem, { toHistoryItem } from "./types/HistoryItem";
 
 const LOCAL_STORAGE_THEME_KEY = "theme";
@@ -43,6 +44,7 @@ interface State {
   responseTab: number;
   theme: string;
   history: HistoryItem[];
+  historyTimestamp: number;
 }
 
 type StoreApi = StoreActionApi<State>;
@@ -82,6 +84,13 @@ const actions = {
 
     if (response.status < 400) {
       const historyItem = toHistoryItem(request);
+
+      console.log("Saving request to history db...");
+      database.history.add(historyItem).then(() => {
+        setState({
+          historyTimestamp: Date.now(),
+        });
+      });
 
       const history: HistoryItem[] = getLocalStorageHistory();
       history.unshift(historyItem);
@@ -151,6 +160,7 @@ const store = createStore<State, typeof actions>({
     loading: false,
     responseTab: 0,
     history: getLocalStorageHistory(),
+    historyTimestamp: Date.now(),
   },
   actions,
 });
@@ -188,4 +198,10 @@ const useResponse = createHook(store, {
   },
 });
 
-export { useRequest, useResponse, useHistory, useTheme, useLoading };
+const useHistoryTimestamp = createHook(store, {
+  selector: (state: State) => {
+    return state.historyTimestamp;
+  },
+});
+
+export { useRequest, useResponse, useHistory, useHistoryTimestamp, useTheme, useLoading };
