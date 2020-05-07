@@ -39,6 +39,8 @@ interface State {
 
 type StoreApi = StoreActionApi<State>;
 
+// private actions, not exposed via actions
+
 const searchHistory = () => ({ setState, getState }: StoreApi) => {
   const searchTerm = getState().searchTerm;
   historyService.search(searchTerm, 100, (results) => {
@@ -55,7 +57,7 @@ const trimHistory = () => ({ dispatch }: StoreApi) => {
 };
 
 const actions = {
-  updateRequestValues: (name: string, value: any) => ({ setState, getState }: StoreApi) => {
+  setRequestValue: (name: string, value: any) => ({ setState, getState }: StoreApi) => {
     setState({
       request: {
         ...getState().request,

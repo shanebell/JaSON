@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const RequestFields: React.FC = () => {
   const classes = useStyles();
-  const [request, { updateRequestValues, send, reset }] = useRequest();
+  const [request, { setRequestValue, send, reset }] = useRequest();
   const [loading] = useLoading();
 
   const isRequestBodyAllowed = () => {
@@ -130,7 +130,7 @@ const RequestFields: React.FC = () => {
   };
 
   const handleFieldChange = (name: string) => (event: any) => {
-    updateRequestValues(name, event.target.value);
+    setRequestValue(name, event.target.value);
   };
 
   const handleKeyDown = async (event: any) => {
@@ -228,7 +228,7 @@ const RequestFields: React.FC = () => {
               maxLines={10}
               readOnly={false}
               onChange={(value: string) => {
-                updateRequestValues("headers", value);
+                setRequestValue("headers", value);
               }}
             />
           </Paper>
@@ -246,7 +246,7 @@ const RequestFields: React.FC = () => {
               maxLines={5000}
               readOnly={false}
               onChange={(value: string) => {
-                updateRequestValues("body", value);
+                setRequestValue("body", value);
               }}
             />
           </Paper>
