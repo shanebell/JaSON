@@ -18,7 +18,8 @@ const WrappedAceEditor: React.FC<{
   onChange?: any;
   minLines?: number;
   maxLines?: number;
-}> = ({ mode, value, readOnly, onChange = () => {}, minLines = 5, maxLines = 40 }) => {
+  maxLength?: number;
+}> = ({ mode, value, readOnly, onChange = () => {}, minLines = 5, maxLines = 40, maxLength = 10_000 }) => {
   const [theme] = useTheme();
 
   return (
@@ -50,6 +51,16 @@ const WrappedAceEditor: React.FC<{
         editor.commands.removeCommand("find");
         editor.container.style.lineHeight = 1.5;
         editor.renderer.updateFontSize();
+        editor.getSession().on("change", () => {
+          const session = editor.getSession();
+          const document = session.getDocument();
+          const value = document.getValue();
+          if (value.length > maxLength) {
+            const cursorPosition = editor.getCursorPosition();
+            session.setValue(value.substring(0, maxLength));
+            editor.moveCursorToPosition(cursorPosition);
+          }
+        });
       }}
       style={{
         padding: "8px",

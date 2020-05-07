@@ -9,11 +9,11 @@ const LOCAL_STORAGE_THEME_KEY = "theme";
 const MAX_HISTORY_SIZE = 500;
 
 const defaultRequest: HttpRequest = {
-  url: "https://httpbin.org/post",
-  method: "POST",
+  url: "https://httpbin.org/json",
+  method: "GET",
   contentType: "application/json",
-  body: '{\n    "name1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."\n}',
-  headers: "Authorization: Bearer 11111111-1111-1111-1111-111111111111",
+  body: "",
+  headers: "",
 };
 
 const defaultResponse: HttpResponse = {
