@@ -4,12 +4,25 @@ import HttpHeader from "./HttpHeader";
 describe("sanitizeUrl cleans up URL and adds http:// if it's missing", () => {
   test.each([
     ["www.example.com", "http://www.example.com"],
-    ["http:/localhost:8080", "http://localhost:8080/"],
+    ["localhost:8080", "http://localhost:8080"],
+    ["http:/localhost:8080", "http://localhost:8080"],
+    ["http://localhost:8080", "http://localhost:8080"],
     ["example.com", "http://example.com"],
-    ["http:example.com", "http://example.com/"],
-    ["http://www.example.com", "http://www.example.com/"],
-    ["https://www.example.com", "https://www.example.com/"],
-    ["ftp://www.example.com", "ftp://www.example.com/"],
+    ["httpbin.org", "http://httpbin.org"],
+    ["http:example.com", "http://example.com"],
+    ["http:/example.com", "http://example.com"],
+    ["http://example.com", "http://example.com"],
+    ["http:///example.com", "http://example.com"],
+    ["http://///example.com", "http://example.com"],
+    ["https:www.example.com", "https://www.example.com"],
+    ["https:/www.example.com", "https://www.example.com"],
+    ["https://www.example.com", "https://www.example.com"],
+    ["https:///www.example.com", "https://www.example.com"],
+    ["ftp://www.example.com", "http://www.example.com"],
+    ["ftp:www.example.com", "http://www.example.com"],
+    ["ftp:/www.example.com", "http://www.example.com"],
+    ["ftp://www.example.com", "http://www.example.com"],
+    ["ftp:///www.example.com", "http://www.example.com"],
   ])("%s -> %s", (url, expected) => {
     expect(sanitizeUrl(url)).toBe(expected);
   });

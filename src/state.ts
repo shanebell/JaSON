@@ -1,5 +1,5 @@
 import { createHook, createStore, StoreActionApi } from "react-sweet-state";
-import HttpRequest from "./types/HttpRequest";
+import HttpRequest, { sanitizeUrl } from "./types/HttpRequest";
 import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
 import historyService from "./historyService";
@@ -85,6 +85,11 @@ const actions = {
     });
 
     const request = getState().request;
+    request.url = sanitizeUrl(request.url);
+    setState({
+      request,
+    });
+
     const response = await sendRequest(request);
 
     if (response.status < 400) {
