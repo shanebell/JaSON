@@ -1,6 +1,6 @@
 import _ from "lodash";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import HttpRequest, { processHeaders, sanitizeUrl } from "./types/HttpRequest";
+import HttpRequest, { processHeaders } from "./types/HttpRequest";
 import HttpResponse, { toHttpResponse } from "./types/HttpResponse";
 
 const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosResponse> => {
@@ -13,7 +13,7 @@ const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosRespon
 
 export const sendRequest = async (request: HttpRequest): Promise<HttpResponse> => {
   const config: AxiosRequestConfig = {
-    url: sanitizeUrl(request.url),
+    url: request.url,
     method: request.method,
     headers: {
       "Content-Type": request.contentType,
