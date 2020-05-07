@@ -10,26 +10,27 @@ export default interface HttpRequest {
   headers: string;
 }
 
-const HTTP_PATTERN = /^http:\/*/;
-const HTTPS_PATTERN = /^https:\/*/;
-const FTP_PATTERN = /^ftp:\/*/;
+const HTTP_PATTERN = /^http:\/*/i;
+const HTTPS_PATTERN = /^https:\/*/i;
+const FTP_PATTERN = /^ftp:\/*/i;
 
 // sanitize request.url
 const sanitizeUrl = (requestUrl: string): string => {
-  let sanitized = "";
+  requestUrl = _.trim(requestUrl);
 
-  // handle some common typos
   if (HTTPS_PATTERN.test(requestUrl)) {
-    sanitized = requestUrl.replace(HTTPS_PATTERN, "https://");
-  } else if (HTTP_PATTERN.test(requestUrl)) {
-    sanitized = requestUrl.replace(HTTP_PATTERN, "http://");
-  } else if (FTP_PATTERN.test(requestUrl)) {
-    sanitized = requestUrl.replace(FTP_PATTERN, "http://");
-  } else {
-    sanitized = `http://${requestUrl}`;
+    return requestUrl.replace(HTTPS_PATTERN, "https://");
   }
 
-  return sanitized;
+  if (HTTP_PATTERN.test(requestUrl)) {
+    return requestUrl.replace(HTTP_PATTERN, "http://");
+  }
+
+  if (FTP_PATTERN.test(requestUrl)) {
+    return requestUrl.replace(FTP_PATTERN, "http://");
+  }
+
+  return `http://${requestUrl}`;
 };
 
 // convert header string into an array of HttpHeader values
