@@ -14,6 +14,7 @@ import config from "../config";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import { useTheme } from "../state";
 import { Grid } from "@material-ui/core";
+import HistorySearch from "./HistorySearch";
 import HistoryList from "./HistoryList";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -88,6 +89,7 @@ const App = () => {
             <ResponseFields />
           </Grid>
           <Grid item xs={4} xl={3} className={classes.gridColumnRight}>
+            <HistorySearch />
             <HistoryList />
           </Grid>
         </Grid>

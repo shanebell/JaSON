@@ -2,21 +2,11 @@ import { createHook, createStore, StoreActionApi } from "react-sweet-state";
 import HttpRequest from "./types/HttpRequest";
 import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
-import _ from "lodash";
-import database from "./database";
+import historyService from "./historyService";
 import HistoryItem, { toHistoryItem } from "./types/HistoryItem";
 
 const LOCAL_STORAGE_THEME_KEY = "theme";
-const LOCAL_STORAGE_HISTORY_KEY = "history";
 const MAX_HISTORY_SIZE = 500;
-
-const getLocalStorageHistory = (): HistoryItem[] => {
-  return JSON.parse(localStorage.getItem(LOCAL_STORAGE_HISTORY_KEY) || "[]");
-};
-
-const setLocalStorageHistory = (history: HistoryItem[]) => {
-  localStorage.setItem(LOCAL_STORAGE_HISTORY_KEY, JSON.stringify(history));
-};
 
 const defaultRequest: HttpRequest = {
   url: "https://httpbin.org/post",
@@ -43,11 +33,26 @@ interface State {
   loading: boolean;
   responseTab: number;
   theme: string;
+  searchTerm: string;
   history: HistoryItem[];
-  historyTimestamp: number;
 }
 
 type StoreApi = StoreActionApi<State>;
+
+const searchHistory = () => ({ setState, getState }: StoreApi) => {
+  const searchTerm = getState().searchTerm;
+  historyService.search(searchTerm, 100, (results) => {
+    setState({
+      history: results,
+    });
+  });
+};
+
+const trimHistory = () => ({ dispatch }: StoreApi) => {
+  historyService.trim(MAX_HISTORY_SIZE, () => {
+    dispatch(searchHistory());
+  });
+};
 
 const actions = {
   updateRequestValues: (name: string, value: any) => ({ setState, getState }: StoreApi) => {
@@ -73,7 +78,7 @@ const actions = {
     });
   },
 
-  send: () => async ({ setState, getState }: StoreApi) => {
+  send: () => async ({ setState, getState, dispatch }: StoreApi) => {
     setState({
       loading: true,
       response: defaultResponse,
@@ -85,25 +90,9 @@ const actions = {
     if (response.status < 400) {
       const historyItem = toHistoryItem(request);
 
-      console.log("Saving request to history db...");
-      database.history.add(historyItem).then(() => {
-        setState({
-          historyTimestamp: Date.now(),
-        });
-      });
-
-      const history: HistoryItem[] = getLocalStorageHistory();
-      history.unshift(historyItem);
-
-      // if we"ve hit the history limit then splice any extras from the end
-      if (history.length > MAX_HISTORY_SIZE) {
-        history.splice(MAX_HISTORY_SIZE);
-      }
-
-      setLocalStorageHistory(history);
-
-      setState({
-        history,
+      historyService.save(historyItem, () => {
+        dispatch(searchHistory());
+        dispatch(trimHistory());
       });
     }
 
@@ -121,11 +110,9 @@ const actions = {
     });
   },
 
-  clearHistory: () => ({ setState }: StoreApi) => {
-    const history: HistoryItem[] = [];
-    setLocalStorageHistory(history);
-    setState({
-      history,
+  clearHistory: () => ({ setState, dispatch }: StoreApi) => {
+    historyService.clear(() => {
+      dispatch(searchHistory());
     });
   },
 
@@ -142,13 +129,20 @@ const actions = {
     });
   },
 
-  removeHistoryItem: (historyItem: HistoryItem) => ({ setState }: StoreApi) => {
-    const history = getLocalStorageHistory();
-    _.remove(history, { id: historyItem.id });
-    setLocalStorageHistory(history);
-    setState({
-      history,
+  removeHistoryItem: (historyItem: HistoryItem) => ({ setState, dispatch }: StoreApi) => {
+    historyService.delete(historyItem, () => {
+      dispatch(searchHistory());
     });
+  },
+
+  setSearchTerm: (searchTerm: string) => ({ setState }: StoreApi) => {
+    setState({
+      searchTerm,
+    });
+  },
+
+  searchHistory: () => ({ dispatch }: StoreApi) => {
+    dispatch(searchHistory());
   },
 };
 
@@ -159,16 +153,10 @@ const store = createStore<State, typeof actions>({
     theme: defaultTheme,
     loading: false,
     responseTab: 0,
-    history: getLocalStorageHistory(),
-    historyTimestamp: Date.now(),
+    history: [],
+    searchTerm: "",
   },
   actions,
-});
-
-const useHistory = createHook(store, {
-  selector: (state: State) => {
-    return state.history;
-  },
 });
 
 const useTheme = createHook(store, {
@@ -198,10 +186,16 @@ const useResponse = createHook(store, {
   },
 });
 
-const useHistoryTimestamp = createHook(store, {
+const useHistory = createHook(store, {
   selector: (state: State) => {
-    return state.historyTimestamp;
+    return state.history;
   },
 });
 
-export { useRequest, useResponse, useHistory, useHistoryTimestamp, useTheme, useLoading };
+const useSearchTerm = createHook(store, {
+  selector: (state: State) => {
+    return state.searchTerm;
+  },
+});
+
+export { useRequest, useResponse, useHistory, useSearchTerm, useTheme, useLoading };
