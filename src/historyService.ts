@@ -30,7 +30,7 @@ const historyService = {
     if (searchTerm.length > 0) {
       database.history
         .filter((historyItem) => {
-          return historyItem.searchableText.includes(searchTerm);
+          return historyItem.searchableText.includes(searchTerm.toLowerCase());
         })
         .limit(limit)
         .reverse()
