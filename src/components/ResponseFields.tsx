@@ -3,7 +3,7 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import StatusCode from "./StatusCode";
 import TabPanel from "./TabPanel";
 import { useResponse } from "../state";
@@ -29,7 +29,7 @@ const ResponseFields: React.FC = () => {
   const classes = useStyles();
   const [{ response, responseTab }, { setResponseTab }] = useResponse();
 
-  const handleTabChange = (event: any, newValue: number) => {
+  const handleTabChange = (event: ChangeEvent<{}>, newValue: number) => {
     setResponseTab(newValue);
   };
 

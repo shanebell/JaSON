@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -129,7 +129,7 @@ const RequestFields: React.FC = () => {
     return _.find(HTTP_METHODS, { value: request.method })?.bodyAllowed || false;
   };
 
-  const handleFieldChange = (name: string) => (event: any) => {
+  const handleFieldChange = (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
     setRequestValue(name, event.target.value);
   };
 

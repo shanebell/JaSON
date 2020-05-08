@@ -20,5 +20,9 @@ describe("toHistoryItem", () => {
     expect(historyItem.host).toBe("www.example.com");
     expect(historyItem.path).toBe("/path/to/resource?param1=value1&param2=value2#123");
     expect(historyItem.date).toBeDefined();
+    expect(historyItem.searchableText).toBe(
+      "https://www.example.com/path/to/resource?param1=value1&param2=value2#123 get"
+    );
+    expect(historyItem.favourite).toBe(0);
   });
 });
