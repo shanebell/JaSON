@@ -1,7 +1,8 @@
 import database from "./database";
 import HistoryItem from "./types/HistoryItem";
 import { HistoryFilter } from "./state";
-import { Table, Collection } from "dexie";
+import { Collection, Table } from "dexie";
+import _ from "lodash";
 
 export const HISTORY_SEARCH_LIMIT = 100;
 
@@ -15,9 +16,22 @@ const applyShowFavourites = (table: Table<HistoryItem, string>, showFavourites: 
 
 const applySearchTerm = (collection: Collection<HistoryItem, string>, searchTerm: string) => {
   if (searchTerm.length > 0) {
-    return collection.filter((historyItem) => {
-      return historyItem.searchableText.includes(searchTerm.toLowerCase());
+    const parts = searchTerm.toLowerCase().split(/\s+/);
+    const terms: string[] = [];
+    parts.forEach((part) => {
+      if (!_.includes(terms, part)) {
+        terms.push(part);
+      }
     });
+
+    // filter by search term
+    if (terms.length > 0) {
+      collection = collection.and((historyItem: HistoryItem) => {
+        return _.every(terms, (term) => {
+          return historyItem.searchableText.includes(term);
+        });
+      });
+    }
   }
   return collection;
 };
