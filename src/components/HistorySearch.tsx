@@ -1,16 +1,17 @@
-import { Menu, MenuItem, Theme } from "@material-ui/core";
+import { Menu, MenuItem, Theme, Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import { MoreVert, Search } from "@material-ui/icons";
+import { Favorite, FavoriteBorder, MoreVert, Search } from "@material-ui/icons";
 import React, { useEffect, useRef, useState } from "react";
 import _ from "lodash";
-import { useSearchTerm } from "../state";
+import { useHistoryFilter } from "../state";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  search: {
+  filters: {
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
   },
@@ -27,7 +28,7 @@ const HistorySearch: React.FC = () => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [searchTerm, { setSearchTerm, searchHistory, clearHistory }] = useSearchTerm();
+  const [{ searchTerm, showFavourites }, { searchHistory, clearHistory, setHistoryFilter }] = useHistoryFilter();
 
   const showMenu = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -49,13 +50,15 @@ const HistorySearch: React.FC = () => {
     }, 250)
   );
 
-  useEffect(() => debounceSearch.current(), [searchTerm]);
+  // debounce search when searchTerm changes
+  useEffect(() => debounceSearch.current(), [searchTerm, showFavourites]);
+
+  // search immediately when showFavourites changes
+  useEffect(() => searchHistory(), [showFavourites, searchHistory]);
 
   return (
-    <>
-      {/* HISTORY ACTIONS */}
+    <div className={classes.filters}>
       <TextField
-        className={classes.search}
         label="Search request history"
         fullWidth
         InputProps={{
@@ -67,9 +70,21 @@ const HistorySearch: React.FC = () => {
           ),
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={showMenu}>
-                <MoreVert fontSize="small" />
-              </IconButton>
+              <Tooltip arrow title="Show favourites">
+                <Checkbox
+                  checked={showFavourites}
+                  size="small"
+                  icon={<FavoriteBorder />}
+                  checkedIcon={<Favorite />}
+                  onChange={(event) => setHistoryFilter("showFavourites", event.target.checked)}
+                  color="default"
+                />
+              </Tooltip>
+              <Tooltip arrow title="More options...">
+                <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={showMenu}>
+                  <MoreVert fontSize="small" />
+                </IconButton>
+              </Tooltip>
               <Menu anchorEl={anchorEl} open={anchorEl != null} onClose={hideMenu}>
                 <MenuItem onClick={clearAll}>
                   <ListItemText>Clear request history</ListItemText>
@@ -79,9 +94,9 @@ const HistorySearch: React.FC = () => {
           ),
         }}
         value={searchTerm}
-        onChange={(event) => setSearchTerm(event.target.value)}
+        onChange={(event) => setHistoryFilter("searchTerm", event.target.value)}
       />
-    </>
+    </div>
   );
 };
 

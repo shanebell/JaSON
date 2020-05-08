@@ -6,7 +6,7 @@ export class JasonDatabase extends Dexie {
   constructor() {
     super("JaSON");
     this.version(1).stores({
-      history: "id, url, method, contentType, host, date",
+      history: "id, url, method, contentType, host, date, favourite",
     });
     this.history = this.table("history");
   }

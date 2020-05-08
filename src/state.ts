@@ -27,13 +27,18 @@ const defaultResponse: HttpResponse = {
 
 const defaultTheme: string = localStorage.getItem(LOCAL_STORAGE_THEME_KEY) || "dark";
 
+export interface HistoryFilter {
+  searchTerm: string;
+  showFavourites: boolean;
+}
+
 interface State {
   request: HttpRequest;
   response: HttpResponse;
   loading: boolean;
   responseTab: number;
   theme: string;
-  searchTerm: string;
+  historyFilter: HistoryFilter;
   history: HistoryItem[];
 }
 
@@ -42,8 +47,8 @@ type StoreApi = StoreActionApi<State>;
 // private actions, not exposed via actions
 
 const searchHistory = () => ({ setState, getState }: StoreApi) => {
-  const searchTerm = getState().searchTerm;
-  historyService.search(searchTerm, 100, (results) => {
+  const historyFilter = getState().historyFilter;
+  historyService.search(historyFilter, (results) => {
     setState({
       history: results,
     });
@@ -136,15 +141,24 @@ const actions = {
     });
   },
 
+  favouriteHistoryItem: (historyItem: HistoryItem, favourite: boolean) => ({ dispatch }: StoreApi) => {
+    historyService.update(historyItem, { favourite: favourite ? 1 : 0 }, () => {
+      dispatch(searchHistory());
+    });
+  },
+
   removeHistoryItem: (historyItem: HistoryItem) => ({ setState, dispatch }: StoreApi) => {
     historyService.delete(historyItem, () => {
       dispatch(searchHistory());
     });
   },
 
-  setSearchTerm: (searchTerm: string) => ({ setState }: StoreApi) => {
+  setHistoryFilter: (name: string, value: any) => ({ setState, getState }: StoreApi) => {
     setState({
-      searchTerm,
+      historyFilter: {
+        ...getState().historyFilter,
+        [name]: value,
+      },
     });
   },
 
@@ -161,7 +175,10 @@ const store = createStore<State, typeof actions>({
     loading: false,
     responseTab: 0,
     history: [],
-    searchTerm: "",
+    historyFilter: {
+      searchTerm: "",
+      showFavourites: false,
+    },
   },
   actions,
 });
@@ -199,10 +216,10 @@ const useHistory = createHook(store, {
   },
 });
 
-const useSearchTerm = createHook(store, {
+const useHistoryFilter = createHook(store, {
   selector: (state: State) => {
-    return state.searchTerm;
+    return state.historyFilter;
   },
 });
 
-export { useRequest, useResponse, useHistory, useSearchTerm, useTheme, useLoading };
+export { useRequest, useResponse, useHistory, useTheme, useLoading, useHistoryFilter };

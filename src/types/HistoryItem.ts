@@ -13,6 +13,7 @@ export default interface HistoryItem {
   body: string;
   headers: string;
   searchableText: string;
+  favourite: number; // https://github.com/dfahlander/Dexie.js/issues/70
 }
 
 const toHistoryItem = (request: HttpRequest): HistoryItem => {
@@ -29,6 +30,7 @@ const toHistoryItem = (request: HttpRequest): HistoryItem => {
     body: request.body,
     headers: request.headers,
     searchableText: `${request.url.toLowerCase()} ${request.method.toString().toLowerCase()}`,
+    favourite: 0,
   };
 };
 

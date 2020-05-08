@@ -10,13 +10,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { Delete, Favorite, FavoriteBorder } from "@material-ui/icons";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import _ from "lodash";
 import { useHistory } from "../state";
 import FormattedDate from "./FormattedDate";
+import { HISTORY_SEARCH_LIMIT } from "../historyService";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  noResults: {
+  message: {
     padding: theme.spacing(4),
   },
   method: {
@@ -45,14 +46,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const HistoryList: React.FC = () => {
   const classes = useStyles();
-  const [history, { selectHistoryItem, removeHistoryItem }] = useHistory();
+  const [history, { selectHistoryItem, removeHistoryItem, favouriteHistoryItem }] = useHistory();
 
   // TODO remove logging
   console.log("HistoryList render");
 
   return (
     <>
-      {_.isEmpty(history) && <div className={classes.noResults}>No results</div>}
+      {_.isEmpty(history) && <div className={classes.message}>No results</div>}
 
       {/* HISTORY ITEMS */}
       <List dense>
@@ -92,8 +93,15 @@ const HistoryList: React.FC = () => {
                 />
               </Tooltip>
               <ListItemSecondaryAction className={classes.actions}>
-                {/* TODO implement "favourite" */}
-                {false && <Checkbox size="small" icon={<FavoriteBorder />} checkedIcon={<Favorite />} value={false} />}
+                <Checkbox
+                  size="small"
+                  icon={<FavoriteBorder />}
+                  checkedIcon={<Favorite />}
+                  checked={historyItem.favourite === 1}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    favouriteHistoryItem(historyItem, event.target.checked)
+                  }
+                />
                 <IconButton aria-label="delete" onClick={() => removeHistoryItem(historyItem)}>
                   <Delete fontSize="small" />
                 </IconButton>
@@ -103,6 +111,9 @@ const HistoryList: React.FC = () => {
           </div>
         ))}
       </List>
+      {history.length === HISTORY_SEARCH_LIMIT && (
+        <div className={classes.message}>Use search to find more history items</div>
+      )}
     </>
   );
 };
