@@ -48,7 +48,10 @@ type StoreApi = StoreActionApi<State>;
 
 const searchHistory = () => ({ setState, getState }: StoreApi) => {
   const historyFilter = getState().historyFilter;
+  const start = Date.now();
   historyService.search(historyFilter, (results) => {
+    const end = Date.now();
+    console.info("Search took %sms", end - start);
     setState({
       history: results,
     });
