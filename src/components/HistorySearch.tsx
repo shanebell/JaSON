@@ -51,7 +51,7 @@ const HistorySearch: React.FC = () => {
   );
 
   // debounce search when searchTerm changes
-  useEffect(() => debounceSearch.current(), [searchTerm, showFavourites]);
+  useEffect(() => debounceSearch.current(), [searchTerm]);
 
   // search immediately when showFavourites changes
   useEffect(() => searchHistory(), [showFavourites, searchHistory]);
