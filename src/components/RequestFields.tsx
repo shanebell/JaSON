@@ -1,12 +1,13 @@
 import Grid from "@material-ui/core/Grid";
 import SendIcon from "@material-ui/icons/Send";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import ClearIcon from "@material-ui/icons/Clear";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -122,7 +123,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const RequestFields: React.FC = () => {
   const classes = useStyles();
-  const [request, { setRequestValue, send, reset }] = useRequest();
+  const [timeoutId, setTimeoutId] = useState<any>(null);
+  const [showCancel, setShowCancel] = useState<boolean>(false);
+  const [request, { setRequestValue, send, cancel, reset }] = useRequest();
   const [loading] = useLoading();
 
   const isRequestBodyAllowed = () => {
@@ -133,11 +136,26 @@ const RequestFields: React.FC = () => {
     setRequestValue(name, event.target.value);
   };
 
-  const handleKeyDown = async (event: any) => {
-    if (event.key === "Enter") {
-      await send();
+  const handleKeyDown = (event: any) => {
+    if (!loading && event.key === "Enter") {
+      handleSend();
     }
   };
+
+  const handleSend = () => {
+    const timeoutId = setTimeout(() => {
+      setShowCancel(true);
+    }, 2500);
+    setTimeoutId(timeoutId);
+    send();
+  };
+
+  useEffect(() => {
+    if (!loading && timeoutId) {
+      clearTimeout(timeoutId);
+      setShowCancel(false);
+    }
+  }, [loading, timeoutId]);
 
   return (
     <Grid container spacing={4}>
@@ -262,7 +280,7 @@ const RequestFields: React.FC = () => {
           color="primary"
           disabled={loading}
           className={classes.button}
-          onClick={send}
+          onClick={handleSend}
           endIcon={<SendIcon />}
         >
           Send request
@@ -278,6 +296,18 @@ const RequestFields: React.FC = () => {
         >
           Reset fields
         </Button>
+        {showCancel && (
+          <Button
+            variant="outlined"
+            size="small"
+            color="secondary"
+            className={classes.button}
+            onClick={cancel}
+            endIcon={<ClearIcon />}
+          >
+            Cancel request
+          </Button>
+        )}
       </Grid>
     </Grid>
   );

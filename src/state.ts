@@ -2,6 +2,7 @@ import { createHook, createStore, StoreActionApi } from "react-sweet-state";
 import HttpRequest, { sanitizeUrl } from "./types/HttpRequest";
 import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
+import axios, { CancelTokenSource } from "axios";
 import historyService from "./historyService";
 import HistoryItem, { toHistoryItem } from "./types/HistoryItem";
 
@@ -40,6 +41,7 @@ interface State {
   theme: string;
   historyFilter: HistoryFilter;
   history: HistoryItem[];
+  cancellable?: CancelTokenSource;
 }
 
 type StoreApi = StoreActionApi<State>;
@@ -100,7 +102,10 @@ const actions = {
       request,
     });
 
-    const response = await sendRequest(request);
+    const cancellable = axios.CancelToken.source();
+    setState({ cancellable });
+    const response = await sendRequest(request, cancellable.token);
+    setState({ cancellable: undefined });
 
     if (response.status < 400) {
       const historyItem = toHistoryItem(request);
@@ -115,6 +120,16 @@ const actions = {
       response,
       loading: false,
     });
+  },
+
+  cancel: () => async ({ getState, setState }: StoreApi) => {
+    const cancellable = getState().cancellable;
+    if (cancellable) {
+      cancellable.cancel();
+      setState({
+        cancellable: undefined,
+      });
+    }
   },
 
   toggleTheme: () => ({ setState, getState }: StoreApi) => {
