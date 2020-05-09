@@ -1,5 +1,5 @@
 import _ from "lodash";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
 import HttpRequest, { processHeaders } from "./types/HttpRequest";
 import HttpResponse, { toHttpResponse } from "./types/HttpResponse";
 
@@ -11,13 +11,14 @@ const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosRespon
   }
 };
 
-export const sendRequest = async (request: HttpRequest): Promise<HttpResponse> => {
+export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken): Promise<HttpResponse> => {
   const config: AxiosRequestConfig = {
     url: request.url,
     method: request.method,
     headers: {
       "Content-Type": request.contentType,
     },
+    cancelToken,
   };
 
   const headers = processHeaders(request.headers);
