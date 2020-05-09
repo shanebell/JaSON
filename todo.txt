@@ -1,8 +1,4 @@
 NEXT:
-- Add feature to cancel a network request
-  - https://github.com/axios/axios#cancellation
-  - Store cancel token in state and allow it to be cancelled
-
 - When trimming history, don't remove favourited items
 - Warning dialog before clearing history
 
