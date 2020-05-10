@@ -1,21 +1,18 @@
 NEXT:
-- When trimming history, don't remove favourited items
-- Warning dialog before clearing history
+- Clear history but keep favourites.
+- Add logo attribution to About dialog
+  - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
+  - Attribution details: https://creativecommons.org/licenses/by/4.0/
 
 --------------------------------------------------------------------------------
 
 TODO
 
-- Migrate old history from previous version?
-- https://github.com/stutrek/dexie-hooks/blob/master/index.ts
-- Validate body before send (maybe not mandatory)
-- Verify cookies are being sent correctly
-- Restrict size of response shown
-- Add logo attribution
-  - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
-  - Attribution details: https://creativecommons.org/licenses/by/4.0/
+- When trimming history, don't remove favourited items?
 - request data - form encoded
   - Does Axios support this?
+- Restrict size of response shown
+- Migrate old history from previous version?
 - New images for Chrome Web Store
 - Update NOTICE
 - Update screenshots
@@ -24,21 +21,20 @@ TODO
 - react-window (to handle large lists - use this for history)
   - https://github.com/bvaughn/react-window
 
-BUGS:
 
-IDEAS:
+ENHANCEMENTS:
+- https://github.com/stutrek/dexie-hooks/blob/master/index.ts
+- Validate body before send (maybe not mandatory)
 - JaSON Website with video and screenshots (GitHub pages)
 - star a history item
 - Render images, other media types
-- delete all except starred history items
+
 - allow a file upload of a request body
 - download as CURL (etc) for a request history item
 - save history to dropbox or export somehow?
 - share a history request with someone (export and email, click to send?)
 - group history by domain to make searching easier
 - filter history by domain, content type, request method, response status etc...
-
-
 
 
 NOTES:
