@@ -57,6 +57,7 @@ const paragraphStyles = makeStyles((theme: Theme) => ({
     width: "36px",
     height: "36px",
     padding: theme.spacing(1),
+    filter: "grayscale(100%)",
   },
 }));
 
