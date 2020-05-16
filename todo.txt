@@ -1,16 +1,14 @@
 NEXT:
 - Clear history but keep favourites.
-- Add logo attribution to About dialog
-  - https://icon-icons.com/icon/friday-halloween-jason-movie/113258
-  - Attribution details: https://creativecommons.org/licenses/by/4.0/
 
 --------------------------------------------------------------------------------
 
 TODO
 
-- When trimming history, don't remove favourited items?
 - request data - form encoded
-  - Does Axios support this?
+  - add validation and errors to request body
+  - eg: <FormHelperText error>Unable to parse request body. Unexpected token } in JSON at position 53</FormHelperText>
+- When trimming history, don't remove favourited items?
 - Restrict size of response shown
 - Migrate old history from previous version?
 - New images for Chrome Web Store
