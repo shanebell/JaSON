@@ -1,14 +1,12 @@
 NEXT:
-- Clear history but keep favourites.
+- request data - form encoded
+  - add validation and errors to request body
+  - eg: <FormHelperText error>Unable to parse request body. Unexpected token } in JSON at position 53</FormHelperText>
 
 --------------------------------------------------------------------------------
 
 TODO
 
-- request data - form encoded
-  - add validation and errors to request body
-  - eg: <FormHelperText error>Unable to parse request body. Unexpected token } in JSON at position 53</FormHelperText>
-- When trimming history, don't remove favourited items?
 - Restrict size of response shown
 - Migrate old history from previous version?
 - New images for Chrome Web Store
@@ -16,23 +14,28 @@ TODO
 - Update screenshots
 - Update Chrome Web Store description - specifically mention cookies
 - Update readme.md
-- react-window (to handle large lists - use this for history)
-  - https://github.com/bvaughn/react-window
-
 
 ENHANCEMENTS:
+- Add tooltip to request body to explain different formats
+  - eg: how to use form data
+  - vary based on content type?
+- Clear history but keep favourites.
+- When trimming history, don't remove favourited items?
 - https://github.com/stutrek/dexie-hooks/blob/master/index.ts
 - Validate body before send (maybe not mandatory)
 - JaSON Website with video and screenshots (GitHub pages)
 - star a history item
 - Render images, other media types
-
+- react-window (to handle large lists - use this for history)
+  - https://github.com/bvaughn/react-window
 - allow a file upload of a request body
 - download as CURL (etc) for a request history item
 - save history to dropbox or export somehow?
 - share a history request with someone (export and email, click to send?)
 - group history by domain to make searching easier
 - filter history by domain, content type, request method, response status etc...
+- make protocol an enum
+- make content type an enum
 
 
 NOTES:
