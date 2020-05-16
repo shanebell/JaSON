@@ -3,6 +3,7 @@ import SendIcon from "@material-ui/icons/Send";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import ClearIcon from "@material-ui/icons/Clear";
 import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -119,10 +120,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1),
   },
+  error: {
+    fontSize: "14px",
+  },
 }));
 
 const RequestFields: React.FC = () => {
   const classes = useStyles();
+  const [requestBodyError, setRequestBodyError] = useState<string | null>(null);
   const [timeoutId, setTimeoutId] = useState<any>(null);
   const [showCancel, setShowCancel] = useState<boolean>(false);
   const [request, { setRequestValue, send, cancel, reset }] = useRequest();
@@ -142,12 +147,28 @@ const RequestFields: React.FC = () => {
     }
   };
 
+  const isValidRequestBody = () => {
+    let valid = true;
+    if (request.contentType === "multipart/form-data" && request.method === "POST") {
+      try {
+        JSON.parse(request.body);
+      } catch (e) {
+        valid = false;
+        setRequestBodyError(`Unable to parse request body. ${e.message}`);
+      }
+    }
+    return valid;
+  };
+
   const handleSend = () => {
-    const timeoutId = setTimeout(() => {
-      setShowCancel(true);
-    }, 2500);
-    setTimeoutId(timeoutId);
-    send();
+    setRequestBodyError(null);
+    if (isValidRequestBody()) {
+      const timeoutId = setTimeout(() => {
+        setShowCancel(true);
+      }, 2500);
+      setTimeoutId(timeoutId);
+      send();
+    }
   };
 
   useEffect(() => {
@@ -281,7 +302,9 @@ const RequestFields: React.FC = () => {
 
       {isRequestBodyAllowed() && (
         <Grid item xs={12} className={classes.gridItem}>
-          <InputLabel className={classes.label}>Request body</InputLabel>
+          <InputLabel className={classes.label} error={requestBodyError != null}>
+            Request body
+          </InputLabel>
           <Paper square variant="outlined">
             <WrappedAceEditor
               mode={EDITOR_MODES[request.contentType]}
@@ -295,6 +318,11 @@ const RequestFields: React.FC = () => {
               }}
             />
           </Paper>
+          {requestBodyError && (
+            <FormHelperText error className={classes.error}>
+              {requestBodyError}
+            </FormHelperText>
+          )}
         </Grid>
       )}
 
