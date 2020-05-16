@@ -12,6 +12,7 @@
     "ace-builds": "^1.4.9",
     "axios": "^0.19.2",
     "dexie": "^3.0.0",
+    "flat": "^5.0.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "prettier": "^2.0.4",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/flat": "^5.0.0",
     "@types/jest": "^25.2.1",
     "@types/lodash": "^4.14.149",
     "@types/moment": "^2.13.0",

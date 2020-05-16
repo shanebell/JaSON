@@ -1,19 +1,21 @@
 import { createHook, createStore, StoreActionApi } from "react-sweet-state";
-import HttpRequest, { sanitizeUrl } from "./types/HttpRequest";
+import HttpRequest from "./types/HttpRequest";
 import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
 import axios, { CancelTokenSource } from "axios";
 import historyService from "./historyService";
 import HistoryItem, { toHistoryItem } from "./types/HistoryItem";
+import { splitUrl } from "./util";
 
 const LOCAL_STORAGE_THEME_KEY = "theme";
 const MAX_HISTORY_SIZE = 500;
 
 const defaultRequest: HttpRequest = {
-  url: "https://httpbin.org/json",
-  method: "GET",
-  contentType: "application/json",
-  body: "",
+  protocol: "http://",
+  url: "httpbin.org/post",
+  method: "POST",
+  contentType: "multipart/form-data",
+  body: '{\n    "name": "asdf",\n    "email": "asdf@email.com"\n}',
   headers: "",
 };
 
@@ -66,14 +68,30 @@ const trimHistory = () => ({ dispatch }: StoreApi) => {
   });
 };
 
+const setRequestUrl = (requestUrl: string) => ({ setState, getState }: StoreApi) => {
+  const { url, protocol } = splitUrl(requestUrl);
+  const { request } = getState();
+  setState({
+    request: {
+      ...request,
+      url,
+      protocol: protocol || request.protocol,
+    },
+  });
+};
+
 const actions = {
-  setRequestValue: (name: string, value: any) => ({ setState, getState }: StoreApi) => {
-    setState({
-      request: {
-        ...getState().request,
-        [name]: value,
-      },
-    });
+  setRequestValue: (name: string, value: any) => ({ setState, getState, dispatch }: StoreApi) => {
+    if (name === "url") {
+      dispatch(setRequestUrl(value));
+    } else {
+      setState({
+        request: {
+          ...getState().request,
+          [name]: value,
+        },
+      });
+    }
   },
 
   setResponseTab: (tab: number) => ({ setState }: StoreApi) => {
@@ -96,11 +114,7 @@ const actions = {
       response: defaultResponse,
     });
 
-    const request = getState().request;
-    request.url = sanitizeUrl(request.url);
-    setState({
-      request,
-    });
+    const { request } = getState();
 
     const cancellable = axios.CancelToken.source();
     setState({ cancellable });
@@ -149,6 +163,7 @@ const actions = {
   selectHistoryItem: (historyItem: HistoryItem) => ({ setState }: StoreApi) => {
     setState({
       request: {
+        protocol: historyItem.protocol,
         url: historyItem.url,
         method: historyItem.method,
         contentType: historyItem.contentType,

@@ -1,42 +1,5 @@
-import { processHeaders, sanitizeUrl } from "./HttpRequest";
+import { processHeaders } from "./HttpRequest";
 import HttpHeader from "./HttpHeader";
-
-describe("sanitizeUrl cleans up URL and adds http:// if it's missing", () => {
-  test.each([
-    // no protocol - should be prefixed with "http://"
-    ["www.example.com", "http://www.example.com"],
-    ["localhost:8080", "http://localhost:8080"],
-    ["httpbin.org", "http://httpbin.org"],
-    ["username:password@httpbin.org", "http://username:password@httpbin.org"],
-
-    // http variants
-    ["http:localhost:8080", "http://localhost:8080"],
-    ["http:/localhost:8080", "http://localhost:8080"],
-    ["http://localhost:8080", "http://localhost:8080"],
-    ["http:/httpbin.org", "http://httpbin.org"],
-    ["http://httpbin.org", "http://httpbin.org"],
-    ["http://username:password@httpbin.org", "http://username:password@httpbin.org"],
-    ["HTTP://username:password@httpbin.org", "http://username:password@httpbin.org"],
-    ["Http://username:password@httpbin.org", "http://username:password@httpbin.org"],
-
-    // https variants
-    ["https:www.example.com", "https://www.example.com"],
-    ["https:/www.example.com", "https://www.example.com"],
-    ["https://example.com", "https://example.com"],
-    ["https:///example.com", "https://example.com"],
-    ["https://username:password@example.com", "https://username:password@example.com"],
-    ["HTTPS://username:password@example.com", "https://username:password@example.com"],
-    ["HttpS://example.com", "https://example.com"],
-
-    // ftp variants
-    ["ftp://example.com", "http://example.com"],
-    ["ftp:example.com", "http://example.com"],
-    ["ftp:/example.com", "http://example.com"],
-    ["ftp:///example.com", "http://example.com"],
-  ])("%s -> %s", (url, expected) => {
-    expect(sanitizeUrl(url)).toBe(expected);
-  });
-});
 
 const validateHeader = (header: HttpHeader, name: string, value: string) => {
   expect(header.name).toBe(name);
