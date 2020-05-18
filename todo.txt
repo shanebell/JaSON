@@ -1,4 +1,7 @@
 NEXT:
+- Remove ThemeDebug
+- Remove defaults for request values
+
 - Migrate old history from previous version?
   - how hard is this?
 
@@ -15,6 +18,7 @@ TODO
 - ?
 
 ENHANCEMENTS:
+- Set most recent history item on open?
 - Add tooltip to request body to explain different formats
   - eg: how to use form data
   - vary based on content type?
