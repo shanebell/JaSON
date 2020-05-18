@@ -1,6 +1,5 @@
 NEXT:
 - New images for Chrome Web Store
-- Update NOTICE
 - Update screenshots
 
 --------------------------------------------------------------------------------
