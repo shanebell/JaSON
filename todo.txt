@@ -1,14 +1,11 @@
 NEXT:
-- New images for Chrome Web Store
-- Update screenshots
-
---------------------------------------------------------------------------------
-
-TODO
-
 - Migrate old history from previous version?
   - how hard is this?
 - Update Chrome Web Store description - specifically mention cookies
+--------------------------------------------------------------------------------
+
+TODO
+- ?
 
 ENHANCEMENTS:
 - Add tooltip to request body to explain different formats
@@ -27,9 +24,6 @@ ENHANCEMENTS:
 - save history to dropbox or export somehow?
 - share a history request with someone (export and email, click to send?)
 
-
-NOTES:
-- in responsive mode set dimensions to 1423x889 to get 1280x800 screenshots
 
 --------------------------------------------------------------------------------
 
