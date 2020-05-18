@@ -1,7 +1,7 @@
 NEXT:
-- request data - form encoded
-  - add validation and errors to request body
-  - eg: <FormHelperText error>Unable to parse request body. Unexpected token } in JSON at position 53</FormHelperText>
+- New images for Chrome Web Store
+- Update NOTICE
+- Update screenshots
 
 --------------------------------------------------------------------------------
 
