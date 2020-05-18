@@ -13,73 +13,20 @@ import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useLoading, useRequest } from "../state";
-import HttpMethod from "../types/HttpMethod";
-import ContentType from "../types/ContentType";
+import HttpMethod, { GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS } from "../types/HttpMethod";
+import ContentType, { MULTIPART_FORM_DATA, TEXT_XML, APPLICATION_XML, APPLICATION_JSON } from "../types/ContentType";
 import WrappedAceEditor from "./WrappedAceEditor";
 import Typography from "@material-ui/core/Typography";
 
-const HTTP_METHODS: HttpMethod[] = [
-  {
-    name: "GET",
-    value: "GET",
-    bodyAllowed: false,
-  },
-  {
-    name: "POST",
-    value: "POST",
-    bodyAllowed: true,
-  },
-  {
-    name: "PUT",
-    value: "PUT",
-    bodyAllowed: true,
-  },
-  {
-    name: "PATCH",
-    value: "PATCH",
-    bodyAllowed: true,
-  },
-  {
-    name: "DELETE",
-    value: "DELETE",
-    bodyAllowed: false,
-  },
-  {
-    name: "HEAD",
-    value: "HEAD",
-    bodyAllowed: false,
-  },
-  {
-    name: "OPTIONS",
-    value: "OPTIONS",
-    bodyAllowed: false,
-  },
-];
+const HTTP_METHODS: HttpMethod[] = [GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS];
 
-const CONTENT_TYPES: ContentType[] = [
-  {
-    name: "JSON (application/json)",
-    value: "application/json",
-  },
-  {
-    name: "XML (text/xml)",
-    value: "text/xml",
-  },
-  {
-    name: "XML (application/xml)",
-    value: "application/xml",
-  },
-  {
-    name: "Form data (multipart/form-data)",
-    value: "multipart/form-data",
-  },
-];
+const CONTENT_TYPES: ContentType[] = [APPLICATION_JSON, TEXT_XML, APPLICATION_XML, MULTIPART_FORM_DATA];
 
 const EDITOR_MODES: Record<string, string> = {
-  "application/json": "json",
-  "text/xml": "xml",
-  "application/xml": "xml",
-  "multipart/form-data": "json",
+  [APPLICATION_JSON.value]: "json",
+  [TEXT_XML.value]: "xml",
+  [APPLICATION_XML.value]: "xml",
+  [MULTIPART_FORM_DATA.value]: "json",
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -149,7 +96,7 @@ const RequestFields: React.FC = () => {
 
   const isValidRequestBody = () => {
     let valid = true;
-    if (request.contentType === "multipart/form-data" && request.method === "POST") {
+    if (request.contentType === MULTIPART_FORM_DATA.value && request.method === POST.value) {
       try {
         JSON.parse(request.body);
       } catch (e) {
