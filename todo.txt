@@ -1,4 +1,6 @@
 NEXT:
+- Restrict size of response shown
+  - Show response but don't format?
 - New images for Chrome Web Store
 - Update NOTICE
 - Update screenshots
@@ -7,13 +9,9 @@ NEXT:
 
 TODO
 
-- Restrict size of response shown
 - Migrate old history from previous version?
-- New images for Chrome Web Store
-- Update NOTICE
-- Update screenshots
+  - how hard is this?
 - Update Chrome Web Store description - specifically mention cookies
-- Update readme.md
 
 ENHANCEMENTS:
 - Add tooltip to request body to explain different formats
@@ -24,7 +22,6 @@ ENHANCEMENTS:
 - https://github.com/stutrek/dexie-hooks/blob/master/index.ts
 - Validate body before send (maybe not mandatory)
 - JaSON Website with video and screenshots (GitHub pages)
-- star a history item
 - Render images, other media types
 - react-window (to handle large lists - use this for history)
   - https://github.com/bvaughn/react-window
@@ -32,15 +29,10 @@ ENHANCEMENTS:
 - download as CURL (etc) for a request history item
 - save history to dropbox or export somehow?
 - share a history request with someone (export and email, click to send?)
-- group history by domain to make searching easier
-- filter history by domain, content type, request method, response status etc...
-- make protocol an enum
-- make content type an enum
 
 
 NOTES:
 - in responsive mode set dimensions to 1423x889 to get 1280x800 screenshots
-
 
 --------------------------------------------------------------------------------
 

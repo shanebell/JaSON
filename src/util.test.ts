@@ -2,7 +2,7 @@ import { splitUrl } from "./util";
 
 describe("splitUrl splits URL into protocol and url", () => {
   test.each([
-    // no protocol - should be prefixed with "http://"
+    // no protocol
     [" www.example.com", "www.example.com", undefined],
     ["localhost:8080", "localhost:8080", undefined],
     ["\thttpbin.org ", "httpbin.org", undefined],
