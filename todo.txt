@@ -24,6 +24,9 @@ ENHANCEMENTS:
 - save history to dropbox or export somehow?
 - share a history request with someone (export and email, click to send?)
 
+NOTES:
+- in responsive mode set dimensions to 1423x889 to get 1280x800 screenshots
+
 
 --------------------------------------------------------------------------------
 
