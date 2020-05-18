@@ -1,6 +1,4 @@
 NEXT:
-- Restrict size of response shown
-  - Show response but don't format?
 - New images for Chrome Web Store
 - Update NOTICE
 - Update screenshots

@@ -33,6 +33,7 @@ export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken
     headers: {
       "Content-Type": request.contentType,
     },
+    timeout: 60_000,
     cancelToken,
   };
 
