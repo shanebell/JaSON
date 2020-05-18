@@ -1,7 +1,14 @@
 NEXT:
 - Migrate old history from previous version?
   - how hard is this?
-- Update Chrome Web Store description - specifically mention cookies
+
+- Update Chrome Web Store description
+  - cookies
+  - dark/light theme
+  - searchable history
+  - favourite history items
+  - delete individual history items
+
 --------------------------------------------------------------------------------
 
 TODO
@@ -11,8 +18,9 @@ ENHANCEMENTS:
 - Add tooltip to request body to explain different formats
   - eg: how to use form data
   - vary based on content type?
-- Clear history but keep favourites.
-- When trimming history, don't remove favourited items?
+- Clear history but keep favourites
+  - Make this an option on the confirm dialog
+- When trimming history, don't remove favourites items?
 - https://github.com/stutrek/dexie-hooks/blob/master/index.ts
 - Validate body before send (maybe not mandatory)
 - JaSON Website with video and screenshots (GitHub pages)
