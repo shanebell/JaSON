@@ -1,7 +1,4 @@
 NEXT:
-- Remove ThemeDebug
-- Remove defaults for request values
-
 - Migrate old history from previous version?
   - how hard is this?
 

@@ -12,10 +12,10 @@ const MAX_HISTORY_SIZE = 500;
 
 const defaultRequest: HttpRequest = {
   protocol: "http://",
-  url: "httpbin.org/post",
-  method: "POST",
-  contentType: "multipart/form-data",
-  body: '{\n    "name": "asdf",\n    "email": "asdf@email.com"\n}',
+  url: "",
+  method: "GET",
+  contentType: "application/json",
+  body: "",
   headers: "",
 };
 
@@ -154,7 +154,7 @@ const actions = {
     });
   },
 
-  clearHistory: () => ({ setState, dispatch }: StoreApi) => {
+  clearHistory: () => ({ dispatch }: StoreApi) => {
     historyService.clear(() => {
       dispatch(searchHistory());
     });
@@ -180,7 +180,7 @@ const actions = {
     });
   },
 
-  removeHistoryItem: (historyItem: HistoryItem) => ({ setState, dispatch }: StoreApi) => {
+  removeHistoryItem: (historyItem: HistoryItem) => ({ dispatch }: StoreApi) => {
     historyService.delete(historyItem, () => {
       dispatch(searchHistory());
     });
