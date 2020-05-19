@@ -74,7 +74,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const RequestFields: React.FC = () => {
   const classes = useStyles();
-  const [requestBodyError, setRequestBodyError] = useState<string | null>(null);
+  const [urlError, setUrlError] = useState<string | null>(null);
+  const [bodyError, setBodyError] = useState<string | null>(null);
   const [timeoutId, setTimeoutId] = useState<any>(null);
   const [showCancel, setShowCancel] = useState<boolean>(false);
   const [request, { setRequestValue, send, cancel, reset }] = useRequest();
@@ -94,28 +95,45 @@ const RequestFields: React.FC = () => {
     }
   };
 
-  const isValidRequestBody = () => {
-    let valid = true;
+  const validateUrl = () => {
+    const valid = request.url.trim().length > 0;
+    setUrlError(valid ? null : "Url is required");
+    return valid;
+  };
+
+  const validateBody = () => {
+    let error = null;
     if (request.contentType === MULTIPART_FORM_DATA.value && request.method === POST.value) {
       try {
         JSON.parse(request.body);
       } catch (e) {
-        valid = false;
-        setRequestBodyError(`Unable to parse request body. ${e.message}`);
+        error = `Unable to parse request body. ${e.message}`;
       }
     }
-    return valid;
+    setBodyError(error ? error : null);
+    return error == null;
+  };
+
+  const validate = (): boolean => {
+    const validUrl = validateUrl();
+    const validBody = validateBody();
+    return validUrl && validBody;
   };
 
   const handleSend = () => {
-    setRequestBodyError(null);
-    if (isValidRequestBody()) {
+    if (validate()) {
       const timeoutId = setTimeout(() => {
         setShowCancel(true);
       }, 2500);
       setTimeoutId(timeoutId);
       send();
     }
+  };
+
+  const handleReset = () => {
+    setBodyError(null);
+    setUrlError(null);
+    reset();
   };
 
   useEffect(() => {
@@ -157,6 +175,8 @@ const RequestFields: React.FC = () => {
           label="Url"
           margin="dense"
           required
+          error={urlError != null}
+          helperText={urlError}
           fullWidth
           InputProps={{
             className: classes.monospace,
@@ -249,7 +269,7 @@ const RequestFields: React.FC = () => {
 
       {isRequestBodyAllowed() && (
         <Grid item xs={12} className={classes.gridItem}>
-          <InputLabel className={classes.label} error={requestBodyError != null}>
+          <InputLabel className={classes.label} error={bodyError != null}>
             Request body
           </InputLabel>
           <Paper square variant="outlined">
@@ -265,9 +285,9 @@ const RequestFields: React.FC = () => {
               }}
             />
           </Paper>
-          {requestBodyError && (
+          {bodyError && (
             <FormHelperText error className={classes.error}>
-              {requestBodyError}
+              {bodyError}
             </FormHelperText>
           )}
         </Grid>
@@ -291,7 +311,7 @@ const RequestFields: React.FC = () => {
           color="default"
           disabled={loading}
           className={classes.button}
-          onClick={reset}
+          onClick={handleReset}
           endIcon={<RefreshIcon />}
         >
           Reset fields
