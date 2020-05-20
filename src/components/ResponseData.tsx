@@ -39,25 +39,35 @@ const CONTENT_TYPE_CONFIG: any = {
   },
 };
 
+// Check if the size of the given response is of a suitable length to format
+const isLengthOk = (response: HttpResponse) => {
+  return response.responseText?.length < 50_000;
+};
+
 const getConfig = (response: HttpResponse) => {
-  const config = _.find(CONTENT_TYPE_CONFIG, (value, key) => {
-    return _.startsWith(response.contentType, key);
-  });
+  let config;
+  if (isLengthOk(response)) {
+    config = _.find(CONTENT_TYPE_CONFIG, (value, key) => {
+      return _.startsWith(response.contentType, key);
+    });
+  }
   return config || { mode: "text" };
 };
 
 const formatResponse = (response: HttpResponse, parser: any): string => {
-  const plugins = [parserBabel, parserXml];
   if (parser) {
-    return prettier.format(response.responseText, { parser, plugins });
-  } else {
-    return response.responseText;
+    try {
+      const plugins = [parserBabel, parserXml];
+      return prettier.format(response.responseText, { parser, plugins });
+    } catch (e) {
+      // ignore
+    }
   }
+  return response.responseText;
 };
 
 const ResponseData: React.FC<{ response: HttpResponse; formatted?: boolean }> = ({ response, formatted = true }) => {
   const config = getConfig(response);
-
   return (
     <WrappedAceEditor
       mode={formatted ? config.mode : "text"}
