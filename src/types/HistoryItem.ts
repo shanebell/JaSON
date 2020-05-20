@@ -4,7 +4,6 @@ import HttpRequest from "./HttpRequest";
 
 export default interface HistoryItem {
   id: string;
-  protocol: string;
   url: string;
   method: Method;
   contentType: string;
@@ -18,11 +17,10 @@ export default interface HistoryItem {
 }
 
 const toHistoryItem = (request: HttpRequest): HistoryItem => {
-  const url = new URL(`${request.protocol}${request.url}`);
+  const url = new URL(request.url);
   const date = Date.now();
   return {
     id: uuidv4(),
-    protocol: request.protocol,
     url: request.url,
     method: request.method,
     contentType: request.contentType,
@@ -31,7 +29,7 @@ const toHistoryItem = (request: HttpRequest): HistoryItem => {
     host: url.host,
     body: request.body,
     headers: request.headers,
-    searchableText: `${request.protocol}${request.url.toLowerCase()} ${request.method.toString().toLowerCase()}`,
+    searchableText: `${request.url.toLowerCase()} ${request.method.toString().toLowerCase()}`,
     favourite: 0,
   };
 };

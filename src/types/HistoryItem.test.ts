@@ -4,12 +4,11 @@ import { toHistoryItem } from "./HistoryItem";
 describe("toHistoryItem", () => {
   it("converts HttpRequest to HistoryItem", () => {
     const request: HttpRequest = {
-      protocol: "https://",
       body: '{ "name": "value" }',
       contentType: "application/json",
       headers: "header1: value1\n header2:  value2 ",
       method: "GET",
-      url: "www.example.com/path/to/resource?param1=value1&param2=value2#123",
+      url: "https://www.example.com/path/to/resource?param1=value1&param2=value2#123",
     };
 
     const historyItem = toHistoryItem(request);
