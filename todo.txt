@@ -1,39 +1,37 @@
 NEXT:
-- When trimming history, don't remove favourited items?
+- Migrate old history from previous version?
+  - how hard is this?
+
+- Update Chrome Web Store description
+  - cookies
+  - dark/light theme
+  - searchable history
+  - favourite history items
+  - delete individual history items
 
 --------------------------------------------------------------------------------
 
 TODO
-
-- Migrate old history from previous version?
-- request data - form encoded
-  - Check this is working
-- Restrict size of response shown
-- New images for Chrome Web Store
-- Review LICENSE and NOTICE
-- Update screenshots
-- Update Chrome Web Store description - specifically mention cookies
-- https://developer.chrome.com/webstore/images#promo
-- Update readme.md
-
+- ?
 
 ENHANCEMENTS:
-- Clear history but keep favourites.
+- Set most recent history item on open?
+- Add tooltip to request body to explain different formats
+  - eg: how to use form data
+  - vary based on content type?
+- Clear history but keep favourites
+  - Make this an option on the confirm dialog
+- When trimming history, don't remove favourites items?
 - https://github.com/stutrek/dexie-hooks/blob/master/index.ts
 - Validate body before send (maybe not mandatory)
 - JaSON Website with video and screenshots (GitHub pages)
-- star a history item
 - Render images, other media types
 - react-window (to handle large lists - use this for history)
   - https://github.com/bvaughn/react-window
-  - Is this still necessary? List is currently filtered to 100 items
 - allow a file upload of a request body
 - download as CURL (etc) for a request history item
 - save history to dropbox or export somehow?
 - share a history request with someone (export and email, click to send?)
-- group history by domain to make searching easier
-- filter history by domain, content type, request method, response status etc...
-
 
 NOTES:
 - in responsive mode set dimensions to 1423x889 to get 1280x800 screenshots

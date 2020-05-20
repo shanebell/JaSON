@@ -3,35 +3,13 @@ import _ from "lodash";
 import HttpHeader from "./HttpHeader";
 
 export default interface HttpRequest {
+  protocol: string;
   url: string;
   method: Method;
   contentType: string;
   body: string;
   headers: string;
 }
-
-const HTTP_PATTERN = /^http:\/*/i;
-const HTTPS_PATTERN = /^https:\/*/i;
-const FTP_PATTERN = /^ftp:\/*/i;
-
-// sanitize request.url
-const sanitizeUrl = (requestUrl: string): string => {
-  requestUrl = _.trim(requestUrl);
-
-  if (HTTPS_PATTERN.test(requestUrl)) {
-    return requestUrl.replace(HTTPS_PATTERN, "https://");
-  }
-
-  if (HTTP_PATTERN.test(requestUrl)) {
-    return requestUrl.replace(HTTP_PATTERN, "http://");
-  }
-
-  if (FTP_PATTERN.test(requestUrl)) {
-    return requestUrl.replace(FTP_PATTERN, "http://");
-  }
-
-  return `http://${requestUrl}`;
-};
 
 // convert header string into an array of HttpHeader values
 const processHeaders = (requestHeaders: string): HttpHeader[] => {
@@ -49,4 +27,4 @@ const processHeaders = (requestHeaders: string): HttpHeader[] => {
   return headers;
 };
 
-export { sanitizeUrl, processHeaders };
+export { processHeaders };

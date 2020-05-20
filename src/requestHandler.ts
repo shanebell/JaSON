@@ -1,5 +1,6 @@
 import _ from "lodash";
 import axios, { AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
+import flatten from "flat";
 import HttpRequest, { processHeaders } from "./types/HttpRequest";
 import HttpResponse, { toHttpResponse } from "./types/HttpResponse";
 
@@ -11,13 +12,28 @@ const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosRespon
   }
 };
 
+const toFormData = (data: string): FormData => {
+  const formData = new FormData();
+  try {
+    const json = JSON.parse(data);
+    const flattened = flatten<{}, {}>(json);
+    _.forEach(flattened, (value, key) => {
+      formData.set(key, value);
+    });
+  } catch (e) {
+    // ignore
+  }
+  return formData;
+};
+
 export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken): Promise<HttpResponse> => {
   const config: AxiosRequestConfig = {
-    url: request.url,
+    url: `${request.protocol}${request.url}`,
     method: request.method,
     headers: {
       "Content-Type": request.contentType,
     },
+    timeout: 60_000,
     cancelToken,
   };
 
@@ -27,7 +43,11 @@ export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken
   });
 
   if (!_.isEmpty(request.body)) {
-    config.data = request.body;
+    if (request.contentType === "multipart/form-data") {
+      config.data = toFormData(request.body);
+    } else {
+      config.data = request.body;
+    }
   }
 
   const startTime = Date.now();

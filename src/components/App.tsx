@@ -9,7 +9,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Navigation from "./Navigation";
 import RequestFields from "./RequestFields";
 import ResponseFields from "./ResponseFields";
-import ThemeDebug from "./ThemeDebug";
 import config from "../config";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import { useTheme } from "../state";
@@ -94,7 +93,6 @@ const App = () => {
           </Grid>
         </Grid>
       </Container>
-      <ThemeDebug />
     </ThemeProvider>
   );
 };

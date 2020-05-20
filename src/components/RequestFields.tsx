@@ -3,6 +3,7 @@ import SendIcon from "@material-ui/icons/Send";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import ClearIcon from "@material-ui/icons/Clear";
 import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -12,73 +13,20 @@ import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useLoading, useRequest } from "../state";
-import HttpMethod from "../types/HttpMethod";
-import ContentType from "../types/ContentType";
+import HttpMethod, { GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS } from "../types/HttpMethod";
+import ContentType, { MULTIPART_FORM_DATA, TEXT_XML, APPLICATION_XML, APPLICATION_JSON } from "../types/ContentType";
 import WrappedAceEditor from "./WrappedAceEditor";
 import Typography from "@material-ui/core/Typography";
 
-const HTTP_METHODS: HttpMethod[] = [
-  {
-    name: "GET",
-    value: "GET",
-    bodyAllowed: false,
-  },
-  {
-    name: "POST",
-    value: "POST",
-    bodyAllowed: true,
-  },
-  {
-    name: "PUT",
-    value: "PUT",
-    bodyAllowed: true,
-  },
-  {
-    name: "PATCH",
-    value: "PATCH",
-    bodyAllowed: true,
-  },
-  {
-    name: "DELETE",
-    value: "DELETE",
-    bodyAllowed: false,
-  },
-  {
-    name: "HEAD",
-    value: "HEAD",
-    bodyAllowed: false,
-  },
-  {
-    name: "OPTIONS",
-    value: "OPTIONS",
-    bodyAllowed: false,
-  },
-];
+const HTTP_METHODS: HttpMethod[] = [GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS];
 
-const CONTENT_TYPES: ContentType[] = [
-  {
-    name: "JSON (application/json)",
-    value: "application/json",
-  },
-  {
-    name: "XML (text/xml)",
-    value: "text/xml",
-  },
-  {
-    name: "XML (application/xml)",
-    value: "application/xml",
-  },
-  {
-    name: "Form encoded",
-    value: "application/x-www-form-urlencoded",
-  },
-];
+const CONTENT_TYPES: ContentType[] = [APPLICATION_JSON, TEXT_XML, APPLICATION_XML, MULTIPART_FORM_DATA];
 
 const EDITOR_MODES: Record<string, string> = {
-  "application/json": "json",
-  "text/xml": "xml",
-  "application/xml": "xml",
-  "application/x-www-form-urlencoded": "json",
+  [APPLICATION_JSON.value]: "json",
+  [TEXT_XML.value]: "xml",
+  [APPLICATION_XML.value]: "xml",
+  [MULTIPART_FORM_DATA.value]: "json",
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -119,10 +67,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1),
   },
+  error: {
+    fontSize: "14px",
+  },
 }));
 
 const RequestFields: React.FC = () => {
   const classes = useStyles();
+  const [urlError, setUrlError] = useState<string | null>(null);
+  const [bodyError, setBodyError] = useState<string | null>(null);
   const [timeoutId, setTimeoutId] = useState<any>(null);
   const [showCancel, setShowCancel] = useState<boolean>(false);
   const [request, { setRequestValue, send, cancel, reset }] = useRequest();
@@ -142,12 +95,45 @@ const RequestFields: React.FC = () => {
     }
   };
 
+  const validateUrl = () => {
+    const valid = request.url.trim().length > 0;
+    setUrlError(valid ? null : "Url is required");
+    return valid;
+  };
+
+  const validateBody = () => {
+    let error = null;
+    if (request.contentType === MULTIPART_FORM_DATA.value && request.method === POST.value) {
+      try {
+        JSON.parse(request.body);
+      } catch (e) {
+        error = `Unable to parse request body. ${e.message}`;
+      }
+    }
+    setBodyError(error ? error : null);
+    return error == null;
+  };
+
+  const validate = (): boolean => {
+    const validUrl = validateUrl();
+    const validBody = validateBody();
+    return validUrl && validBody;
+  };
+
   const handleSend = () => {
-    const timeoutId = setTimeout(() => {
-      setShowCancel(true);
-    }, 2500);
-    setTimeoutId(timeoutId);
-    send();
+    if (validate()) {
+      const timeoutId = setTimeout(() => {
+        setShowCancel(true);
+      }, 2500);
+      setTimeoutId(timeoutId);
+      send();
+    }
+  };
+
+  const handleReset = () => {
+    setBodyError(null);
+    setUrlError(null);
+    reset();
   };
 
   useEffect(() => {
@@ -159,13 +145,38 @@ const RequestFields: React.FC = () => {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12} xl={6} className={classes.gridItem}>
+      <Grid item xs={2} xl={1} className={classes.gridItem}>
+        <TextField
+          className={classes.textField}
+          id="protocol"
+          label="Protocol"
+          margin="dense"
+          select
+          required
+          fullWidth
+          InputProps={{
+            className: classes.monospace,
+          }}
+          value={request.protocol}
+          onChange={handleFieldChange("protocol")}
+        >
+          {["http://", "https://"].map((protocol) => (
+            <MenuItem key={protocol} value={protocol}>
+              {protocol}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Grid>
+
+      <Grid item xs={10} xl={5} className={classes.gridItem}>
         <TextField
           className={classes.textField}
           id="url"
           label="Url"
           margin="dense"
           required
+          error={urlError != null}
+          helperText={urlError}
           fullWidth
           InputProps={{
             className: classes.monospace,
@@ -179,6 +190,7 @@ const RequestFields: React.FC = () => {
           onChange={handleFieldChange("url")}
         />
       </Grid>
+
       <Grid item xs={6} xl={3} className={classes.gridItem}>
         <TextField
           className={classes.textField}
@@ -201,6 +213,7 @@ const RequestFields: React.FC = () => {
           ))}
         </TextField>
       </Grid>
+
       <Grid item xs={6} xl={3} className={classes.gridItem}>
         <TextField
           className={classes.textField}
@@ -256,7 +269,9 @@ const RequestFields: React.FC = () => {
 
       {isRequestBodyAllowed() && (
         <Grid item xs={12} className={classes.gridItem}>
-          <InputLabel className={classes.label}>Request body</InputLabel>
+          <InputLabel className={classes.label} error={bodyError != null}>
+            Request body
+          </InputLabel>
           <Paper square variant="outlined">
             <WrappedAceEditor
               mode={EDITOR_MODES[request.contentType]}
@@ -270,6 +285,11 @@ const RequestFields: React.FC = () => {
               }}
             />
           </Paper>
+          {bodyError && (
+            <FormHelperText error className={classes.error}>
+              {bodyError}
+            </FormHelperText>
+          )}
         </Grid>
       )}
 
@@ -291,7 +311,7 @@ const RequestFields: React.FC = () => {
           color="default"
           disabled={loading}
           className={classes.button}
-          onClick={reset}
+          onClick={handleReset}
           endIcon={<RefreshIcon />}
         >
           Reset fields
