@@ -145,30 +145,7 @@ const RequestFields: React.FC = () => {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={2} xl={1} className={classes.gridItem}>
-        <TextField
-          className={classes.textField}
-          id="protocol"
-          label="Protocol"
-          margin="dense"
-          select
-          required
-          fullWidth
-          InputProps={{
-            className: classes.monospace,
-          }}
-          value={request.protocol}
-          onChange={handleFieldChange("protocol")}
-        >
-          {["http://", "https://"].map((protocol) => (
-            <MenuItem key={protocol} value={protocol}>
-              {protocol}
-            </MenuItem>
-          ))}
-        </TextField>
-      </Grid>
-
-      <Grid item xs={10} xl={5} className={classes.gridItem}>
+      <Grid item xs={12} xl={5} className={classes.gridItem}>
         <TextField
           className={classes.textField}
           id="url"

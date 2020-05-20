@@ -28,7 +28,7 @@ const toFormData = (data: string): FormData => {
 
 export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken): Promise<HttpResponse> => {
   const config: AxiosRequestConfig = {
-    url: `${request.protocol}${request.url}`,
+    url: request.url,
     method: request.method,
     headers: {
       "Content-Type": request.contentType,

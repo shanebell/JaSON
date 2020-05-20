@@ -3,7 +3,6 @@ import _ from "lodash";
 import HttpHeader from "./HttpHeader";
 
 export default interface HttpRequest {
-  protocol: string;
   url: string;
   method: Method;
   contentType: string;

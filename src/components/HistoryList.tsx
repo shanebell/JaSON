@@ -48,9 +48,6 @@ const HistoryList: React.FC = () => {
   const classes = useStyles();
   const [history, { selectHistoryItem, removeHistoryItem, favouriteHistoryItem }] = useHistory();
 
-  // TODO remove logging
-  console.log("HistoryList render");
-
   return (
     <>
       {_.isEmpty(history) && <div className={classes.message}>No results</div>}
