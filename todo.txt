@@ -1,9 +1,12 @@
 NEXT:
-- Migrate old history from previous version?
-  - how hard is this?
+- More testing of history migration
+- increase history size?
+  - what's a good number?
 
 - Update Chrome Web Store description
   - cookies
+  - migrate previous history
+  - improved history performance
   - dark/light theme
   - searchable history
   - favourite history items
@@ -38,6 +41,10 @@ NOTES:
 
 
 --------------------------------------------------------------------------------
+
+if (historyFilter.searchTerm === "history") {
+      localStorage.setItem("JaSON.history", JSON.stringify(testHistory));
+    }
 
 const colorSchemes = [
   // { primary: "#fba875", secondary: "#b07466" }, // default for "dark" theme

@@ -13,19 +13,32 @@ import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useLoading, useRequest } from "../state";
-import HttpMethod, { GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS } from "../types/HttpMethod";
-import ContentType, { MULTIPART_FORM_DATA, TEXT_XML, APPLICATION_XML, APPLICATION_JSON } from "../types/ContentType";
+import HttpMethod, { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } from "../types/HttpMethod";
+import ContentType, {
+  APPLICATION_JSON,
+  APPLICATION_XML,
+  MULTIPART_FORM_DATA,
+  TEXT_XML,
+  X_WWW_FORM_URLENCODED,
+} from "../types/ContentType";
 import WrappedAceEditor from "./WrappedAceEditor";
 import Typography from "@material-ui/core/Typography";
 
 const HTTP_METHODS: HttpMethod[] = [GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS];
 
-const CONTENT_TYPES: ContentType[] = [APPLICATION_JSON, TEXT_XML, APPLICATION_XML, MULTIPART_FORM_DATA];
+const CONTENT_TYPES: ContentType[] = [
+  APPLICATION_JSON,
+  TEXT_XML,
+  APPLICATION_XML,
+  X_WWW_FORM_URLENCODED,
+  MULTIPART_FORM_DATA,
+];
 
 const EDITOR_MODES: Record<string, string> = {
   [APPLICATION_JSON.value]: "json",
   [TEXT_XML.value]: "xml",
   [APPLICATION_XML.value]: "xml",
+  [X_WWW_FORM_URLENCODED.value]: "json",
   [MULTIPART_FORM_DATA.value]: "json",
 };
 
@@ -101,13 +114,20 @@ const RequestFields: React.FC = () => {
     return valid;
   };
 
+  const isFormPost = (): boolean => {
+    return (
+      _.includes([MULTIPART_FORM_DATA.value, X_WWW_FORM_URLENCODED.value], request.contentType) &&
+      request.method === POST.value
+    );
+  };
+
   const validateBody = () => {
     let error = null;
-    if (request.contentType === MULTIPART_FORM_DATA.value && request.method === POST.value) {
+    if (isFormPost()) {
       try {
         JSON.parse(request.body);
       } catch (e) {
-        error = `Unable to parse request body. ${e.message}`;
+        error = `Unable to parse form data. ${e.message}`;
       }
     }
     setBodyError(error ? error : null);

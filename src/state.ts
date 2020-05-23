@@ -46,7 +46,7 @@ interface State {
 
 type StoreApi = StoreActionApi<State>;
 
-// private actions, not exposed via actions
+// private actions (not exposed in state, used internally via dispatch)
 
 const searchHistory = () => ({ setState, getState }: StoreApi) => {
   const historyFilter = getState().historyFilter;
@@ -65,6 +65,8 @@ const trimHistory = () => ({ dispatch }: StoreApi) => {
     dispatch(searchHistory());
   });
 };
+
+// public actions
 
 const actions = {
   setRequestValue: (name: string, value: any) => ({ setState, getState }: StoreApi) => {
@@ -118,7 +120,7 @@ const actions = {
     });
   },
 
-  cancel: () => async ({ getState, setState }: StoreApi) => {
+  cancel: () => ({ getState, setState }: StoreApi) => {
     const cancellable = getState().cancellable;
     if (cancellable) {
       cancellable.cancel();
@@ -178,6 +180,12 @@ const actions = {
 
   searchHistory: () => ({ dispatch }: StoreApi) => {
     dispatch(searchHistory());
+  },
+
+  migrateHistory: () => ({ dispatch }: StoreApi) => {
+    historyService.migrate(() => {
+      dispatch(searchHistory());
+    });
   },
 };
 

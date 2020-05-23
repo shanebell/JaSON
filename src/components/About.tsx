@@ -78,7 +78,7 @@ const Paragraph: React.FC<{
 }> = ({ text, href, target, linkText, icon, image }) => {
   const classes = paragraphStyles();
   return (
-    <Typography variant="body1" align="center" className={classes.paragraph}>
+    <Typography variant="body1" align="center" className={classes.paragraph} component="div">
       {icon && <Icon path={icon} title={linkText} size={1.5} className={classes.icon} />}
       {image && <img src={image} alt="JaSON logo" className={classes.image} />}
       <div>
@@ -155,7 +155,7 @@ const About: React.FC<{ open: boolean; onClose: React.ReactEventHandler }> = ({ 
           />
           <Paragraph
             icon={mdiCreativeCommons}
-            text="Icon licensed under the"
+            text="Jason icon licensed under the"
             href="https://creativecommons.org/licenses/by/4.0/"
             target="_creativecommons"
             linkText="CC Attribution license"

@@ -1,8 +1,10 @@
 import _ from "lodash";
 import axios, { AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
 import flatten from "flat";
+import qs from "qs";
 import HttpRequest, { processHeaders } from "./types/HttpRequest";
 import HttpResponse, { toHttpResponse } from "./types/HttpResponse";
+import { MULTIPART_FORM_DATA, X_WWW_FORM_URLENCODED } from "./types/ContentType";
 
 const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosResponse> => {
   try {
@@ -12,7 +14,7 @@ const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosRespon
   }
 };
 
-const toFormData = (data: string): FormData => {
+const toMultipartFormData = (data: string): FormData => {
   const formData = new FormData();
   try {
     const json = JSON.parse(data);
@@ -24,6 +26,28 @@ const toFormData = (data: string): FormData => {
     // ignore
   }
   return formData;
+};
+
+const toFormUrlEncoded = (data: string): string => {
+  try {
+    const json = JSON.parse(data);
+    return qs.stringify(json);
+  } catch (e) {
+    // ignore
+  }
+  return "";
+};
+
+const getRequestBody = (request: HttpRequest) => {
+  if (request.contentType === X_WWW_FORM_URLENCODED.value) {
+    return toFormUrlEncoded(request.body);
+  }
+
+  if (request.contentType === MULTIPART_FORM_DATA.value) {
+    return toMultipartFormData(request.body);
+  }
+
+  return request.body;
 };
 
 export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken): Promise<HttpResponse> => {
@@ -43,11 +67,7 @@ export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken
   });
 
   if (!_.isEmpty(request.body)) {
-    if (request.contentType === "multipart/form-data") {
-      config.data = toFormData(request.body);
-    } else {
-      config.data = request.body;
-    }
+    config.data = getRequestBody(request);
   }
 
   const startTime = Date.now();

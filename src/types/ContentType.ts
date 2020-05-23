@@ -18,9 +18,14 @@ const APPLICATION_XML: ContentType = {
   value: "application/xml",
 };
 
+const X_WWW_FORM_URLENCODED: ContentType = {
+  name: "Form data (application/x-www-form-urlencoded)",
+  value: "application/x-www-form-urlencoded",
+};
+
 const MULTIPART_FORM_DATA: ContentType = {
   name: "Form data (multipart/form-data)",
   value: "multipart/form-data",
 };
 
-export { APPLICATION_JSON, TEXT_XML, APPLICATION_XML, MULTIPART_FORM_DATA };
+export { APPLICATION_JSON, TEXT_XML, APPLICATION_XML, X_WWW_FORM_URLENCODED, MULTIPART_FORM_DATA };
