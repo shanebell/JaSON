@@ -3,8 +3,12 @@ import HistoryItem from "./types/HistoryItem";
 import { HistoryFilter } from "./state";
 import { Collection, Table } from "dexie";
 import _ from "lodash";
+import { legacyRequestToHistoryItem } from "./historyUtil";
 
 export const HISTORY_SEARCH_LIMIT = 100;
+
+const LEGACY_HISTORY_KEY = "JaSON.history";
+const HISTORY_BUFFER = 50;
 
 const isEmpty = (historyFilter: HistoryFilter): boolean => {
   return historyFilter.searchTerm.length === 0 && !historyFilter.showFavourites;
@@ -59,7 +63,8 @@ const historyService = {
 
   trim: (size: number, callback: () => void) => {
     database.history.count(async (count) => {
-      if (count > size) {
+      // include a buffer so we don't trim history every time
+      if (count > size + HISTORY_BUFFER) {
         const keysToDelete = await database.history.orderBy("date").reverse().offset(size).primaryKeys();
         await database.history.bulkDelete(keysToDelete);
         callback();
@@ -75,6 +80,33 @@ const historyService = {
       let query = applyShowFavourites(database.history, showFavourites);
       query = applySearchTerm(query, searchTerm);
       applyCommonFilters(query).then(callback);
+    }
+  },
+
+  migrate: (callback: () => void) => {
+    const historyString = localStorage.getItem(LEGACY_HISTORY_KEY);
+    if (historyString) {
+      console.info("Attempting to migrate legacy JaSON history");
+      const start = Date.now();
+      const itemsToSave: HistoryItem[] = [];
+      try {
+        const historyItems: any[] = JSON.parse(historyString);
+        _.forEach(historyItems, (historyItem) => {
+          if (itemsToSave.length >= 500) {
+            return false;
+          }
+          const item = legacyRequestToHistoryItem(historyItem.request);
+          if (item) {
+            itemsToSave.push(item);
+          }
+        });
+      } catch (e) {
+        console.info("Error migrating history: %s", e.message);
+      } finally {
+        database.history.bulkAdd(itemsToSave).then(() => callback());
+        console.info("History migration took %sms", Date.now() - start);
+        localStorage.removeItem(LEGACY_HISTORY_KEY);
+      }
     }
   },
 };
