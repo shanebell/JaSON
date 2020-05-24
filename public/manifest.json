@@ -3,6 +3,7 @@
   "version": "5.0.0",
   "manifest_version": 2,
   "description": "JaSON: JSON and XML API test tool",
+  "default_locale": "en",
   "background": {
     "scripts": ["background.js"],
     "persistent": false
