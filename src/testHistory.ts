@@ -50,6 +50,73 @@ const historyItem = {
   },
 };
 
-const testHistory = _.times(500, () => historyItem);
+const domains = [
+  "lorem",
+  "ipsum",
+  "dolor",
+  "sit",
+  "amet",
+  "consectetur",
+  "adipiscing",
+  "elit",
+  "mauris",
+  "gravida",
+  "arcu",
+  "nibh",
+  "sed",
+  "scelerisque",
+  "metus",
+  "varius",
+  "eget",
+  "ut",
+  "et",
+  "facilisis",
+  "eros",
+  "in",
+  "posuere",
+  "lectus",
+  "sed",
+  "non",
+  "lorem",
+  "augue",
+  "nullam",
+  "in",
+  "maximus",
+  "erat",
+  "donec",
+  "sagittis",
+  "quis",
+  "nunc",
+  "aliquam",
+  "aliquam",
+  "pellentesque",
+  "suscipit",
+  "maximus",
+  "quam",
+  "eu",
+  "euismod",
+  "ex",
+  "luctus",
+  "nec",
+  "integer",
+  "consectetur",
+  "commodo",
+  "ex",
+  "at",
+  "condimentum",
+];
+
+const methods = ["GET", "POST", "PATCH", "PUT", "DELETE"];
+
+const testHistory = _.times(2000, (i) => {
+  return {
+    ...historyItem,
+    request: {
+      ...historyItem.request,
+      url: `https://www.${domains[i % domains.length]}.com/${i}`,
+      method: `${methods[i % methods.length]}`,
+    },
+  };
+});
 
 export default testHistory;

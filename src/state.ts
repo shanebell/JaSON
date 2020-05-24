@@ -7,7 +7,6 @@ import historyService from "./historyService";
 import HistoryItem, { toHistoryItem } from "./types/HistoryItem";
 
 const LOCAL_STORAGE_THEME_KEY = "theme";
-const MAX_HISTORY_SIZE = 500;
 
 const defaultRequest: HttpRequest = {
   url: "",
@@ -61,7 +60,7 @@ const searchHistory = () => ({ setState, getState }: StoreApi) => {
 };
 
 const trimHistory = () => ({ dispatch }: StoreApi) => {
-  historyService.trim(MAX_HISTORY_SIZE, () => {
+  historyService.trim(() => {
     dispatch(searchHistory());
   });
 };
