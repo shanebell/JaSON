@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const consoleMessage = () => {
-  console.log(`JaSON v${config.version}`);
+  console.info(`JaSON v${config.version}`);
 };
 
 const palette: Record<string, PaletteOptions> = {

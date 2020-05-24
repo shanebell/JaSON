@@ -86,7 +86,7 @@ const historyService = {
   migrate: (callback: () => void) => {
     const historyString = localStorage.getItem(LEGACY_HISTORY_KEY);
     if (historyString) {
-      console.info("Attempting to migrate legacy JaSON history");
+      console.debug("Attempting to migrate legacy JaSON history");
       const start = Date.now();
       const itemsToSave: HistoryItem[] = [];
       try {
@@ -101,10 +101,10 @@ const historyService = {
           }
         });
       } catch (e) {
-        console.info("Error migrating history: %s", e.message);
+        console.debug("Error migrating history: %s", e.message);
       } finally {
         database.history.bulkAdd(itemsToSave).then(() => callback());
-        console.info("History migration took %sms", Date.now() - start);
+        console.debug("History migration took %sms", Date.now() - start);
         localStorage.removeItem(LEGACY_HISTORY_KEY);
       }
     }
