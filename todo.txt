@@ -1,12 +1,27 @@
 NEXT:
 - Update Chrome Web Store description
-  - cookies
-  - migrate previous history
-  - improved history performance
-  - dark/light theme
-  - searchable history
-  - favourite history items
-  - delete individual history items
+Test JSON/XML APIs from within Chrome
+
+Cookie support:
+Automatically sends cookies from Chrome. This is extremely handy for APIs which require authentication. Simply authenticate via your browser as normal and JaSON will send cookies for requests which match.
+
+HTTP methods:
+GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS
+
+Request history:
+Keeps request history with full text search. Individual history items can be deleted, or marked as a "favourite" for easy access. History from previous versions of JaSON will be automatically migrated. Stores history in IndexedDB for improved performance.
+
+Dark/light theme:
+Change the colour theme to suit your work environment.
+
+Formatted input/output:
+Provides an IDE like experience when editing request body and headers. Automatically formats request/response body syntax and colour based on content type.
+
+Content type:
+Supports JSON, XML, and form encoded data by default. Additional content types can be used by setting a custom content type header.
+
+New and improved:
+Completely re-written, new styling, layout, colours, additional features and improved performance.
 
 Test release
   - partial release and test history migration
@@ -20,6 +35,8 @@ ENHANCEMENTS:
   - vary based on content type?
 - Clear history but keep favourites
   - Make this an option on the confirm dialog
+- Provide contenxt menu option - "Open in JaSON"
+  - https://developer.chrome.com/extensions/contextMenus
 - When trimming history, don't remove favourites items?
 - https://github.com/stutrek/dexie-hooks/blob/master/index.ts
 - Validate body before send (maybe not mandatory)
