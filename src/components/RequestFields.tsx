@@ -85,6 +85,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const HTTP_PATTERN = /^http:\/\//i;
+const HTTPS_PATTERN = /^https:\/\//i;
+
 const RequestFields: React.FC = () => {
   const classes = useStyles();
   const [urlError, setUrlError] = useState<string | null>(null);
@@ -109,9 +112,20 @@ const RequestFields: React.FC = () => {
   };
 
   const validateUrl = () => {
-    const valid = request.url.trim().length > 0;
-    setUrlError(valid ? null : "Url is required");
-    return valid;
+    const url = _.trim(request.url);
+
+    if (url.length === 0) {
+      setUrlError("Url is required");
+      return false;
+    }
+
+    if (!HTTP_PATTERN.test(url) && !HTTPS_PATTERN.test(url)) {
+      setUrlError("Url must include protocol - http:// or https://");
+      return false;
+    }
+
+    setUrlError(null);
+    return true;
   };
 
   const isFormPost = (): boolean => {
@@ -180,6 +194,9 @@ const RequestFields: React.FC = () => {
           }}
           inputProps={{
             maxLength: 1024,
+          }}
+          FormHelperTextProps={{
+            className: classes.error,
           }}
           onKeyDown={handleKeyDown}
           value={request.url}

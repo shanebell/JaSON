@@ -10,7 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { Delete, Favorite, FavoriteBorder } from "@material-ui/icons";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import _ from "lodash";
 import { useHistory } from "../state";
 import FormattedDate from "./FormattedDate";
@@ -46,7 +46,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const HistoryList: React.FC = () => {
   const classes = useStyles();
-  const [history, { selectHistoryItem, removeHistoryItem, favouriteHistoryItem }] = useHistory();
+  const [history, { selectHistoryItem, removeHistoryItem, favouriteHistoryItem, migrateHistory }] = useHistory();
+
+  useEffect(migrateHistory, [migrateHistory]);
 
   return (
     <>

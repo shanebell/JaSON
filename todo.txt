@@ -1,8 +1,4 @@
 NEXT:
-- More testing of history migration
-- increase history size?
-  - what's a good number?
-
 - Update Chrome Web Store description
   - cookies
   - migrate previous history
@@ -12,10 +8,10 @@ NEXT:
   - favourite history items
   - delete individual history items
 
---------------------------------------------------------------------------------
+Test release
+  - partial release and test history migration
 
-TODO
-- ?
+--------------------------------------------------------------------------------
 
 ENHANCEMENTS:
 - Set most recent history item on open?

@@ -8,7 +8,7 @@ import { legacyRequestToHistoryItem } from "./historyUtil";
 export const HISTORY_SEARCH_LIMIT = 100;
 
 const LEGACY_HISTORY_KEY = "JaSON.history";
-const HISTORY_BUFFER = 50;
+const MAX_HISTORY_SIZE = 1000;
 
 const isEmpty = (historyFilter: HistoryFilter): boolean => {
   return historyFilter.searchTerm.length === 0 && !historyFilter.showFavourites;
@@ -61,11 +61,11 @@ const historyService = {
     database.history.clear().then(callback);
   },
 
-  trim: (size: number, callback: () => void) => {
+  trim: (callback: () => void) => {
     database.history.count(async (count) => {
-      // include a buffer so we don't trim history every time
-      if (count > size + HISTORY_BUFFER) {
-        const keysToDelete = await database.history.orderBy("date").reverse().offset(size).primaryKeys();
+      // include a buffer of 50 records so we don't trim history every time
+      if (count > MAX_HISTORY_SIZE + 50) {
+        const keysToDelete = await database.history.orderBy("date").reverse().offset(MAX_HISTORY_SIZE).primaryKeys();
         await database.history.bulkDelete(keysToDelete);
         callback();
       }
@@ -92,7 +92,7 @@ const historyService = {
       try {
         const historyItems: any[] = JSON.parse(historyString);
         _.forEach(historyItems, (historyItem) => {
-          if (itemsToSave.length >= 500) {
+          if (itemsToSave.length >= MAX_HISTORY_SIZE) {
             return false;
           }
           const item = legacyRequestToHistoryItem(historyItem.request);

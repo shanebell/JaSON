@@ -2,7 +2,7 @@ import Container from "@material-ui/core/Container";
 import Divider from "@material-ui/core/Divider";
 import { createMuiTheme, makeStyles, Theme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
-import React, { useEffect } from "react";
+import React from "react";
 import "typeface-source-code-pro";
 import "typeface-roboto";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -69,14 +69,12 @@ consoleMessage();
 
 const App = () => {
   const classes = useStyles();
-  const [theme, { migrateHistory }] = useTheme();
+  const [theme] = useTheme();
 
   const muiTheme = createMuiTheme({
     spacing: 4,
     palette: palette[theme],
   });
-
-  useEffect(migrateHistory, [migrateHistory]);
 
   return (
     <ThemeProvider theme={muiTheme}>
