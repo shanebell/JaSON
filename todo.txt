@@ -1,11 +1,12 @@
 NEXT:
-- Add tooltip to request body to explain different formats
-  - eg: how to use form data
-  - vary based on content type?
 
 --------------------------------------------------------------------------------
 
 ENHANCEMENTS:
+- Dont set "data" in Axios request for GET
+  - this happens if entering POST data and then method is changed to GET
+  - the old POST data is still in "request.body"
+  - not currently breaking anything but shouldn't be set
 - Set most recent history item on open?
 - Clear history but keep favourites
   - Make this an option on the confirm dialog

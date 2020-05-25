@@ -130,8 +130,22 @@ const RequestFields: React.FC = () => {
 
   const isFormPost = (): boolean => {
     return (
-      _.includes([MULTIPART_FORM_DATA.value, X_WWW_FORM_URLENCODED.value], request.contentType) &&
-      request.method === POST.value
+      isRequestBodyAllowed() &&
+      _.includes([MULTIPART_FORM_DATA.value, X_WWW_FORM_URLENCODED.value], request.contentType)
+    );
+  };
+
+  const getRequestBodyTooltip = () => {
+    return isFormPost() ? (
+      <>
+        <Typography variant="caption">To send form data, enter as JSON. eg:</Typography>
+        <pre className={classes.tooltipCode}>{`{ 
+  "email": "user@example.com",
+  "password": "Passw0rd1" 
+}`}</pre>
+      </>
+    ) : (
+      ""
     );
   };
 
@@ -286,19 +300,28 @@ const RequestFields: React.FC = () => {
           <InputLabel className={classes.label} error={bodyError != null}>
             Request body
           </InputLabel>
-          <Paper square variant="outlined">
-            <WrappedAceEditor
-              mode={EDITOR_MODES[request.contentType]}
-              value={request.body}
-              minLines={10}
-              maxLines={5000}
-              maxLength={10_000}
-              readOnly={false}
-              onChange={(value: string) => {
-                setRequestValue("body", value);
-              }}
-            />
-          </Paper>
+          <Tooltip
+            arrow
+            placement="top"
+            classes={{ tooltip: classes.tooltip }}
+            title={getRequestBodyTooltip()}
+            enterDelay={500}
+            enterNextDelay={500}
+          >
+            <Paper square variant="outlined">
+              <WrappedAceEditor
+                mode={EDITOR_MODES[request.contentType]}
+                value={request.body}
+                minLines={10}
+                maxLines={5000}
+                maxLength={10_000}
+                readOnly={false}
+                onChange={(value: string) => {
+                  setRequestValue("body", value);
+                }}
+              />
+            </Paper>
+          </Tooltip>
           {bodyError && (
             <FormHelperText error className={classes.error}>
               {bodyError}
