@@ -1,26 +1,23 @@
 NEXT:
-
+- Add tooltip to request body to explain different formats
+  - eg: how to use form data
+  - vary based on content type?
 
 --------------------------------------------------------------------------------
 
 ENHANCEMENTS:
 - Set most recent history item on open?
-- Add tooltip to request body to explain different formats
-  - eg: how to use form data
-  - vary based on content type?
 - Clear history but keep favourites
   - Make this an option on the confirm dialog
+- When trimming history, don't remove favourites items?
 - Provide contenxt menu option - "Open in JaSON"
   - https://developer.chrome.com/extensions/contextMenus
-- When trimming history, don't remove favourites items?
+- download as CURL (etc) for a request history item
 - https://github.com/stutrek/dexie-hooks/blob/master/index.ts
-- Validate body before send (maybe not mandatory)
+- Take out history migration - leave this for a couple of months
 - JaSON Website with video and screenshots (GitHub pages)
 - Render images, other media types
-- react-window (to handle large lists - use this for history)
-  - https://github.com/bvaughn/react-window
 - allow a file upload of a request body
-- download as CURL (etc) for a request history item
 - save history to dropbox or export somehow?
 - share a history request with someone (export and email, click to send?)
 
