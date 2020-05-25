@@ -179,7 +179,7 @@ const RequestFields: React.FC = () => {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12} xl={5} className={classes.gridItem}>
+      <Grid item xs={12} xl={6} className={classes.gridItem}>
         <TextField
           className={classes.textField}
           id="url"
