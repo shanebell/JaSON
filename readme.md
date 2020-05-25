@@ -1,27 +1,32 @@
 #  JaSON
 
-JaSON is a Google Chrome extension for testing APIs and making HTTP network requests. 
+JaSON is a Google Chrome extension for testing APIs and making HTTP network requests.
 
-Being a browser extension means JaSON automatically sends cookies from the browser. This makes testing APIs which require authentication a breeze. Simply authenticate in Chrome as normal and any API requests you make from JaSON will automatically include cookies. 
-
-Send requests over HTTP or HTTPS and see formatted, syntax highlighted responses. Also supports sending of form encoded request parameters.
-
-Supports the following HTTP operations:
-
-- GET
-- POST
-- PATCH
-- PUT
-- DELETE
-- HEAD
-- OPTIONS
-
-Allows the addition of request parameters, headers and a JSON or XML request body.
-
-Saves request history for quick and easy re-use and provides full search.
-
-Mark popular requests as favourites for easy filtering.
-
-The response body and headers are formatted and syntax highlighted making them easy to read and debug. Includes the response time in milliseconds and the raw response for easy debugging.
+It is available to install from the Chrome Web Store:
 
 https://chrome.google.com/webstore/detail/oealdlhfjifhgbmjnenhkgffglaibojf
+
+### Cookie support ###
+Automatically sends cookies from Chrome. This is extremely handy for APIs which require authentication. Simply authenticate via your browser as normal and JaSON will send cookies for requests which match.
+
+### HTTP methods ###
+GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS
+
+### Request history ###
+Keeps request history with full text search. Individual history items can be deleted, or marked as a "favourite" for easy access. History from previous versions of JaSON will be automatically migrated. Stores history in IndexedDB for improved performance.
+
+### Dark/light theme ###
+Change the colour theme to suit your work environment.
+
+### Formatted input/output ###
+Provides an IDE like experience when editing request body and headers. Automatically formats request/response body syntax and colour based on content type.
+
+### Content type ###
+Supports JSON, XML, and form encoded data by default. Additional content types can be used by setting a custom content type header.
+
+### New and improved ###
+Completely re-written, new styling, layout, colours, additional features and improved performance.
+
+### 100% open source ###
+Source code is available from GitHub.
+
