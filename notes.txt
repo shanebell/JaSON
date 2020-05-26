@@ -1,36 +1,12 @@
-NEXT:
+TEST URLs:
+
+- http://ip.jsontest.com
+- http://headers.jsontest.com/
+- http://date.jsontest.com/
+- http://httpbin.org/ip
+- https://tryphp.w3schools.com/demo/welcome.php
 
 --------------------------------------------------------------------------------
-
-ENHANCEMENTS:
-- Dont set "data" in Axios request for GET
-  - this happens if entering POST data and then method is changed to GET
-  - the old POST data is still in "request.body"
-  - not currently breaking anything but shouldn't be set
-- Set most recent history item on open?
-- Clear history but keep favourites
-  - Make this an option on the confirm dialog
-- When trimming history, don't remove favourites items?
-- Provide contenxt menu option - "Open in JaSON"
-  - https://developer.chrome.com/extensions/contextMenus
-- download as CURL (etc) for a request history item
-- https://github.com/stutrek/dexie-hooks/blob/master/index.ts
-- Take out history migration - leave this for a couple of months
-- JaSON Website with video and screenshots (GitHub pages)
-- Render images, other media types
-- allow a file upload of a request body
-- save history to dropbox or export somehow?
-- share a history request with someone (export and email, click to send?)
-
-NOTES:
-- in responsive mode set dimensions to 1423x889 to get 1280x800 screenshots
-
-
---------------------------------------------------------------------------------
-
-if (historyFilter.searchTerm === "history") {
-      localStorage.setItem("JaSON.history", JSON.stringify(testHistory));
-    }
 
 const colorSchemes = [
   // { primary: "#fba875", secondary: "#b07466" }, // default for "dark" theme
@@ -47,9 +23,7 @@ const colorSchemes = [
   // { primary: "#ffa34d", secondary: "#f67575" },
 ];
 
-
-
-
+--------------------------------------------------------------------------------
 
 if (maxLength) {
   const doc = editor.session.doc;
