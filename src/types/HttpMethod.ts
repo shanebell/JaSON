@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export default interface HttpMethod {
   name: string;
   value: string;
@@ -46,4 +48,10 @@ const OPTIONS = {
   bodyAllowed: false,
 };
 
-export { GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS };
+const httpMethods = [GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS];
+
+const isRequestBodyAllowed = (method: string) => {
+  return _.find(httpMethods, { value: method })?.bodyAllowed || false;
+};
+
+export { httpMethods, isRequestBodyAllowed, GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS };
