@@ -13,26 +13,17 @@ import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useLoading, useRequest } from "../state";
-import HttpMethod, { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } from "../types/HttpMethod";
-import ContentType, {
+import { httpMethods, isRequestBodyAllowed } from "../types/HttpMethod";
+import {
   APPLICATION_JSON,
   APPLICATION_XML,
+  contentTypes,
   MULTIPART_FORM_DATA,
   TEXT_XML,
   X_WWW_FORM_URLENCODED,
 } from "../types/ContentType";
 import WrappedAceEditor from "./WrappedAceEditor";
 import Typography from "@material-ui/core/Typography";
-
-const HTTP_METHODS: HttpMethod[] = [GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS];
-
-const CONTENT_TYPES: ContentType[] = [
-  APPLICATION_JSON,
-  TEXT_XML,
-  APPLICATION_XML,
-  X_WWW_FORM_URLENCODED,
-  MULTIPART_FORM_DATA,
-];
 
 const EDITOR_MODES: Record<string, string> = {
   [APPLICATION_JSON.value]: "json",
@@ -97,10 +88,6 @@ const RequestFields: React.FC = () => {
   const [request, { setRequestValue, send, cancel, reset }] = useRequest();
   const [loading] = useLoading();
 
-  const isRequestBodyAllowed = () => {
-    return _.find(HTTP_METHODS, { value: request.method })?.bodyAllowed || false;
-  };
-
   const handleFieldChange = (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
     setRequestValue(name, event.target.value);
   };
@@ -130,7 +117,7 @@ const RequestFields: React.FC = () => {
 
   const isFormPost = (): boolean => {
     return (
-      isRequestBodyAllowed() &&
+      isRequestBodyAllowed(request.method) &&
       _.includes([MULTIPART_FORM_DATA.value, X_WWW_FORM_URLENCODED.value], request.contentType)
     );
   };
@@ -234,7 +221,7 @@ const RequestFields: React.FC = () => {
           value={request.method}
           onChange={handleFieldChange("method")}
         >
-          {HTTP_METHODS.map((method) => (
+          {httpMethods.map((method) => (
             <MenuItem key={method.value} value={method.value} dense>
               {method.name}
             </MenuItem>
@@ -257,7 +244,7 @@ const RequestFields: React.FC = () => {
           value={request.contentType}
           onChange={handleFieldChange("contentType")}
         >
-          {CONTENT_TYPES.map((contentType) => (
+          {contentTypes.map((contentType) => (
             <MenuItem key={contentType.value} value={contentType.value} dense>
               {contentType.name}
             </MenuItem>
@@ -295,7 +282,7 @@ const RequestFields: React.FC = () => {
         </Tooltip>
       </Grid>
 
-      {isRequestBodyAllowed() && (
+      {isRequestBodyAllowed(request.method) && (
         <Grid item xs={12} className={classes.gridItem}>
           <InputLabel className={classes.label} error={bodyError != null}>
             Request body

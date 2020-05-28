@@ -5,6 +5,7 @@ import qs from "qs";
 import HttpRequest, { processHeaders } from "./types/HttpRequest";
 import HttpResponse, { toHttpResponse } from "./types/HttpResponse";
 import { MULTIPART_FORM_DATA, X_WWW_FORM_URLENCODED } from "./types/ContentType";
+import { isRequestBodyAllowed } from "./types/HttpMethod";
 
 const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosResponse> => {
   try {
@@ -66,7 +67,7 @@ export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken
     config.headers[header.name] = header.value;
   });
 
-  if (!_.isEmpty(request.body)) {
+  if (isRequestBodyAllowed(request.method) && !_.isEmpty(request.body)) {
     config.data = getRequestBody(request);
   }
 

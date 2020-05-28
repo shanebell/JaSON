@@ -1,5 +1,7 @@
 #  JaSON
 
+![JaSON logo](https://github.com/shanebell/JaSON/raw/master/public/jason-128x128.png)
+
 JaSON is a Google Chrome extension for testing APIs and making HTTP network requests.
 
 It is available to install from the Chrome Web Store:
