@@ -1,6 +1,6 @@
 {
   "name": "JaSON",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "manifest_version": 2,
   "description": "JaSON: JSON and XML API test tool",
   "background": {
