@@ -1,8 +1,8 @@
 {
   "name": "JaSON",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "manifest_version": 2,
-  "description": "JaSON: JSON and XML API test tool",
+  "description": "A simple, easy to use HTTP client to send API requests from within Chrome and see formatted, syntax highlighted responses. Great for testing and debugging JSON and XML APIs, RESTful APIs, GraphQL APIs, web services, web applications and more.",
   "background": {
     "scripts": ["background.js"],
     "persistent": false
