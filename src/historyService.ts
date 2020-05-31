@@ -57,8 +57,12 @@ const historyService = {
     database.history.update(historyItem.id, updates).then(callback);
   },
 
-  clear: (callback: () => void) => {
-    database.history.clear().then(callback);
+  clear: (includeFavourites: boolean, callback: () => void) => {
+    if (includeFavourites) {
+      database.history.clear().then(callback);
+    } else {
+      database.history.where({ favourite: 0 }).delete().then(callback);
+    }
   },
 
   trim: (callback: () => void) => {

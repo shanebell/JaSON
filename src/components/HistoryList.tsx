@@ -54,7 +54,6 @@ const HistoryList: React.FC = () => {
     <>
       {_.isEmpty(history) && <div className={classes.message}>No results</div>}
 
-      {/* HISTORY ITEMS */}
       <List dense>
         {history.map((historyItem) => (
           <div key={historyItem.id}>

@@ -137,8 +137,8 @@ const actions = {
     });
   },
 
-  clearHistory: () => ({ dispatch }: StoreApi) => {
-    historyService.clear(() => {
+  clearHistory: (includeFavourites: boolean) => ({ dispatch }: StoreApi) => {
+    historyService.clear(includeFavourites, () => {
       dispatch(searchHistory());
     });
   },

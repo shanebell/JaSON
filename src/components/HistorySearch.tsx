@@ -4,6 +4,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { Favorite, FavoriteBorder, MoreVert, Search } from "@material-ui/icons";
 import React, { useEffect, useRef, useState } from "react";
 import _ from "lodash";
@@ -12,7 +13,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 
@@ -34,7 +34,8 @@ const HistorySearch: React.FC = () => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [clearHistoryDialogOpen, setClearHistoryDialogOpen] = useState<boolean>(false);
+  const [deleteHistoryDialogOpen, setDeleteHistoryDialogOpen] = useState<boolean>(false);
+  const [includeFavourites, setIncludeFavourites] = useState<boolean>(false);
   const [{ searchTerm, showFavourites }, { searchHistory, clearHistory, setHistoryFilter }] = useHistoryFilter();
 
   const showMenu = (event: any) => {
@@ -45,18 +46,19 @@ const HistorySearch: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const showClearHistoryDialog = () => {
+  const showDeleteHistoryDialog = () => {
     hideMenu();
-    setClearHistoryDialogOpen(true);
+    setIncludeFavourites(false);
+    setDeleteHistoryDialogOpen(true);
   };
 
-  const hideClearHistoryDialog = () => {
-    setClearHistoryDialogOpen(false);
+  const hideDeleteHistoryDialog = () => {
+    setDeleteHistoryDialogOpen(false);
   };
 
-  const clearAll = () => {
-    clearHistory();
-    hideClearHistoryDialog();
+  const deleteHistory = () => {
+    clearHistory(includeFavourites);
+    hideDeleteHistoryDialog();
   };
 
   // debounce the history search to prevent excessive re-renders
@@ -102,8 +104,8 @@ const HistorySearch: React.FC = () => {
                 </IconButton>
               </Tooltip>
               <Menu anchorEl={anchorEl} open={anchorEl != null} onClose={hideMenu}>
-                <MenuItem onClick={showClearHistoryDialog}>
-                  <ListItemText>Clear request history</ListItemText>
+                <MenuItem onClick={showDeleteHistoryDialog}>
+                  <ListItemText>Delete request history</ListItemText>
                 </MenuItem>
               </Menu>
             </InputAdornment>
@@ -112,25 +114,36 @@ const HistorySearch: React.FC = () => {
         value={searchTerm}
         onChange={(event) => setHistoryFilter("searchTerm", event.target.value)}
       />
+
       <Dialog
-        open={clearHistoryDialogOpen}
-        onClose={hideClearHistoryDialog}
+        open={deleteHistoryDialogOpen}
+        onClose={hideDeleteHistoryDialog}
         aria-labelledby="confirm-dialog-title"
         aria-describedby="confirm-dialog-description"
         maxWidth="md"
       >
-        <DialogTitle id="confirm-dialog-title">Clear request history?</DialogTitle>
+        <DialogTitle id="confirm-dialog-title">Delete request history?</DialogTitle>
         <DialogContent>
-          <DialogContentText id="confirm-dialog-description">
-            This will delete all items (including favourites) from your history.
-          </DialogContentText>
+          <p>Are you sure you want to delete all items from your request history?</p>
+          <p>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={includeFavourites}
+                  onChange={() => setIncludeFavourites(!includeFavourites)}
+                  color="primary"
+                />
+              }
+              label="Delete favourites?"
+            />
+          </p>
         </DialogContent>
         <DialogActions>
-          <Button onClick={hideClearHistoryDialog} color="primary">
+          <Button onClick={hideDeleteHistoryDialog} color="primary">
             Cancel
           </Button>
-          <Button onClick={clearAll} color="primary" autoFocus>
-            Clear history
+          <Button onClick={deleteHistory} color="primary" autoFocus>
+            Delete history
           </Button>
         </DialogActions>
       </Dialog>
