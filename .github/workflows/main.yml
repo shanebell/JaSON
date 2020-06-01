@@ -1,0 +1,13 @@
+name: Build JaSON
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: node:lts
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: npm run build
