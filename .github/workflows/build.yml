@@ -1,4 +1,4 @@
-name: Build JaSON
+name: Build
 
 on:
   push:
@@ -17,4 +17,9 @@ jobs:
         env:
           CI: true
       - run: npm run build
+      - run: cd build && zip -r ../JaSON.zip .
+      - uses: actions/upload-artifact@v1
+        with:
+          name: JaSON.zip
+          path: JaSON.zip
 
