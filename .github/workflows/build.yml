@@ -13,13 +13,17 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
-      - run: npm install
-      - run: npm test
+      - run: echo ${{ github.ref }}
+      - run: echo ${TAG}
         env:
-          CI: true
-      - run: npm run build
-      - run: cd build && zip -r ../JaSON-${{ github.ref }}.zip .
-      - uses: actions/upload-artifact@v1
-        with:
-          name: JaSON
-          path: JaSON-${{ github.ref }}.zip
+          TAG: echo ${{ github.ref }} | sed s/refs\\/tags\\///
+#      - run: npm install
+#      - run: npm test
+#        env:
+#          CI: true
+#      - run: npm run build
+#      - run: cd build && zip -r ../JaSON-${{ github.ref }}.zip .
+#      - uses: actions/upload-artifact@v1
+#        with:
+#          name: JaSON
+#          path: JaSON-${{ github.ref }}.zip
