@@ -19,7 +19,7 @@ jobs:
           CI: true
       - run: npm run build
       - run: echo ::set-env name=VERSION::${GITHUB_REF#refs/*/}
-      - run: echo ${{ VERSION }}
+      - run: echo ${{ env.VERSION }}
       - run: cd build && zip -r ../JaSON-${{ env.VERSION }}.zip .
       - uses: actions/upload-artifact@v1
         with:
