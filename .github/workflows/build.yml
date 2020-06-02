@@ -13,10 +13,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
-      - run: echo ${{ github.ref }}
-      - run: echo ${TAG}
-        env:
-          TAG: echo ${{ github.ref }} | sed s/refs\\/tags\\///
+      - run: echo ::set-env name=VERSION::${GITHUB_REF#refs/*/}
+      - run: echo ${VERSION}
 #      - run: npm install
 #      - run: npm test
 #        env:
