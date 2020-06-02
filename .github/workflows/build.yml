@@ -23,5 +23,5 @@ jobs:
       - run: cd build && zip -r ../JaSON-${{ env.VERSION }}.zip .
       - uses: actions/upload-artifact@v1
         with:
-          name: JaSON
-          path: JaSON-${{ env.VERSION }}.zip
+          name: JaSON-${{ env.VERSION }}
+          path: /
