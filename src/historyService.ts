@@ -1,9 +1,11 @@
 import database from "./database";
 import HistoryItem from "./types/HistoryItem";
-import { HistoryFilter } from "./state";
 import { Collection, Table } from "dexie";
 import _ from "lodash";
 import { legacyRequestToHistoryItem } from "./historyUtil";
+import { HistoryFilter } from "./types/HistoryFilter";
+
+const { history } = database;
 
 export const HISTORY_SEARCH_LIMIT = 100;
 
@@ -14,23 +16,32 @@ const isEmpty = (historyFilter: HistoryFilter): boolean => {
   return historyFilter.searchTerm.length === 0 && !historyFilter.showFavourites;
 };
 
-const applyShowFavourites = (table: Table<HistoryItem, string>, showFavourites: boolean) => {
-  return showFavourites ? table.where({ favourite: 1 }) : table.toCollection();
+const applyOrderBy = (database: Table<HistoryItem, string>): Collection<HistoryItem, string> => {
+  return database.orderBy("date").reverse();
 };
 
-const applySearchTerm = (collection: Collection<HistoryItem, string>, searchTerm: string) => {
+const applyLimit = (collection: Collection<HistoryItem, string>): Collection<HistoryItem, string> => {
+  return collection.limit(HISTORY_SEARCH_LIMIT);
+};
+
+const applyShowFavourites = (
+  collection: Collection<HistoryItem, string>,
+  showFavourites: boolean
+): Collection<HistoryItem, string> => {
+  return showFavourites ? collection.filter((historyItem: HistoryItem) => historyItem.favourite === 1) : collection;
+};
+
+const applySearchTerm = (
+  collection: Collection<HistoryItem, string>,
+  searchTerm: string
+): Collection<HistoryItem, string> => {
   if (searchTerm.length > 0) {
-    const parts = searchTerm.toLowerCase().split(/\s+/);
-    const terms: string[] = [];
-    parts.forEach((part) => {
-      if (!_.includes(terms, part)) {
-        terms.push(part);
-      }
-    });
+    const parts = searchTerm.trim().toLowerCase().split(/\s+/);
+    const terms = _.compact(_.uniq(parts));
 
     // filter by search term
     if (terms.length > 0) {
-      collection = collection.and((historyItem: HistoryItem) => {
+      collection = collection.filter((historyItem: HistoryItem) => {
         return _.every(terms, (term) => {
           return historyItem.searchableText.includes(term);
         });
@@ -40,51 +51,46 @@ const applySearchTerm = (collection: Collection<HistoryItem, string>, searchTerm
   return collection;
 };
 
-const applyCommonFilters = (collection: Collection<HistoryItem, string>) => {
-  return collection.limit(HISTORY_SEARCH_LIMIT).reverse().sortBy("date");
-};
-
 const historyService = {
   save: (historyItem: HistoryItem, callback: () => void) => {
-    database.history.add(historyItem).then(callback);
+    history.add(historyItem).then(callback);
   },
 
   delete: (historyItem: HistoryItem, callback: () => void) => {
-    database.history.delete(historyItem.id).then(callback);
+    history.delete(historyItem.id).then(callback);
   },
 
   update: (historyItem: HistoryItem, updates: {}, callback: () => void) => {
-    database.history.update(historyItem.id, updates).then(callback);
+    history.update(historyItem.id, updates).then(callback);
   },
 
   clear: (includeFavourites: boolean, callback: () => void) => {
     if (includeFavourites) {
-      database.history.clear().then(callback);
+      history.clear().then(callback);
     } else {
-      database.history.where({ favourite: 0 }).delete().then(callback);
+      history.where({ favourite: 0 }).delete().then(callback);
     }
   },
 
   trim: (callback: () => void) => {
-    database.history.count(async (count) => {
+    history.count(async (count) => {
       // include a buffer of 50 records so we don't trim history every time
       if (count > MAX_HISTORY_SIZE + 50) {
-        const keysToDelete = await database.history.orderBy("date").reverse().offset(MAX_HISTORY_SIZE).primaryKeys();
-        await database.history.bulkDelete(keysToDelete);
+        const keysToDelete = await history.orderBy("date").reverse().offset(MAX_HISTORY_SIZE).primaryKeys();
+        await history.bulkDelete(keysToDelete);
         callback();
       }
     });
   },
 
   search: (historyFilter: HistoryFilter, callback: (results: HistoryItem[]) => void) => {
-    if (isEmpty(historyFilter)) {
-      database.history.orderBy("date").reverse().limit(HISTORY_SEARCH_LIMIT).toArray(callback);
-    } else {
-      const { searchTerm, showFavourites } = historyFilter;
-      let query = applyShowFavourites(database.history, showFavourites);
-      query = applySearchTerm(query, searchTerm);
-      applyCommonFilters(query).then(callback);
+    let collection = applyOrderBy(history);
+    if (!isEmpty(historyFilter)) {
+      collection = applyShowFavourites(collection, historyFilter.showFavourites);
+      collection = applySearchTerm(collection, historyFilter.searchTerm);
     }
+    collection = applyLimit(collection);
+    collection.toArray().then(callback);
   },
 
   migrate: (callback: () => void) => {
@@ -107,7 +113,7 @@ const historyService = {
       } catch (e) {
         console.debug("Error migrating history: %s", e.message);
       } finally {
-        database.history.bulkAdd(itemsToSave).then(() => callback());
+        history.bulkAdd(itemsToSave).then(() => callback());
         console.debug("History migration took %sms", Date.now() - start);
         localStorage.removeItem(LEGACY_HISTORY_KEY);
       }
