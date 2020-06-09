@@ -5,6 +5,7 @@ import { sendRequest } from "./requestHandler";
 import axios, { CancelTokenSource } from "axios";
 import historyService from "./historyService";
 import HistoryItem, { toHistoryItem } from "./types/HistoryItem";
+import { HistoryFilter } from "./types/HistoryFilter";
 
 const LOCAL_STORAGE_THEME_KEY = "theme";
 
@@ -26,11 +27,6 @@ const defaultResponse: HttpResponse = {
 };
 
 const defaultTheme: string = localStorage.getItem(LOCAL_STORAGE_THEME_KEY) || "dark";
-
-export interface HistoryFilter {
-  searchTerm: string;
-  showFavourites: boolean;
-}
 
 interface State {
   request: HttpRequest;
@@ -144,13 +140,14 @@ const actions = {
   },
 
   selectHistoryItem: (historyItem: HistoryItem) => ({ setState }: StoreApi) => {
+    const { url, method, contentType, body, headers } = historyItem;
     setState({
       request: {
-        url: historyItem.url,
-        method: historyItem.method,
-        contentType: historyItem.contentType,
-        body: historyItem.body,
-        headers: historyItem.headers,
+        url,
+        method,
+        contentType,
+        body,
+        headers,
       },
       response: defaultResponse,
     });
