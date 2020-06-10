@@ -1,20 +1,35 @@
-### WTF is JaSON?
-JaSON is a handy Chrome plugin that lets you to send and receive JSON and XML from your browser to web services around the internet. Instead of having to write code or hack on command line tools like curl, you can use JaSON to explore an API with a few easy clicks. It's free, easy to use and takes only a few seconds to install.
+#  JaSON
 
-### Sounds awesome! Where do I get it?
-You can install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/jason/oealdlhfjifhgbmjnenhkgffglaibojf).
+![Build](https://github.com/shanebell/JaSON/workflows/Build/badge.svg)
 
-### Ok, done. Now what do I do?
-An example is probably the best way to demonstrate. Let's assume you want to explore the [OpenWeatherMap API](http://openweathermap.org/API#weather).
+![JaSON logo](https://github.com/shanebell/JaSON/raw/master/public/jason-128x128.png)
 
-To get the weather in Sydney Australia, you can simply enter the following URL and hit send.
+JaSON is a Google Chrome extension for testing APIs and making HTTP network requests.
 
-```
-http://api.openweathermap.org/data/2.5/weather?q=Sydney,Australia
-```
+It is available to install from the Chrome Web Store:
 
-Boom! You'll get a nicely formatted response. You're welcome :)
+https://chrome.google.com/webstore/detail/oealdlhfjifhgbmjnenhkgffglaibojf
 
-Let's try a few other things.
+### Cookie support ###
+Automatically sends cookies from Chrome. This is extremely handy for APIs which require authentication. Simply authenticate via your browser as normal and JaSON will send cookies for requests which match.
 
-### More coming soon...
+### HTTP methods ###
+GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS
+
+### Request history ###
+Keeps request history with full text search. Individual history items can be deleted, or marked as a "favourite" for easy access. History from previous versions of JaSON will be automatically migrated. Stores history in IndexedDB for improved performance.
+
+### Dark/light theme ###
+Change the colour theme to suit your work environment.
+
+### Formatted input/output ###
+Provides an IDE like experience when editing request body and headers. Automatically formats request/response body syntax and colour based on content type.
+
+### Content type ###
+Supports JSON, XML, and form encoded data by default. Additional content types can be used by setting a custom content type header.
+
+### New and improved ###
+Completely re-written, new styling, layout, colours, additional features and improved performance.
+
+### 100% open source ###
+Source code is available from GitHub.
