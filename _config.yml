@@ -1,7 +1,8 @@
 title: JaSON
 description: JaSON Chrome Extension
 google_analytics: 
-show_downloads: true
+show_downloads: false
+logo: https://github.com/shanebell/JaSON/raw/master/public/jason-128x128.png
 theme: jekyll-theme-minimal
 
 gems:
