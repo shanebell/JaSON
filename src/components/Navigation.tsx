@@ -1,4 +1,4 @@
-import { Tooltip } from "@material-ui/core";
+import { Theme, Tooltip } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -13,7 +13,7 @@ import logo from "../images/jason.png";
 import { useTheme } from "../state";
 import Loading from "./Loading";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   title: {
     flexGrow: 1,
     fontWeight: 300,

@@ -14,7 +14,7 @@ import { mdiBug, mdiGithub, mdiGoogleChrome, mdiLicense, mdiCreativeCommons } fr
 import Icon from "@mdi/react";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   title: {
     fontWeight: 300,
   },
