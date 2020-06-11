@@ -1,9 +1,9 @@
 import Chip from "@material-ui/core/Chip";
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import HttpResponse from "../types/HttpResponse";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(2),
     marginLeft: theme.spacing(2),

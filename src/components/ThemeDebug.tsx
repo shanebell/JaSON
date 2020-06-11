@@ -2,10 +2,10 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { BugReport } from "@material-ui/icons";
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(2),
     padding: theme.spacing(4),

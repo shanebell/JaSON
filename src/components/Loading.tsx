@@ -1,9 +1,9 @@
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useLoading } from "../state";
 import React from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   progress: {
     height: theme.spacing(0.5),
   },

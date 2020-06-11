@@ -1,6 +1,6 @@
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import React, { ChangeEvent } from "react";
@@ -11,7 +11,7 @@ import ResponseTime from "./ResponseTime";
 import ResponseData from "./ResponseData";
 import ResponseHeaders from "./ResponseHeaders";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   responseTabs: {
     marginBottom: theme.spacing(4),
   },

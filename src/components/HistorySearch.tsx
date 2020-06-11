@@ -15,6 +15,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme: Theme) => ({
   filters: {
@@ -27,6 +28,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   searchInput: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
+  },
+  tooltip: {
+    maxWidth: 500,
+  },
+  tooltipCode: {
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: "bold",
+    margin: 0,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
 }));
 
@@ -83,12 +94,27 @@ const HistorySearch: React.FC = () => {
           className: classes.searchInput,
           startAdornment: (
             <InputAdornment position="start">
-              <Search className={classes.searchIcon} />
+              <Tooltip
+                arrow
+                classes={{ tooltip: classes.tooltip }}
+                title={
+                  <>
+                    <Typography variant="caption">Search on any combination of URL, method or status. eg:</Typography>
+                    <pre className={classes.tooltipCode}>mydomain.com POST 500</pre>
+                  </>
+                }
+              >
+                <Search className={classes.searchIcon} />
+              </Tooltip>
             </InputAdornment>
           ),
           endAdornment: (
             <InputAdornment position="end">
-              <Tooltip arrow title="Show favourites">
+              <Tooltip
+                arrow
+                classes={{ tooltip: classes.tooltip }}
+                title={<Typography variant="caption">Show favourites</Typography>}
+              >
                 <Checkbox
                   checked={showFavourites}
                   size="small"
@@ -98,8 +124,12 @@ const HistorySearch: React.FC = () => {
                   color="default"
                 />
               </Tooltip>
-              <Tooltip arrow title="More options...">
-                <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={showMenu}>
+              <Tooltip
+                arrow
+                title={<Typography variant="caption">More options...</Typography>}
+                classes={{ tooltip: classes.tooltip }}
+              >
+                <IconButton onClick={showMenu}>
                   <MoreVert fontSize="small" />
                 </IconButton>
               </Tooltip>
