@@ -8,26 +8,64 @@ import {
 } from "./types/ContentType";
 import { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } from "./types/HttpMethod";
 
-let request: any = null;
+let legacyHistoryItem: any = null;
 
 beforeEach(() => {
-  request = {
-    url: "https://httpbin.org/post",
-    method: "POST",
-    contentType: "application/json",
-    headers: [
-      { name: "Authorization", value: "Bearer 3ac4fafc-2665-4657-a2ca-c7451f6160ec" },
-      { name: "content-type", value: "application/json" },
-      { name: "name" },
-      { value: "value" },
-    ],
-    body: '{ "name": "value" }',
-    time: "2020-05-21T12:39:57.510Z",
+  legacyHistoryItem = {
+    request: {
+      url: "https://httpbin.org/post",
+      method: "POST",
+      contentType: "application/json",
+      headers: [
+        { name: "Authorization", value: "Bearer 3ac4fafc-2665-4657-a2ca-c7451f6160ec" },
+        { name: "content-type", value: "application/json" },
+        { name: "name" },
+        { value: "value" },
+      ],
+      body: '{ "name": "value" }',
+      time: "2020-05-21T12:39:57.510Z",
+    },
+    response: {
+      data: '{\n  "origin": "1.157.185.79"\n}',
+      status: 200,
+      headers: [
+        {
+          name: "access-control-allow-credentials",
+          value: "true",
+        },
+        { name: "access-control-allow-origin", value: "*" },
+        {
+          name: "content-length",
+          value: "31",
+        },
+        { name: "content-type", value: "application/json" },
+        {
+          name: "date",
+          value: "Thu, 21 May 2020 12:39:57 GMT",
+        },
+        { name: "server", value: "gunicorn/19.9.0" },
+        { name: "status", value: "200" },
+      ],
+      config: {
+        method: "GET",
+        transformRequest: [null],
+        transformResponse: [null],
+        url: "https://httpbin.org/ip",
+        headers: {
+          "Content-Type": "application/json",
+          test: "value",
+          Accept: "application/json, text/plain, */*",
+        },
+        data: "",
+      },
+      statusText: "",
+      time: "2020-05-21T12:39:57.732Z",
+    },
   };
 });
 
 test("legacyRequestToHistoryItem converts a legacy history request to a history item", () => {
-  const historyItem = legacyRequestToHistoryItem(request);
+  const historyItem = legacyRequestToHistoryItem(legacyHistoryItem);
   expect(historyItem).toBeDefined();
   expect(historyItem?.url).toBe("https://httpbin.org/post");
   expect(historyItem?.method).toBe("POST");
@@ -37,7 +75,8 @@ test("legacyRequestToHistoryItem converts a legacy history request to a history 
   );
   expect(historyItem?.body).toBe('{ "name": "value" }');
   expect(historyItem?.date).toBe(1590064797510);
-  expect(historyItem?.searchableText).toBe("https://httpbin.org/post post");
+  expect(historyItem?.searchableText).toBe("https://httpbin.org/post post 200");
+  expect(historyItem?.status).toBe(200);
 });
 
 describe("legacyRequestToHistoryItem only converts valid content types", () => {
@@ -52,8 +91,8 @@ describe("legacyRequestToHistoryItem only converts valid content types", () => {
     ["text/plain", false],
     ["text/json", false],
   ])("%s - %s", async (contentType, valid) => {
-    request.contentType = contentType;
-    const historyItem = legacyRequestToHistoryItem(request);
+    legacyHistoryItem.request.contentType = contentType;
+    const historyItem = legacyRequestToHistoryItem(legacyHistoryItem);
     if (valid) {
       expect(historyItem?.contentType).toBe(contentType);
     } else {
@@ -74,8 +113,8 @@ describe("legacyRequestToHistoryItem only converts valid URLs", () => {
     ["httpbin.org/ip", false],
     ["localhost:8080/", false],
   ])("%s - %s", async (url, valid) => {
-    request.url = url;
-    const historyItem = legacyRequestToHistoryItem(request);
+    legacyHistoryItem.request.url = url;
+    const historyItem = legacyRequestToHistoryItem(legacyHistoryItem);
     if (valid) {
       expect(historyItem?.url).toBe(url);
     } else {
@@ -96,8 +135,8 @@ describe("legacyRequestToHistoryItem only converts valid HTTP methods", () => {
     ["TRACE", false],
     ["CONNECT", false],
   ])("%s - %s", async (method, valid) => {
-    request.method = method;
-    const historyItem = legacyRequestToHistoryItem(request);
+    legacyHistoryItem.request.method = method;
+    const historyItem = legacyRequestToHistoryItem(legacyHistoryItem);
     if (valid) {
       expect(historyItem?.method).toBe(method);
     } else {
@@ -116,8 +155,8 @@ describe("legacyRequestToHistoryItem only converts valid dates", () => {
     ["21-05-2020T12:00:00", false],
     ["2020-05-21T12:39:57.x510Z", false],
   ])("%s - %s", async (time, valid) => {
-    request.time = time;
-    const historyItem = legacyRequestToHistoryItem(request);
+    legacyHistoryItem.request.time = time;
+    const historyItem = legacyRequestToHistoryItem(legacyHistoryItem);
     if (valid) {
       expect(historyItem?.date).toBeDefined();
     } else {
