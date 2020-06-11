@@ -1,12 +1,6 @@
-#  JaSON
-
-![Build](https://github.com/shanebell/JaSON/workflows/Build/badge.svg)
-
 JaSON is a Google Chrome extension for testing APIs and making HTTP network requests.
 
-It is available to install from the Chrome Web Store:
-
-https://chrome.google.com/webstore/detail/oealdlhfjifhgbmjnenhkgffglaibojf
+It is available to install from the [Chrome Web Store](https://chrome.google.com/webstore/detail/oealdlhfjifhgbmjnenhkgffglaibojf)
 
 ### Cookie support ###
 Automatically sends cookies from Chrome. This is extremely handy for APIs which require authentication. Simply authenticate via your browser as normal and JaSON will send cookies for requests which match.
@@ -30,4 +24,4 @@ Supports JSON, XML, and form encoded data by default. Additional content types c
 Completely re-written, new styling, layout, colours, additional features and improved performance.
 
 ### 100% open source ###
-Source code is available from GitHub.
+Source code is available from [GitHub](https://github.com/shanebell/JaSON)
