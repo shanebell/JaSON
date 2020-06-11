@@ -20,13 +20,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   message: {
     padding: theme.spacing(4),
   },
-  method: {
+  chip: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    marginRight: theme.spacing(1),
+    color: theme.palette.text.secondary,
   },
   date: {
     display: "inline !important",
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
   trim: {
     display: "block",
@@ -74,12 +76,21 @@ const HistoryList: React.FC = () => {
                         {historyItem.host}
                       </Typography>
                       <Chip
-                        className={classes.method}
+                        className={classes.chip}
                         label={historyItem.method}
-                        color="primary"
+                        color="default"
                         size="small"
                         variant="outlined"
                       />
+                      {historyItem.status && (
+                        <Chip
+                          className={classes.chip}
+                          label={historyItem.status}
+                          color="default"
+                          size="small"
+                          variant="outlined"
+                        />
+                      )}
                       <Typography component="span" variant="caption" className={`${classes.trim} ${classes.date}`}>
                         <FormattedDate date={historyItem.date} />
                       </Typography>

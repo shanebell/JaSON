@@ -21,17 +21,9 @@ const CONTENT_TYPES = [
 
 /**
  * Convert a request from a legacy history item to a new history item.
- *
- * old format: {
- *   body: "",
- *   contentType: "application/json",
- *   headers: [{name: "test", value: "value"}],
- *   method: "GET",
- *   time: "2020-05-21T11:52:04.206Z",
- *   url: "https://httpbin.org/ip"
- * }
  */
-const legacyRequestToHistoryItem = (request: any): HistoryItem | null => {
+const legacyRequestToHistoryItem = (legacyHistoryItem: any): HistoryItem | null => {
+  const { request, response } = legacyHistoryItem;
   try {
     if (!_.includes(HTTP_METHODS, request.method)) {
       return null;
@@ -64,7 +56,8 @@ const legacyRequestToHistoryItem = (request: any): HistoryItem | null => {
         .map((header) => `${header.name || ""}: ${header.value || ""}`)
         .join("\n")
         .value(),
-      searchableText: `${request.url.toLowerCase()} ${request.method.toString().toLowerCase()}`,
+      status: response.status,
+      searchableText: `${_.toLower(request.url)} ${_.toLower(request.method)} ${response.status || ""}`,
       favourite: 0,
     };
   } catch (e) {

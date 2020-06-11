@@ -100,8 +100,8 @@ const actions = {
     const response = await sendRequest(request, cancellable.token);
     setState({ cancellable: undefined });
 
-    if (response.status < 400) {
-      const historyItem = toHistoryItem(request);
+    if (response.status > 0) {
+      const historyItem = toHistoryItem(request, response);
 
       historyService.save(historyItem, () => {
         dispatch(searchHistory());

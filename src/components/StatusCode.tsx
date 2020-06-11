@@ -88,14 +88,18 @@ const statusCodes: Record<number, string> = {
   511: "Network Authentication Required",
 };
 
-const isError = (status: number) => _.toNumber(status) >= 400;
+const isError = (status: number) => {
+  const value = _.toNumber(status);
+  return value < 0 || value >= 400;
+};
 
 const getLabel = (status: number) => {
-  if (status === 999) {
+  if (status > 0) {
+    const statusText = statusCodes[status];
+    return statusText ? `${status} - ${statusText}` : status;
+  } else {
     return "Request failed";
   }
-  const statusText = statusCodes[status];
-  return statusText ? `${status} - ${statusText}` : status;
 };
 
 const StatusCode: React.FC<{ status: number }> = ({ status }) => {

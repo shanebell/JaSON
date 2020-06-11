@@ -84,10 +84,11 @@ const historyService = {
   },
 
   search: (historyFilter: HistoryFilter, callback: (results: HistoryItem[]) => void) => {
+    const { searchTerm, showFavourites } = historyFilter;
     let collection = applyOrderBy(history);
     if (!isEmpty(historyFilter)) {
-      collection = applyShowFavourites(collection, historyFilter.showFavourites);
-      collection = applySearchTerm(collection, historyFilter.searchTerm);
+      collection = applyShowFavourites(collection, showFavourites);
+      collection = applySearchTerm(collection, searchTerm);
     }
     collection = applyLimit(collection);
     collection.toArray().then(callback);
@@ -105,7 +106,7 @@ const historyService = {
           if (itemsToSave.length >= MAX_HISTORY_SIZE) {
             return false;
           }
-          const item = legacyRequestToHistoryItem(historyItem.request);
+          const item = legacyRequestToHistoryItem(historyItem);
           if (item) {
             itemsToSave.push(item);
           }
