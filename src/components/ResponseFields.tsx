@@ -67,7 +67,7 @@ const ResponseFields: React.FC = () => {
         </TabPanel>
 
         {/* RESPONSE HEADERS */}
-        <TabPanel isActive={responseTab === 2 && response.data}>
+        <TabPanel isActive={responseTab === 2 && response.headers}>
           <Paper square variant="outlined">
             <ResponseHeaders headers={response.headers} />
           </Paper>
