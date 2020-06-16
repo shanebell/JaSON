@@ -1,6 +1,6 @@
 {
   "name": "jason",
-  "version": "5.0.10",
+  "version": "5.0.11",
   "private": true,
   "dependencies": {
     "@material-ui/core": "4.10.1",
@@ -12,6 +12,7 @@
     "axios": "0.19.2",
     "dexie": "3.0.1",
     "flat": "5.0.0",
+    "jsonwebtoken": "8.5.1",
     "lodash": "4.17.15",
     "moment": "2.26.0",
     "prettier": "2.0.5",
@@ -54,6 +55,7 @@
     "@types/axios": "0.14.0",
     "@types/flat": "5.0.1",
     "@types/jest": "25.2.3",
+    "@types/jsonwebtoken": "8.5.0",
     "@types/lodash": "4.14.155",
     "@types/moment": "2.13.0",
     "@types/node": "13.13.9",
