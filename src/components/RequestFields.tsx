@@ -2,17 +2,18 @@ import Grid from "@material-ui/core/Grid";
 import SendIcon from "@material-ui/icons/Send";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import ClearIcon from "@material-ui/icons/Clear";
+import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { useLoading, useRequest } from "../state";
+import { useJwt, useLoading, useRequest } from "../state";
 import { httpMethods, isRequestBodyAllowed } from "../types/HttpMethod";
 import {
   APPLICATION_JSON,
@@ -24,6 +25,8 @@ import {
 } from "../types/ContentType";
 import WrappedAceEditor from "./WrappedAceEditor";
 import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import { Popover } from "@material-ui/core";
 
 const EDITOR_MODES: Record<string, string> = {
   [APPLICATION_JSON.value]: "json",
@@ -74,6 +77,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   error: {
     fontSize: "14px",
   },
+  headers: {
+    position: "relative",
+  },
+  authorized: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    zIndex: 100,
+  },
+  jwt: {
+    padding: theme.spacing(1),
+    fontFamily: "'Source Code Pro', monospace",
+    lineHeight: 1.5,
+    fontSize: 14,
+    width: "650px",
+  },
 }));
 
 const HTTP_PATTERN = /^http:\/\//i;
@@ -85,7 +104,9 @@ const RequestFields: React.FC = () => {
   const [bodyError, setBodyError] = useState<string | null>(null);
   const [timeoutId, setTimeoutId] = useState<any>(null);
   const [showCancel, setShowCancel] = useState<boolean>(false);
+  const [jwtAnchor, setJwtAnchor] = useState<HTMLButtonElement | null>(null);
   const [request, { setRequestValue, send, cancel, reset }] = useRequest();
+  const [jwt] = useJwt();
   const [loading] = useLoading();
 
   const handleFieldChange = (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -266,7 +287,20 @@ const RequestFields: React.FC = () => {
           enterDelay={500}
           enterNextDelay={500}
         >
-          <Paper square variant="outlined">
+          <Paper square variant="outlined" className={classes.headers}>
+            {jwt && (
+              <Tooltip arrow title={<Typography variant="caption">Show JSON web token</Typography>}>
+                <IconButton
+                  aria-label="Authorization"
+                  className={classes.authorized}
+                  onClick={(event: MouseEvent<HTMLButtonElement>) => {
+                    setJwtAnchor(event.currentTarget);
+                  }}
+                >
+                  <VerifiedUserIcon fontSize="default" />
+                </IconButton>
+              </Tooltip>
+            )}
             <WrappedAceEditor
               mode="properties"
               value={request.headers}
@@ -281,6 +315,24 @@ const RequestFields: React.FC = () => {
           </Paper>
         </Tooltip>
       </Grid>
+
+      <Popover
+        open={Boolean(jwtAnchor)}
+        anchorEl={jwtAnchor}
+        onClose={() => setJwtAnchor(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        <Paper square variant="outlined" className={classes.jwt}>
+          <WrappedAceEditor mode="json" value={jwt} readOnly={true} showGutter={false} />
+        </Paper>
+      </Popover>
 
       {isRequestBodyAllowed(request.method) && (
         <Grid item xs={12} className={classes.gridItem}>

@@ -2,12 +2,15 @@ import { createHook, createStore, StoreActionApi } from "react-sweet-state";
 import HttpRequest from "./types/HttpRequest";
 import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
+import { decode } from "jsonwebtoken";
 import axios, { CancelTokenSource } from "axios";
 import historyService from "./historyService";
 import HistoryItem, { toHistoryItem } from "./types/HistoryItem";
 import { HistoryFilter } from "./types/HistoryFilter";
+import _ from "lodash";
 
 const LOCAL_STORAGE_THEME_KEY = "theme";
+const JWT_PATTERN = /^\s*Authorization\s*:\s*Bearer\s+([a-zA-Z0-9-_.]+)\s*$/gm;
 
 const defaultRequest: HttpRequest = {
   url: "",
@@ -37,6 +40,7 @@ interface State {
   historyFilter: HistoryFilter;
   history: HistoryItem[];
   cancellable?: CancelTokenSource;
+  jwt: string;
 }
 
 type StoreApi = StoreActionApi<State>;
@@ -61,16 +65,42 @@ const trimHistory = () => ({ dispatch }: StoreApi) => {
   });
 };
 
+const parseHeaders = () => ({ setState, getState }: StoreApi) => {
+  const { headers } = getState().request;
+  let jwt;
+
+  // parse all tokens and use the last one
+  let matches;
+  while ((matches = JWT_PATTERN.exec(headers))) {
+    if (matches != null && _.size(matches) === 2) {
+      try {
+        const decoded = decode(matches[1], { complete: true, json: true });
+        if (decoded) {
+          jwt = JSON.stringify(decoded, null, 2);
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+  }
+  setState({
+    jwt,
+  });
+};
+
 // public actions
 
 const actions = {
-  setRequestValue: (name: string, value: any) => ({ setState, getState }: StoreApi) => {
+  setRequestValue: (name: string, value: any) => ({ setState, getState, dispatch }: StoreApi) => {
     setState({
       request: {
         ...getState().request,
         [name]: value,
       },
     });
+    if (name === "headers") {
+      dispatch(parseHeaders());
+    }
   },
 
   setResponseTab: (tab: number) => ({ setState }: StoreApi) => {
@@ -197,6 +227,7 @@ const store = createStore<State, typeof actions>({
       searchTerm: "",
       showFavourites: false,
     },
+    jwt: "",
   },
   actions,
 });
@@ -216,6 +247,12 @@ const useLoading = createHook(store, {
 const useRequest = createHook(store, {
   selector: (state: State) => {
     return state.request;
+  },
+});
+
+const useJwt = createHook(store, {
+  selector: (state: State) => {
+    return state.jwt;
   },
 });
 
@@ -240,4 +277,4 @@ const useHistoryFilter = createHook(store, {
   },
 });
 
-export { useRequest, useResponse, useHistory, useTheme, useLoading, useHistoryFilter };
+export { useRequest, useResponse, useJwt, useHistory, useTheme, useLoading, useHistoryFilter };
