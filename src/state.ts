@@ -65,7 +65,7 @@ const trimHistory = () => ({ dispatch }: StoreApi) => {
   });
 };
 
-const parseHeaders = () => ({ setState, getState }: StoreApi) => {
+const processHeaders = () => ({ setState, getState }: StoreApi) => {
   const { headers } = getState().request;
   let jwt;
 
@@ -99,7 +99,7 @@ const actions = {
       },
     });
     if (name === "headers") {
-      dispatch(parseHeaders());
+      dispatch(processHeaders());
     }
   },
 
@@ -114,6 +114,7 @@ const actions = {
       request: defaultRequest,
       response: defaultResponse,
       responseTab: 0,
+      jwt: "",
     });
   },
 
@@ -169,7 +170,7 @@ const actions = {
     });
   },
 
-  selectHistoryItem: (historyItem: HistoryItem) => ({ setState }: StoreApi) => {
+  selectHistoryItem: (historyItem: HistoryItem) => ({ setState, dispatch }: StoreApi) => {
     const { url, method, contentType, body, headers } = historyItem;
     setState({
       request: {
@@ -181,6 +182,7 @@ const actions = {
       },
       response: defaultResponse,
     });
+    dispatch(processHeaders());
   },
 
   favouriteHistoryItem: (historyItem: HistoryItem, favourite: boolean) => ({ dispatch }: StoreApi) => {
