@@ -13,7 +13,7 @@ import React, { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { useJwt, useLoading, useRequest } from "../state";
+import { useAuth, useLoading, useRequest } from "../state";
 import { httpMethods, isRequestBodyAllowed } from "../types/HttpMethod";
 import {
   APPLICATION_JSON,
@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: theme.spacing(1),
     zIndex: 100,
   },
-  jwt: {
+  auth: {
     padding: theme.spacing(1),
     fontFamily: "'Source Code Pro', monospace",
     lineHeight: 1.5,
@@ -104,9 +104,9 @@ const RequestFields: React.FC = () => {
   const [bodyError, setBodyError] = useState<string | null>(null);
   const [timeoutId, setTimeoutId] = useState<any>(null);
   const [showCancel, setShowCancel] = useState<boolean>(false);
-  const [jwtAnchor, setJwtAnchor] = useState<HTMLButtonElement | null>(null);
+  const [authAnchor, setAuthAnchor] = useState<HTMLButtonElement | null>(null);
   const [request, { setRequestValue, send, cancel, reset }] = useRequest();
-  const [jwt] = useJwt();
+  const [auth] = useAuth();
   const [loading] = useLoading();
 
   const handleFieldChange = (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -288,13 +288,20 @@ const RequestFields: React.FC = () => {
           enterNextDelay={500}
         >
           <Paper square variant="outlined" className={classes.headers}>
-            {jwt && (
-              <Tooltip arrow title={<Typography variant="caption">Show JSON web token</Typography>}>
+            {auth && (
+              <Tooltip
+                arrow
+                title={
+                  <Typography variant="caption">
+                    Show {auth.type === "JWT" ? "JSON web token" : "Basic Auth credentials"}
+                  </Typography>
+                }
+              >
                 <IconButton
                   aria-label="Authorization"
                   className={classes.authorized}
                   onClick={(event: MouseEvent<HTMLButtonElement>) => {
-                    setJwtAnchor(event.currentTarget);
+                    setAuthAnchor(event.currentTarget);
                   }}
                 >
                   <VerifiedUserIcon fontSize="default" />
@@ -317,9 +324,9 @@ const RequestFields: React.FC = () => {
       </Grid>
 
       <Popover
-        open={Boolean(jwtAnchor)}
-        anchorEl={jwtAnchor}
-        onClose={() => setJwtAnchor(null)}
+        open={Boolean(authAnchor)}
+        anchorEl={authAnchor}
+        onClose={() => setAuthAnchor(null)}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "center",
@@ -329,8 +336,8 @@ const RequestFields: React.FC = () => {
           horizontal: "center",
         }}
       >
-        <Paper square variant="outlined" className={classes.jwt}>
-          <WrappedAceEditor mode="json" value={jwt} readOnly={true} showGutter={false} />
+        <Paper square variant="outlined" className={classes.auth}>
+          <WrappedAceEditor mode="json" value={auth?.value || ""} readOnly={true} showGutter={false} />
         </Paper>
       </Popover>
 
