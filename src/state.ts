@@ -10,7 +10,8 @@ import { HistoryFilter } from "./types/HistoryFilter";
 import _ from "lodash";
 
 const LOCAL_STORAGE_THEME_KEY = "theme";
-const JWT_PATTERN = /^\s*Authorization\s*:\s*Bearer\s+([a-zA-Z0-9-_.]+)\s*$/gm;
+
+const AUTH_PATTERN = /^\s*Authorization\s*:\s*(Bearer|Basic)\s+([a-zA-Z0-9-_.=]+)\s*$/gm;
 
 const defaultRequest: HttpRequest = {
   url: "",
@@ -31,6 +32,11 @@ const defaultResponse: HttpResponse = {
 
 const defaultTheme: string = localStorage.getItem(LOCAL_STORAGE_THEME_KEY) || "dark";
 
+interface Auth {
+  type: "Basic" | "JWT";
+  value: string;
+}
+
 interface State {
   request: HttpRequest;
   response: HttpResponse;
@@ -40,7 +46,7 @@ interface State {
   historyFilter: HistoryFilter;
   history: HistoryItem[];
   cancellable?: CancelTokenSource;
-  jwt: string;
+  auth?: Auth;
 }
 
 type StoreApi = StoreActionApi<State>;
@@ -65,18 +71,30 @@ const trimHistory = () => ({ dispatch }: StoreApi) => {
   });
 };
 
+// TODO pull this out into a separate helper and write some unit tests
 const processHeaders = () => ({ setState, getState }: StoreApi) => {
   const { headers } = getState().request;
-  let jwt;
+  let auth: Auth | undefined;
+  let encoded;
+  let authType;
 
-  // parse all tokens and use the last one
+  // parse all matching tokens and use the last one
   let matches;
-  while ((matches = JWT_PATTERN.exec(headers))) {
-    if (matches != null && _.size(matches) === 2) {
+  while ((matches = AUTH_PATTERN.exec(headers))) {
+    if (matches != null && _.size(matches) === 3) {
       try {
-        const decoded = decode(matches[1], { complete: true, json: true });
-        if (decoded) {
-          jwt = JSON.stringify(decoded, null, 2);
+        authType = matches[1];
+        encoded = matches[2];
+        if (authType === "Bearer") {
+          const decoded = decode(encoded, { complete: true, json: true });
+          if (decoded) {
+            auth = { type: "JWT", value: JSON.stringify(decoded, null, 2) };
+          }
+        } else if (authType === "Basic") {
+          const decoded = atob(encoded);
+          if (decoded) {
+            auth = { type: "Basic", value: decoded };
+          }
         }
       } catch (e) {
         // ignore
@@ -84,7 +102,7 @@ const processHeaders = () => ({ setState, getState }: StoreApi) => {
     }
   }
   setState({
-    jwt,
+    auth,
   });
 };
 
@@ -114,7 +132,7 @@ const actions = {
       request: defaultRequest,
       response: defaultResponse,
       responseTab: 0,
-      jwt: "",
+      auth: undefined,
     });
   },
 
@@ -229,7 +247,6 @@ const store = createStore<State, typeof actions>({
       searchTerm: "",
       showFavourites: false,
     },
-    jwt: "",
   },
   actions,
 });
@@ -252,9 +269,9 @@ const useRequest = createHook(store, {
   },
 });
 
-const useJwt = createHook(store, {
+const useAuth = createHook(store, {
   selector: (state: State) => {
-    return state.jwt;
+    return state.auth;
   },
 });
 
@@ -279,4 +296,4 @@ const useHistoryFilter = createHook(store, {
   },
 });
 
-export { useRequest, useResponse, useJwt, useHistory, useTheme, useLoading, useHistoryFilter };
+export { useRequest, useResponse, useAuth, useHistory, useTheme, useLoading, useHistoryFilter };
