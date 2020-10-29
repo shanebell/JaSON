@@ -5,7 +5,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { Favorite, FavoriteBorder, MoreVert, Search } from "@material-ui/icons";
+import { Favorite, FavoriteBorder, MoreVert, Search, Close } from "@material-ui/icons";
 import React, { useEffect, useRef, useState } from "react";
 import _ from "lodash";
 import { useHistoryFilter } from "../state";
@@ -48,6 +48,14 @@ const HistorySearch: React.FC = () => {
   const [deleteHistoryDialogOpen, setDeleteHistoryDialogOpen] = useState<boolean>(false);
   const [includeFavourites, setIncludeFavourites] = useState<boolean>(false);
   const [{ searchTerm, showFavourites }, { searchHistory, clearHistory, setHistoryFilter }] = useHistoryFilter();
+
+  const hasSearchTerm = () => {
+    return searchTerm && searchTerm.trim().length > 0;
+  };
+
+  const clearSearchTerm = () => {
+    setHistoryFilter("searchTerm", "");
+  };
 
   const showMenu = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -110,6 +118,17 @@ const HistorySearch: React.FC = () => {
           ),
           endAdornment: (
             <InputAdornment position="end">
+              {hasSearchTerm() && (
+                <Tooltip
+                  arrow
+                  classes={{ tooltip: classes.tooltip }}
+                  title={<Typography variant="caption">Clear search term</Typography>}
+                >
+                  <IconButton aria-label="clear" onClick={clearSearchTerm}>
+                    <Close fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              )}
               <Tooltip
                 arrow
                 classes={{ tooltip: classes.tooltip }}
