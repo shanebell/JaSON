@@ -1,5 +1,7 @@
 import packageJson from "../package.json";
 
-export default {
+const config = {
   version: packageJson.version,
 };
+
+export default config;

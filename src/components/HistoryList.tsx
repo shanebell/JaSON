@@ -102,18 +102,22 @@ const HistoryList: React.FC = () => {
                 />
               </Tooltip>
               <ListItemSecondaryAction className={classes.actions}>
-                <Checkbox
-                  size="small"
-                  icon={<FavoriteBorder />}
-                  checkedIcon={<Favorite />}
-                  checked={historyItem.favourite === 1}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                    favouriteHistoryItem(historyItem, event.target.checked)
-                  }
-                />
-                <IconButton aria-label="delete" onClick={() => removeHistoryItem(historyItem)}>
-                  <Delete fontSize="small" />
-                </IconButton>
+                <Tooltip arrow title={historyItem.favourite ? "Remove from favourites" : "Add to favourites"}>
+                  <Checkbox
+                    size="small"
+                    icon={<FavoriteBorder />}
+                    checkedIcon={<Favorite />}
+                    checked={historyItem.favourite === 1}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      favouriteHistoryItem(historyItem, event.target.checked)
+                    }
+                  />
+                </Tooltip>
+                <Tooltip arrow title="Delete from history">
+                  <IconButton aria-label="delete" onClick={() => removeHistoryItem(historyItem)}>
+                    <Delete fontSize="small" />
+                  </IconButton>
+                </Tooltip>
               </ListItemSecondaryAction>
             </ListItem>
             <Divider variant="fullWidth" component="li" />
