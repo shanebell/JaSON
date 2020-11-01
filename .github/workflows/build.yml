@@ -18,8 +18,7 @@ jobs:
         env:
           CI: true
       - run: npm run build
-      - run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - uses: actions/upload-artifact@v1
         with:
-          name: JaSON-${VERSION}
+          name: JaSON-${GITHUB_REF#refs/*/}
           path: build
