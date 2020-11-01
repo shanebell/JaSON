@@ -18,7 +18,10 @@ jobs:
         env:
           CI: true
       - run: npm run build
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/*/}
       - uses: actions/upload-artifact@v1
         with:
-          name: JaSON-${{ GITHUB_REF#refs/*/ }}
+          name: JaSON-${{ steps.get_version.outputs.VERSION }}
           path: build
