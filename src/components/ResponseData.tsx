@@ -27,6 +27,8 @@ const ResponseData: React.FC<{ response: HttpResponse; formatted?: boolean }> = 
       minLines={1}
       maxLines={5000}
       readOnly
+      allowCopy={true}
+      copyMessage="Response data copied to clipboard"
     />
   );
 };
