@@ -10,7 +10,7 @@ import React from "react";
 import config from "../config";
 import "typeface-roboto";
 import logo from "../images/jason.png";
-import { mdiBug, mdiGithub, mdiGoogleChrome, mdiLicense, mdiCreativeCommons } from "@mdi/js";
+import { mdiBug, mdiGithub, mdiGoogleChrome, mdiLicense, mdiCreativeCommons, mdiShieldCheck } from "@mdi/js";
 import Icon from "@mdi/react";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
 
@@ -152,6 +152,13 @@ const About: React.FC<{ open: boolean; onClose: React.ReactEventHandler }> = ({ 
             href="http://laurareen.com/"
             target="_laurareen"
             linkText="Laura Reen"
+          />
+          <Paragraph
+            icon={mdiShieldCheck}
+            text="For privacy details see"
+            href="https://github.com/shanebell/JaSON/blob/master/privacy-policy.md"
+            target="_privacypolicy"
+            linkText="Privacy Policy"
           />
           <Paragraph
             icon={mdiCreativeCommons}

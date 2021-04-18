@@ -1,6 +1,6 @@
 {
   "name": "JaSON",
-  "version": "5.0.23",
+  "version": "5.0.24",
   "manifest_version": 2,
   "description": "A simple, easy to use HTTP client to send API requests from within Chrome and see formatted, syntax highlighted responses.",
   "background": {
