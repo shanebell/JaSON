@@ -34,3 +34,5 @@ Completely re-written, new styling, layout, colours, additional features and imp
 ### 100% open source ###
 Source code is available from GitHub.
 
+### Privacy policy ###
+Privacy policy is available [here](https://github.com/shanebell/JaSON/blob/master/privacy-policy.md)
