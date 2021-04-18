@@ -8,7 +8,7 @@ Free and ready to install now from the [Chrome Web Store](https://chrome.google.
 
 <p>
   <a href="https://chrome.google.com/webstore/detail/oealdlhfjifhgbmjnenhkgffglaibojf" target="_blank">
-    <img src="https://github.com/shanebell/JaSON/raw/master/public/chrome-web-store.png" style="width: 248px;"/>
+    <img alt="Chrome Web Store" src="https://github.com/shanebell/JaSON/raw/master/public/chrome-web-store.png" style="width: 248px;"/>
   </a>
 </p>
 
@@ -39,3 +39,6 @@ Completely re-written, new styling, layout, colours, additional features and imp
 
 ### 100% open source ###
 Source code is available from [GitHub](https://github.com/shanebell/JaSON)
+
+### Privacy policy ###
+Privacy policy is available [here](https://github.com/shanebell/JaSON/blob/master/privacy-policy.md)
