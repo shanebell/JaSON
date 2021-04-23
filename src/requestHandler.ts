@@ -58,7 +58,7 @@ export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken
     headers: {
       "Content-Type": request.contentType,
     },
-    timeout: 60_000,
+    timeout: 300_000, // 5 mins
     cancelToken,
   };
 
