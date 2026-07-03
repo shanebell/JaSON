@@ -1,24 +1,25 @@
-import Container from "@material-ui/core/Container";
-import Divider from "@material-ui/core/Divider";
-import { createMuiTheme, makeStyles, Theme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/core/styles";
+import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import { createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import React from "react";
-import "typeface-source-code-pro";
-import "typeface-roboto";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import "@fontsource/source-code-pro";
+import "@fontsource/roboto";
+import CssBaseline from "@mui/material/CssBaseline";
 import Navigation from "./Navigation";
 import RequestFields from "./RequestFields";
 import ResponseFields from "./ResponseFields";
 import config from "../config";
-import { PaletteOptions } from "@material-ui/core/styles/createPalette";
+import { PaletteOptions } from "@mui/material/styles";
 import { useTheme } from "../state";
-import { Grid } from "@material-ui/core";
+import Grid from "@mui/material/Grid";
 import HistorySearch from "./HistorySearch";
 import HistoryList from "./HistoryList";
+import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   container: {
-    paddingTop: 64 + theme.spacing(2),
+    paddingTop: `calc(64px + ${theme.spacing(4)})`,
     height: "100%",
   },
   divider: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   gridColumnLeft: {
     height: "100%",
     overflowY: "scroll",
-    paddingRight: `${theme.spacing(2)}px !important`,
+    paddingRight: theme.spacing(2),
   },
   gridColumnRight: {
     height: "100%",
@@ -44,7 +45,7 @@ const consoleMessage = () => {
 
 const palette: Record<string, PaletteOptions> = {
   dark: {
-    type: "dark",
+    mode: "dark",
     primary: {
       main: "#d7d8dd",
     },
@@ -53,7 +54,7 @@ const palette: Record<string, PaletteOptions> = {
     },
   },
   light: {
-    type: "light",
+    mode: "light",
     primary: {
       main: "#515570",
     },
@@ -65,11 +66,29 @@ const palette: Record<string, PaletteOptions> = {
 
 consoleMessage();
 
+const AppContent: React.FC = () => {
+  const { classes } = useStyles();
+  return (
+    <Container maxWidth={false} className={classes.container}>
+      <Grid container spacing={4} className={classes.gridContainer}>
+        <Grid size={{ xs: 8, xl: 9 }} className={classes.gridColumnLeft}>
+          <RequestFields />
+          <Divider className={classes.divider} />
+          <ResponseFields />
+        </Grid>
+        <Grid size={{ xs: 4, xl: 3 }} className={classes.gridColumnRight}>
+          <HistorySearch />
+          <HistoryList />
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
+
 const App = () => {
-  const classes = useStyles();
   const [theme] = useTheme();
 
-  const muiTheme = createMuiTheme({
+  const muiTheme = createTheme({
     spacing: 4,
     palette: palette[theme],
   });
@@ -78,19 +97,7 @@ const App = () => {
     <ThemeProvider theme={muiTheme}>
       <CssBaseline />
       <Navigation />
-      <Container maxWidth={false} className={classes.container}>
-        <Grid container spacing={4} className={classes.gridContainer}>
-          <Grid item xs={8} xl={9} className={classes.gridColumnLeft}>
-            <RequestFields />
-            <Divider className={classes.divider} />
-            <ResponseFields />
-          </Grid>
-          <Grid item xs={4} xl={3} className={classes.gridColumnRight}>
-            <HistorySearch />
-            <HistoryList />
-          </Grid>
-        </Grid>
-      </Container>
+      <AppContent />
     </ThemeProvider>
   );
 };

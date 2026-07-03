@@ -2,8 +2,7 @@ import { createHook, createStore, StoreActionApi } from "react-sweet-state";
 import HttpRequest from "./types/HttpRequest";
 import HttpResponse from "./types/HttpResponse";
 import { sendRequest } from "./requestHandler";
-import { decode } from "jsonwebtoken";
-import axios, { CancelTokenSource } from "axios";
+import { jwtDecode } from "jwt-decode";
 import historyService from "./historyService";
 import HistoryItem, { toHistoryItem } from "./types/HistoryItem";
 import { HistoryFilter } from "./types/HistoryFilter";
@@ -45,7 +44,7 @@ interface State {
   theme: string;
   historyFilter: HistoryFilter;
   history: HistoryItem[];
-  cancellable?: CancelTokenSource;
+  cancellable?: AbortController;
   auth?: Auth;
 }
 
@@ -53,186 +52,219 @@ type StoreApi = StoreActionApi<State>;
 
 // private actions (not exposed in state, used internally via dispatch)
 
-const searchHistory = () => ({ setState, getState }: StoreApi) => {
-  const historyFilter = getState().historyFilter;
-  const start = Date.now();
-  historyService.search(historyFilter, (results) => {
-    const end = Date.now();
-    console.debug("Search took %sms", end - start);
-    setState({
-      history: results,
+const searchHistory =
+  () =>
+  ({ setState, getState }: StoreApi) => {
+    const historyFilter = getState().historyFilter;
+    const start = Date.now();
+    historyService.search(historyFilter, (results) => {
+      const end = Date.now();
+      console.debug("Search took %sms", end - start);
+      setState({
+        history: results,
+      });
     });
-  });
-};
+  };
 
-const trimHistory = () => ({ dispatch }: StoreApi) => {
-  historyService.trim(() => {
-    dispatch(searchHistory());
-  });
-};
+const trimHistory =
+  () =>
+  ({ dispatch }: StoreApi) => {
+    historyService.trim(() => {
+      dispatch(searchHistory());
+    });
+  };
 
-// TODO pull this out into a separate helper and write some unit tests
-const processHeaders = () => ({ setState, getState }: StoreApi) => {
-  const { headers } = getState().request;
-  let auth: Auth | undefined;
-  let encoded;
-  let authType;
+const processHeaders =
+  () =>
+  ({ setState, getState }: StoreApi) => {
+    const { headers } = getState().request;
+    let auth: Auth | undefined;
+    let encoded;
+    let authType;
 
-  // parse all matching tokens and use the last one
-  let matches;
-  while ((matches = AUTH_PATTERN.exec(headers))) {
-    if (matches != null && _.size(matches) === 3) {
-      try {
-        authType = matches[1];
-        encoded = matches[2];
-        if (authType === "Bearer") {
-          const decoded = decode(encoded, { complete: true, json: true });
-          if (decoded) {
-            auth = { type: "JWT", value: JSON.stringify(decoded, null, 2) };
+    let matches;
+    while ((matches = AUTH_PATTERN.exec(headers))) {
+      if (_.size(matches) === 3) {
+        try {
+          authType = matches[1];
+          encoded = matches[2];
+          if (authType === "Bearer") {
+            const payload = jwtDecode(encoded);
+            const headerB64 = encoded.split(".")[0];
+            const headerPadded = headerB64 + "=".repeat((4 - (headerB64.length % 4)) % 4);
+            const header = JSON.parse(atob(headerPadded));
+            if (payload) {
+              auth = { type: "JWT", value: JSON.stringify({ header, payload }, null, 2) };
+            }
+          } else if (authType === "Basic") {
+            const decoded = atob(encoded);
+            if (decoded) {
+              auth = { type: "Basic", value: decoded };
+            }
           }
-        } else if (authType === "Basic") {
-          const decoded = atob(encoded);
-          if (decoded) {
-            auth = { type: "Basic", value: decoded };
-          }
+        } catch (e) {
+          // ignore
         }
-      } catch (e) {
-        // ignore
       }
     }
-  }
-  setState({
-    auth,
-  });
-};
+    setState({
+      auth,
+    });
+  };
 
 // public actions
 
 const actions = {
-  setRequestValue: (name: string, value: any) => ({ setState, getState, dispatch }: StoreApi) => {
-    setState({
-      request: {
-        ...getState().request,
-        [name]: value,
-      },
-    });
-    if (name === "headers") {
-      dispatch(processHeaders());
-    }
-  },
-
-  setResponseTab: (tab: number) => ({ setState }: StoreApi) => {
-    setState({
-      responseTab: tab,
-    });
-  },
-
-  reset: () => ({ setState }: StoreApi) => {
-    setState({
-      request: defaultRequest,
-      response: defaultResponse,
-      responseTab: 0,
-      auth: undefined,
-    });
-  },
-
-  send: () => async ({ setState, getState, dispatch }: StoreApi) => {
-    setState({
-      loading: true,
-      response: defaultResponse,
-    });
-
-    const { request } = getState();
-
-    const cancellable = axios.CancelToken.source();
-    setState({ cancellable });
-    const response = await sendRequest(request, cancellable.token);
-    setState({ cancellable: undefined });
-
-    if (response.status > 0) {
-      const historyItem = toHistoryItem(request, response);
-
-      historyService.save(historyItem, () => {
-        dispatch(searchHistory());
-        dispatch(trimHistory());
-      });
-    }
-
-    setState({
-      response,
-      loading: false,
-    });
-  },
-
-  cancel: () => ({ getState, setState }: StoreApi) => {
-    const cancellable = getState().cancellable;
-    if (cancellable) {
-      cancellable.cancel();
+  setRequestValue:
+    (name: string, value: any) =>
+    ({ setState, getState, dispatch }: StoreApi) => {
       setState({
-        cancellable: undefined,
+        request: {
+          ...getState().request,
+          [name]: value,
+        },
       });
-    }
-  },
+      if (name === "headers") {
+        dispatch(processHeaders());
+      }
+    },
 
-  toggleTheme: () => ({ setState, getState }: StoreApi) => {
-    const theme = getState().theme === "dark" ? "light" : "dark";
-    localStorage.setItem(LOCAL_STORAGE_THEME_KEY, theme);
-    setState({
-      theme,
-    });
-  },
+  setResponseTab:
+    (tab: number) =>
+    ({ setState }: StoreApi) => {
+      setState({
+        responseTab: tab,
+      });
+    },
 
-  clearHistory: (includeFavourites: boolean) => ({ dispatch }: StoreApi) => {
-    historyService.clear(includeFavourites, () => {
+  reset:
+    () =>
+    ({ setState }: StoreApi) => {
+      setState({
+        request: defaultRequest,
+        response: defaultResponse,
+        responseTab: 0,
+        auth: undefined,
+      });
+    },
+
+  send:
+    () =>
+    async ({ setState, getState, dispatch }: StoreApi) => {
+      setState({
+        loading: true,
+        response: defaultResponse,
+      });
+
+      const { request } = getState();
+
+      const controller = new AbortController();
+      setState({ cancellable: controller });
+      const response = await sendRequest(request, controller.signal);
+      setState({ cancellable: undefined });
+
+      if (response.status > 0) {
+        const historyItem = toHistoryItem(request, response);
+
+        historyService.save(historyItem, () => {
+          dispatch(searchHistory());
+          dispatch(trimHistory());
+        });
+      }
+
+      setState({
+        response,
+        loading: false,
+      });
+    },
+
+  cancel:
+    () =>
+    ({ getState, setState }: StoreApi) => {
+      const cancellable = getState().cancellable;
+      if (cancellable) {
+        cancellable.abort();
+        setState({
+          cancellable: undefined,
+        });
+      }
+    },
+
+  toggleTheme:
+    () =>
+    ({ setState, getState }: StoreApi) => {
+      const theme = getState().theme === "dark" ? "light" : "dark";
+      localStorage.setItem(LOCAL_STORAGE_THEME_KEY, theme);
+      setState({
+        theme,
+      });
+    },
+
+  clearHistory:
+    (includeFavourites: boolean) =>
+    ({ dispatch }: StoreApi) => {
+      historyService.clear(includeFavourites, () => {
+        dispatch(searchHistory());
+      });
+    },
+
+  selectHistoryItem:
+    (historyItem: HistoryItem) =>
+    ({ setState, dispatch }: StoreApi) => {
+      const { url, method, contentType, body, headers } = historyItem;
+      setState({
+        request: {
+          url,
+          method,
+          contentType,
+          body,
+          headers,
+        },
+        response: defaultResponse,
+      });
+      dispatch(processHeaders());
+    },
+
+  favouriteHistoryItem:
+    (historyItem: HistoryItem, favourite: boolean) =>
+    ({ dispatch }: StoreApi) => {
+      historyService.update(historyItem, { favourite: favourite ? 1 : 0 }, () => {
+        dispatch(searchHistory());
+      });
+    },
+
+  removeHistoryItem:
+    (historyItem: HistoryItem) =>
+    ({ dispatch }: StoreApi) => {
+      historyService.delete(historyItem, () => {
+        dispatch(searchHistory());
+      });
+    },
+
+  setHistoryFilter:
+    (name: string, value: any) =>
+    ({ setState, getState }: StoreApi) => {
+      setState({
+        historyFilter: {
+          ...getState().historyFilter,
+          [name]: value,
+        },
+      });
+    },
+
+  searchHistory:
+    () =>
+    ({ dispatch }: StoreApi) => {
       dispatch(searchHistory());
-    });
-  },
+    },
 
-  selectHistoryItem: (historyItem: HistoryItem) => ({ setState, dispatch }: StoreApi) => {
-    const { url, method, contentType, body, headers } = historyItem;
-    setState({
-      request: {
-        url,
-        method,
-        contentType,
-        body,
-        headers,
-      },
-      response: defaultResponse,
-    });
-    dispatch(processHeaders());
-  },
-
-  favouriteHistoryItem: (historyItem: HistoryItem, favourite: boolean) => ({ dispatch }: StoreApi) => {
-    historyService.update(historyItem, { favourite: favourite ? 1 : 0 }, () => {
-      dispatch(searchHistory());
-    });
-  },
-
-  removeHistoryItem: (historyItem: HistoryItem) => ({ dispatch }: StoreApi) => {
-    historyService.delete(historyItem, () => {
-      dispatch(searchHistory());
-    });
-  },
-
-  setHistoryFilter: (name: string, value: any) => ({ setState, getState }: StoreApi) => {
-    setState({
-      historyFilter: {
-        ...getState().historyFilter,
-        [name]: value,
-      },
-    });
-  },
-
-  searchHistory: () => ({ dispatch }: StoreApi) => {
-    dispatch(searchHistory());
-  },
-
-  migrateHistory: () => ({ dispatch }: StoreApi) => {
-    historyService.migrate(() => {
-      dispatch(searchHistory());
-    });
-  },
+  migrateHistory:
+    () =>
+    ({ dispatch }: StoreApi) => {
+      historyService.migrate(() => {
+        dispatch(searchHistory());
+      });
+    },
 };
 
 const store = createStore<State, typeof actions>({

@@ -1,9 +1,9 @@
-import Chip from "@material-ui/core/Chip";
+import Chip from "@mui/material/Chip";
 import React from "react";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "tss-react/mui";
 import HttpResponse from "../types/HttpResponse";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     marginTop: theme.spacing(2),
     marginLeft: theme.spacing(2),
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const ResponseTime: React.FC<{ response: HttpResponse }> = ({ response }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (response.startTime > 0 && response.endTime > 0) {
     const timeInMillis = response.endTime - response.startTime;

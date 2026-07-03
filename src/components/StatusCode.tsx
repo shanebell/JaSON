@@ -1,9 +1,9 @@
-import Chip from "@material-ui/core/Chip";
+import Chip from "@mui/material/Chip";
 import React from "react";
 import _ from "lodash";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     marginTop: theme.spacing(2),
     marginLeft: theme.spacing(2),
@@ -22,8 +22,6 @@ const statusCodes: Record<number, string> = {
   100: "Continue",
   101: "Switching Protocols",
   102: "Processing",
-
-  // success
   200: "OK",
   201: "Created",
   202: "Accepted",
@@ -43,8 +41,6 @@ const statusCodes: Record<number, string> = {
   306: "(Unused)",
   307: "Temporary Redirect",
   308: "Permanent Redirect",
-
-  // error
   400: "Bad Request",
   401: "Unauthorized",
   402: "Payment Required",
@@ -103,12 +99,18 @@ const getLabel = (status: number) => {
 };
 
 const StatusCode: React.FC<{ status: number }> = ({ status }) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   if (status) {
     const label = getLabel(status);
-    const classNames = `${classes.root} ${isError(status) ? classes.error : classes.success}`;
-    return <Chip className={classNames} label={label} size="small" variant="outlined" color="primary" />;
+    return (
+      <Chip
+        className={cx(classes.root, isError(status) ? classes.error : classes.success)}
+        label={label}
+        size="small"
+        variant="outlined"
+      />
+    );
   } else {
     return null;
   }

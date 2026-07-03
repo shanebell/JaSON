@@ -1,6 +1,6 @@
 import _ from "lodash";
-import axios, { AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
-import flatten from "flat";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { flatten } from "flat";
 import qs from "qs";
 import HttpRequest, { processHeaders } from "./types/HttpRequest";
 import HttpResponse, { toHttpResponse } from "./types/HttpResponse";
@@ -11,7 +11,10 @@ const sendAxiosRequest = async (config: AxiosRequestConfig): Promise<AxiosRespon
   try {
     return await axios(config);
   } catch (error) {
-    return error.response;
+    if (axios.isAxiosError(error)) {
+      return error.response as AxiosResponse;
+    }
+    throw error;
   }
 };
 
@@ -51,7 +54,7 @@ const getRequestBody = (request: HttpRequest) => {
   return request.body;
 };
 
-export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken): Promise<HttpResponse> => {
+export const sendRequest = async (request: HttpRequest, signal: AbortSignal): Promise<HttpResponse> => {
   const config: AxiosRequestConfig = {
     url: request.url,
     method: request.method,
@@ -59,12 +62,12 @@ export const sendRequest = async (request: HttpRequest, cancelToken: CancelToken
       "Content-Type": request.contentType,
     },
     timeout: 300_000, // 5 mins
-    cancelToken,
+    signal,
   };
 
   const headers = processHeaders(request.headers);
   _.forEach(headers, (header) => {
-    config.headers[header.name] = header.value;
+    config.headers![header.name] = header.value;
   });
 
   if (isRequestBodyAllowed(request.method) && !_.isEmpty(request.body)) {

@@ -1,20 +1,20 @@
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Slide from "@material-ui/core/Slide";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import { makeStyles } from "tss-react/mui";
+import Typography from "@mui/material/Typography";
 import React from "react";
 import config from "../config";
-import "typeface-roboto";
+import "@fontsource/roboto";
 import logo from "../images/jason.png";
 import { mdiBug, mdiGithub, mdiGoogleChrome, mdiLicense, mdiCreativeCommons, mdiShieldCheck } from "@mdi/js";
 import Icon from "@mdi/react";
-import { TransitionProps } from "@material-ui/core/transitions/transition";
+import { TransitionProps } from "@mui/material/transitions";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   title: {
     fontWeight: 300,
   },
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const paragraphStyles = makeStyles((theme: Theme) => ({
+const paragraphStyles = makeStyles()((theme) => ({
   paragraph: {
     padding: theme.spacing(1),
     display: "flex",
@@ -62,7 +62,7 @@ const paragraphStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & { children?: React.ReactElement<any, any> },
+  props: TransitionProps & { children: React.ReactElement<any, any> },
   ref: React.Ref<unknown>
 ) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -76,7 +76,7 @@ const Paragraph: React.FC<{
   icon?: string;
   image?: any;
 }> = ({ text, href, target, linkText, icon, image }) => {
-  const classes = paragraphStyles();
+  const { classes } = paragraphStyles();
   return (
     <Typography variant="body1" align="center" className={classes.paragraph} component="div">
       {icon && <Icon path={icon} title={linkText} size={1.5} className={classes.icon} />}
@@ -92,20 +92,19 @@ const Paragraph: React.FC<{
   );
 };
 
-const About: React.FC<{ open: boolean; onClose: React.ReactEventHandler }> = ({ open, onClose }) => {
-  const classes = useStyles();
+const About: React.FC<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
+  const { classes } = useStyles();
   return (
     <Dialog
       open={open}
-      onBackdropClick={onClose}
-      onEscapeKeyDown={onClose}
-      TransitionComponent={Transition}
+      onClose={onClose}
+      slots={{ transition: Transition }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle id="alert-dialog-title" disableTypography className={classes.title}>
+      <DialogTitle id="alert-dialog-title" className={classes.title}>
         <Typography align="center" variant="h6">
           JaSON
         </Typography>

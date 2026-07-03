@@ -1,18 +1,18 @@
-import Grid from "@material-ui/core/Grid";
-import SendIcon from "@material-ui/icons/Send";
-import RefreshIcon from "@material-ui/icons/Refresh";
-import ClearIcon from "@material-ui/icons/Clear";
-import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Tooltip from "@material-ui/core/Tooltip";
-import Paper from "@material-ui/core/Paper";
+import Grid from "@mui/material/Grid";
+import { Send as SendIcon } from "@mui/icons-material";
+import { Refresh as RefreshIcon } from "@mui/icons-material";
+import { Clear as ClearIcon } from "@mui/icons-material";
+import { VerifiedUser as VerifiedUserIcon } from "@mui/icons-material";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import Tooltip from "@mui/material/Tooltip";
+import Paper from "@mui/material/Paper";
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import _ from "lodash";
-import Button from "@material-ui/core/Button";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import Button from "@mui/material/Button";
+import { makeStyles } from "tss-react/mui";
 import { useAuth, useLoading, useRequest } from "../state";
 import { httpMethods, isRequestBodyAllowed } from "../types/HttpMethod";
 import {
@@ -24,9 +24,9 @@ import {
   X_WWW_FORM_URLENCODED,
 } from "../types/ContentType";
 import WrappedAceEditor from "./WrappedAceEditor";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import { Popover } from "@material-ui/core";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import { Popover } from "@mui/material";
 
 const EDITOR_MODES: Record<string, string> = {
   [APPLICATION_JSON.value]: "json",
@@ -36,7 +36,7 @@ const EDITOR_MODES: Record<string, string> = {
   [MULTIPART_FORM_DATA.value]: "json",
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     flexGrow: 1,
     display: "flex",
@@ -99,7 +99,7 @@ const HTTP_PATTERN = /^http:\/\//i;
 const HTTPS_PATTERN = /^https:\/\//i;
 
 const RequestFields: React.FC = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [urlError, setUrlError] = useState<string | null>(null);
   const [bodyError, setBodyError] = useState<string | null>(null);
   const [timeoutId, setTimeoutId] = useState<any>(null);
@@ -147,9 +147,9 @@ const RequestFields: React.FC = () => {
     return isFormPost() ? (
       <>
         <Typography variant="caption">To send form data, enter as JSON. eg:</Typography>
-        <pre className={classes.tooltipCode}>{`{ 
+        <pre className={classes.tooltipCode}>{`{
   "email": "user@example.com",
-  "password": "Passw0rd1" 
+  "password": "Passw0rd1"
 }`}</pre>
       </>
     ) : (
@@ -162,7 +162,7 @@ const RequestFields: React.FC = () => {
     if (isFormPost()) {
       try {
         JSON.parse(request.body);
-      } catch (e) {
+      } catch (e: any) {
         error = `Unable to parse form data. ${e.message}`;
       }
     }
@@ -201,7 +201,7 @@ const RequestFields: React.FC = () => {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12} xl={6} className={classes.gridItem}>
+      <Grid size={{ xs: 12, xl: 6 }} className={classes.gridItem}>
         <TextField
           className={classes.textField}
           id="url"
@@ -211,14 +211,10 @@ const RequestFields: React.FC = () => {
           error={urlError != null}
           helperText={urlError}
           fullWidth
-          InputProps={{
-            className: classes.monospace,
-          }}
-          inputProps={{
-            maxLength: 1024,
-          }}
-          FormHelperTextProps={{
-            className: classes.error,
+          slotProps={{
+            input: { className: classes.monospace },
+            htmlInput: { maxLength: 1024 },
+            formHelperText: { className: classes.error },
           }}
           onKeyDown={handleKeyDown}
           value={request.url}
@@ -227,7 +223,7 @@ const RequestFields: React.FC = () => {
         />
       </Grid>
 
-      <Grid item xs={6} xl={3} className={classes.gridItem}>
+      <Grid size={{ xs: 6, xl: 3 }} className={classes.gridItem}>
         <TextField
           className={classes.textField}
           id="method"
@@ -236,9 +232,7 @@ const RequestFields: React.FC = () => {
           select
           required
           fullWidth
-          InputProps={{
-            className: classes.monospace,
-          }}
+          slotProps={{ input: { className: classes.monospace } }}
           value={request.method}
           onChange={handleFieldChange("method")}
         >
@@ -250,7 +244,7 @@ const RequestFields: React.FC = () => {
         </TextField>
       </Grid>
 
-      <Grid item xs={6} xl={3} className={classes.gridItem}>
+      <Grid size={{ xs: 6, xl: 3 }} className={classes.gridItem}>
         <TextField
           className={classes.textField}
           id="content-type"
@@ -259,9 +253,7 @@ const RequestFields: React.FC = () => {
           select
           required
           fullWidth
-          InputProps={{
-            className: classes.monospace,
-          }}
+          slotProps={{ input: { className: classes.monospace } }}
           value={request.contentType}
           onChange={handleFieldChange("contentType")}
         >
@@ -273,7 +265,7 @@ const RequestFields: React.FC = () => {
         </TextField>
       </Grid>
 
-      <Grid item xs={12} className={classes.gridItem}>
+      <Grid size={12} className={classes.gridItem}>
         <InputLabel className={classes.label}>Request headers</InputLabel>
         <Tooltip
           arrow
@@ -304,7 +296,7 @@ const RequestFields: React.FC = () => {
                     setAuthAnchor(event.currentTarget);
                   }}
                 >
-                  <VerifiedUserIcon fontSize="default" />
+                  <VerifiedUserIcon fontSize="medium" />
                 </IconButton>
               </Tooltip>
             )}
@@ -342,7 +334,7 @@ const RequestFields: React.FC = () => {
       </Popover>
 
       {isRequestBodyAllowed(request.method) && (
-        <Grid item xs={12} className={classes.gridItem}>
+        <Grid size={12} className={classes.gridItem}>
           <InputLabel className={classes.label} error={bodyError != null}>
             Request body
           </InputLabel>
@@ -376,7 +368,7 @@ const RequestFields: React.FC = () => {
         </Grid>
       )}
 
-      <Grid item xs={12} className={`${classes.actions} ${classes.gridItem}`}>
+      <Grid size={12} className={`${classes.actions} ${classes.gridItem}`}>
         <Button
           variant="contained"
           size="small"
@@ -391,7 +383,6 @@ const RequestFields: React.FC = () => {
         <Button
           variant="outlined"
           size="small"
-          color="default"
           disabled={loading}
           className={classes.button}
           onClick={handleReset}

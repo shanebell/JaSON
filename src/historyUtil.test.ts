@@ -1,3 +1,4 @@
+/// <reference types="vitest/globals" />
 import { legacyRequestToHistoryItem } from "./historyUtil";
 import {
   APPLICATION_JSON,

@@ -10,11 +10,11 @@ import "ace-builds/src-noconflict/theme-tomorrow_night";
 import "ace-builds/src-noconflict/theme-tomorrow";
 import "ace-builds/src-noconflict/ext-language_tools";
 import { useTheme } from "../state";
-import { IconButton, Snackbar, Tooltip, Typography } from "@material-ui/core";
-import FileCopy from "@material-ui/icons/FileCopy";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { IconButton, Snackbar, Tooltip, Typography } from "@mui/material";
+import { FileCopy } from "@mui/icons-material";
+import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   wrapper: {
     position: "relative",
   },
@@ -50,20 +50,16 @@ const WrappedAceEditor: React.FC<{
   showGutter = true,
 }) => {
   const [theme] = useTheme();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [showCopySnackbar, setShowCopySnackbar] = useState<boolean>(false);
 
-  const copyContent = () => {
-    setShowCopySnackbar(false);
-
-    const el = document.createElement("textarea");
-    el.value = value;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand("copy");
-    document.body.removeChild(el);
-
-    setShowCopySnackbar(true);
+  const copyContent = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setShowCopySnackbar(true);
+    } catch (e) {
+      console.warn("Clipboard write failed", e);
+    }
   };
 
   return (
@@ -94,7 +90,7 @@ const WrappedAceEditor: React.FC<{
         }}
         onLoad={(editor) => {
           editor.commands.removeCommand("find");
-          editor.container.style.lineHeight = 1.5;
+          editor.container.style.lineHeight = "1.5";
           editor.renderer.updateFontSize();
           editor.getSession().on("change", () => {
             const session = editor.getSession();
@@ -115,8 +111,8 @@ const WrappedAceEditor: React.FC<{
       {allowCopy && (
         <>
           <Tooltip arrow title={<Typography variant="caption">Copy content</Typography>}>
-            <IconButton className={classes.copy} aria-label="Copy content" onClick={() => copyContent()}>
-              <FileCopy fontSize="default" />
+            <IconButton className={classes.copy} aria-label="Copy content" onClick={copyContent}>
+              <FileCopy fontSize="medium" />
             </IconButton>
           </Tooltip>
           <Snackbar

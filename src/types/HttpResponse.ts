@@ -15,7 +15,7 @@ const toHttpResponse = (axiosResponse: AxiosResponse, startTime: number, endTime
     startTime,
     endTime,
     status: axiosResponse?.status || -1,
-    contentType: axiosResponse?.headers["content-type"],
+    contentType: String(axiosResponse?.headers["content-type"] ?? ""),
     headers: axiosResponse?.headers,
     data: axiosResponse?.data,
     responseText: axiosResponse?.request.responseText,

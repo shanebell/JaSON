@@ -1,9 +1,9 @@
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import React, { ChangeEvent } from "react";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import { makeStyles } from "tss-react/mui";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import React from "react";
 import StatusCode from "./StatusCode";
 import TabPanel from "./TabPanel";
 import { useResponse } from "../state";
@@ -11,7 +11,7 @@ import ResponseTime from "./ResponseTime";
 import ResponseData from "./ResponseData";
 import ResponseHeaders from "./ResponseHeaders";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   responseTabs: {
     marginBottom: theme.spacing(4),
   },
@@ -26,16 +26,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const ResponseFields: React.FC = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [{ response, responseTab }, { setResponseTab }] = useResponse();
 
-  const handleTabChange = (event: ChangeEvent<{}>, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setResponseTab(newValue);
   };
 
   return (
     <Grid container spacing={2} className={classes.grid}>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <div className={classes.chips}>
           <StatusCode status={response.status} />
           <ResponseTime response={response} />

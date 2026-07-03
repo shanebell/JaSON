@@ -1,19 +1,19 @@
-import { Theme, Tooltip } from "@material-ui/core";
-import AppBar from "@material-ui/core/AppBar/AppBar";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import DarkThemeIcon from "@material-ui/icons/Brightness4";
-import LightThemeIcon from "@material-ui/icons/Brightness7";
-import { makeStyles } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import { Theme, Tooltip } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import { Brightness4 as DarkThemeIcon } from "@mui/icons-material";
+import { Brightness7 as LightThemeIcon } from "@mui/icons-material";
+import { makeStyles } from "tss-react/mui";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import About from "./About";
 import logo from "../images/jason.png";
 import { useTheme } from "../state";
 import Loading from "./Loading";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   title: {
     flexGrow: 1,
     fontWeight: 300,
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Navigation: React.FC = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [theme, { toggleTheme }] = useTheme();
 

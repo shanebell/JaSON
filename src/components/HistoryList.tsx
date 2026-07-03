@@ -1,22 +1,21 @@
-import { Divider, Theme } from "@material-ui/core";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Chip from "@material-ui/core/Chip";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles } from "@material-ui/core/styles";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
-import { Delete, Favorite, FavoriteBorder } from "@material-ui/icons";
+import { Divider } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import Chip from "@mui/material/Chip";
+import ListItemText from "@mui/material/ListItemText";
+import { makeStyles } from "tss-react/mui";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import { Delete, Favorite, FavoriteBorder } from "@mui/icons-material";
 import React, { ChangeEvent, useEffect } from "react";
 import _ from "lodash";
 import { useHistory } from "../state";
 import FormattedDate from "./FormattedDate";
 import { HISTORY_SEARCH_LIMIT } from "../historyService";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   message: {
     padding: theme.spacing(4),
   },
@@ -47,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const HistoryList: React.FC = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [history, { selectHistoryItem, removeHistoryItem, favouriteHistoryItem, migrateHistory }] = useHistory();
 
   useEffect(migrateHistory, [migrateHistory]);
@@ -59,7 +58,7 @@ const HistoryList: React.FC = () => {
       <List dense>
         {history.map((historyItem) => (
           <div key={historyItem.id}>
-            <ListItem dense button alignItems="flex-start" onClick={() => selectHistoryItem(historyItem)}>
+            <ListItemButton dense alignItems="flex-start" onClick={() => selectHistoryItem(historyItem)}>
               <Tooltip
                 arrow
                 enterDelay={250}
@@ -78,7 +77,6 @@ const HistoryList: React.FC = () => {
                       <Chip
                         className={classes.chip}
                         label={historyItem.method}
-                        color="default"
                         size="small"
                         variant="outlined"
                       />
@@ -86,7 +84,6 @@ const HistoryList: React.FC = () => {
                         <Chip
                           className={classes.chip}
                           label={historyItem.status}
-                          color="default"
                           size="small"
                           variant="outlined"
                         />
@@ -96,12 +93,12 @@ const HistoryList: React.FC = () => {
                       </Typography>
                     </>
                   }
-                  secondaryTypographyProps={{
-                    component: "span",
+                  slotProps={{
+                    secondary: { component: "span" },
                   }}
                 />
               </Tooltip>
-              <ListItemSecondaryAction className={classes.actions}>
+              <div className={classes.actions}>
                 <Tooltip arrow title={historyItem.favourite ? "Remove from favourites" : "Add to favourites"}>
                   <Checkbox
                     size="small"
@@ -114,12 +111,12 @@ const HistoryList: React.FC = () => {
                   />
                 </Tooltip>
                 <Tooltip arrow title="Delete from history">
-                  <IconButton aria-label="delete" onClick={() => removeHistoryItem(historyItem)}>
+                  <IconButton aria-label="delete" onClick={(e) => { e.stopPropagation(); removeHistoryItem(historyItem); }}>
                     <Delete fontSize="small" />
                   </IconButton>
                 </Tooltip>
-              </ListItemSecondaryAction>
-            </ListItem>
+              </div>
+            </ListItemButton>
             <Divider variant="fullWidth" component="li" />
           </div>
         ))}

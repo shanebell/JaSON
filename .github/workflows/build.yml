@@ -9,19 +9,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '12'
+          node-version: '20'
       - run: npm install
       - run: npm test
-        env:
-          CI: true
       - run: npm run build
       - name: Get version
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/*/}
-      - uses: actions/upload-artifact@v1
+        run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+      - uses: actions/upload-artifact@v4
         with:
           name: JaSON-${{ steps.get_version.outputs.VERSION }}
           path: build

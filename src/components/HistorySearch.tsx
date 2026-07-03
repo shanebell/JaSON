@@ -1,33 +1,30 @@
-import { Menu, MenuItem, Theme, Tooltip } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { Favorite, FavoriteBorder, MoreVert, Search, Close } from "@material-ui/icons";
+import { Menu, MenuItem, Tooltip } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import ListItemText from "@mui/material/ListItemText";
+import { makeStyles } from "tss-react/mui";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { Favorite, FavoriteBorder, MoreVert, Search, Close } from "@mui/icons-material";
 import React, { useEffect, useRef, useState } from "react";
 import _ from "lodash";
 import { useHistoryFilter } from "../state";
-import Checkbox from "@material-ui/core/Checkbox";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
+import Checkbox from "@mui/material/Checkbox";
+import DialogTitle from "@mui/material/DialogTitle";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   filters: {
+    paddingTop: theme.spacing(2),
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
   },
   searchIcon: {
     color: theme.palette.grey[600],
-  },
-  searchInput: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
   },
   tooltip: {
     maxWidth: 500,
@@ -42,9 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const HistorySearch: React.FC = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [deleteHistoryDialogOpen, setDeleteHistoryDialogOpen] = useState<boolean>(false);
   const [includeFavourites, setIncludeFavourites] = useState<boolean>(false);
   const [{ searchTerm, showFavourites }, { searchHistory, clearHistory, setHistoryFilter }] = useHistoryFilter();
@@ -57,7 +54,7 @@ const HistorySearch: React.FC = () => {
     setHistoryFilter("searchTerm", "");
   };
 
-  const showMenu = (event: any) => {
+  const showMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -98,67 +95,67 @@ const HistorySearch: React.FC = () => {
       <TextField
         label="Search request history"
         fullWidth
-        InputProps={{
-          className: classes.searchInput,
-          startAdornment: (
-            <InputAdornment position="start">
-              <Tooltip
-                arrow
-                classes={{ tooltip: classes.tooltip }}
-                title={
-                  <>
-                    <Typography variant="caption">Search on any combination of URL, method or status. eg:</Typography>
-                    <pre className={classes.tooltipCode}>mydomain.com POST 500</pre>
-                  </>
-                }
-              >
-                <Search className={classes.searchIcon} />
-              </Tooltip>
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              {hasSearchTerm() && (
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
                 <Tooltip
                   arrow
                   classes={{ tooltip: classes.tooltip }}
-                  title={<Typography variant="caption">Clear search term</Typography>}
+                  title={
+                    <>
+                      <Typography variant="caption">Search on any combination of URL, method or status. eg:</Typography>
+                      <pre className={classes.tooltipCode}>mydomain.com POST 500</pre>
+                    </>
+                  }
                 >
-                  <IconButton aria-label="clear" onClick={clearSearchTerm}>
-                    <Close fontSize="small" />
+                  <Search className={classes.searchIcon} />
+                </Tooltip>
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                {hasSearchTerm() && (
+                  <Tooltip
+                    arrow
+                    classes={{ tooltip: classes.tooltip }}
+                    title={<Typography variant="caption">Clear search term</Typography>}
+                  >
+                    <IconButton aria-label="clear" onClick={clearSearchTerm}>
+                      <Close fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
+                <Tooltip
+                  arrow
+                  classes={{ tooltip: classes.tooltip }}
+                  title={<Typography variant="caption">Show favourites</Typography>}
+                >
+                  <Checkbox
+                    checked={showFavourites}
+                    size="small"
+                    icon={<FavoriteBorder />}
+                    checkedIcon={<Favorite />}
+                    onChange={(event) => setHistoryFilter("showFavourites", event.target.checked)}
+                  />
+                </Tooltip>
+                <Tooltip
+                  arrow
+                  title={<Typography variant="caption">More options...</Typography>}
+                  classes={{ tooltip: classes.tooltip }}
+                >
+                  <IconButton onClick={showMenu}>
+                    <MoreVert fontSize="small" />
                   </IconButton>
                 </Tooltip>
-              )}
-              <Tooltip
-                arrow
-                classes={{ tooltip: classes.tooltip }}
-                title={<Typography variant="caption">Show favourites</Typography>}
-              >
-                <Checkbox
-                  checked={showFavourites}
-                  size="small"
-                  icon={<FavoriteBorder />}
-                  checkedIcon={<Favorite />}
-                  onChange={(event) => setHistoryFilter("showFavourites", event.target.checked)}
-                  color="default"
-                />
-              </Tooltip>
-              <Tooltip
-                arrow
-                title={<Typography variant="caption">More options...</Typography>}
-                classes={{ tooltip: classes.tooltip }}
-              >
-                <IconButton onClick={showMenu}>
-                  <MoreVert fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Menu anchorEl={anchorEl} open={anchorEl != null} onClose={hideMenu}>
-                <MenuItem onClick={showDeleteHistoryDialog}>
-                  <ListItemText>Delete request history</ListItemText>
-                </MenuItem>
-              </Menu>
-            </InputAdornment>
-          ),
+                <Menu anchorEl={anchorEl} open={anchorEl != null} onClose={hideMenu}>
+                  <MenuItem onClick={showDeleteHistoryDialog}>
+                    <ListItemText>Delete request history</ListItemText>
+                  </MenuItem>
+                </Menu>
+              </InputAdornment>
+            ),
+          },
         }}
         value={searchTerm}
         onChange={(event) => setHistoryFilter("searchTerm", event.target.value)}

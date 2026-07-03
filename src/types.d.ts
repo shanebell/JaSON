@@ -1,1 +1,3 @@
-declare module "@prettier/plugin-xml/src/plugin";
+declare module "*.png";
+declare module "*.jpg";
+declare module "*.svg";
